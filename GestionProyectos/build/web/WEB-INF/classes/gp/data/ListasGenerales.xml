@@ -13,6 +13,18 @@
         <result property="numeroResolucion" column="NUMERORESO"/>
     </resultMap>
     
+    <resultMap id="lista_montosHistorial" type="gp.model.HistorialMontos">
+        <result property="montoviable" column="MONTOMODIF"/>
+        <result property="fecha" column="FECHA"/>
+        <result property="nombreMonto" column="NOMBREMONTO"/>
+    </resultMap>
+    
+    <resultMap id="montoViable" type="gp.model.HistorialMontos">
+        <result property="montoviable" column="MONTOVIABLE"/>
+        <result property="fecha" column="FECHA"/>
+        <result property="nombreMonto" column="MONTO"/>
+    </resultMap>
+    
     <select id="getExpedientes" resultMap="lista_Exp">
         SELECT TRAM_NUM AS NUMEROTRAMITE FROM vw_ogpl002@DB_LINK_TRAMITE
         WHERE DEPE_COD='1001872'
@@ -30,6 +42,20 @@
     <select id="getResoluciones" resultMap="lista_Exp3">
         SELECT RESO_NUM AS NUMERORESO FROM vw_ogpl003@DB_LINK_TRAMITE
         GROUP BY RESO_NUM
+    </select>
+    
+    <select id="getHistorialMontos" resultMap="lista_montosHistorial" parameterType="String">
+        SELECT CO.MONTO_MODIF AS MONTOMODIF,'MODIFICADO'||' '||CO.NUM_MONTO as NOMBREMONTO,TO_CHAR(CO.FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM COMPONENTES CO
+        WHERE CO.ID_PROYECTO=#{codigo}
+        AND CO.NUM_MONTO NOT IN('0')
+        ORDER BY CO.NUM_MONTO ASC
+    </select>
+    
+    <select id="getMontoViable" resultMap="montoViable" parameterType="String">
+        SELECT P.MONTO_VIAB AS MONTOVIABLE, TO_CHAR(P.FECHA_VIAB,'DD/MM/YYYY') AS FECHA, 'MONTO VIABLE' AS MONTO
+        FROM PROYECTO P
+        WHERE P.ID_PROYECTO=#{codigo}
     </select>
     
 </mapper>

@@ -19,6 +19,7 @@ import gp.model.AspectosGenerales;
 import gp.model.BusqPreInversion;
 import gp.model.Componentes;
 import gp.model.GuardarNuevComp;
+import gp.model.HistorialMontos;
 import gp.model.Montos;
 import gp.model.Opi_responsable;
 import gp.model.Origen;
@@ -117,6 +118,7 @@ public class BusquedaPreInversion {
     private Integer idcomp;
     private String fmm;
     private String fmmaux;
+    private List<HistorialMontos> historialMontos;
 
     public BusquedaPreInversion() {
         cantidad = "2";
@@ -131,6 +133,7 @@ public class BusquedaPreInversion {
         widhtcomp = "";
         rpd = new RegistroPreInversionDaoImpl();
         rid = new RegistroInversionDaoImpl();
+        historialMontos= new ArrayList<HistorialMontos>();
         estado10 = -1;
         estado = true;
         estado4 = false;
@@ -242,9 +245,17 @@ public class BusquedaPreInversion {
     }
 
     public void mostrarHistorial() {
+        historialMontos.clear();
         bqpim.clear();
         try {
+            historialMontos.add(lgd.getMontoViable(b20));
+            List<HistorialMontos> listaaux= new ArrayList<HistorialMontos>();
+            listaaux=lgd.getMontosHistorial(b20);
+            for(int i=0;i<listaaux.size();i++){
+                historialMontos.add(listaaux.get(i));
+            }            
             bqpim = bpi.getMontoHistorial(b20);
+            System.out.println("ACA ES: "+bqpim.size()+" "+historialMontos.size());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -1167,6 +1178,14 @@ public class BusquedaPreInversion {
 
     public void setB6D(Double b6D) {
         this.b6D = b6D;
+    }
+
+    public List<HistorialMontos> getHistorialMontos() {
+        return historialMontos;
+    }
+
+    public void setHistorialMontos(List<HistorialMontos> historialMontos) {
+        this.historialMontos = historialMontos;
     }
 
 }

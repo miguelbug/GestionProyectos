@@ -7,6 +7,7 @@
 package gp.dao;
 
 import gp.model.Expedientes;
+import gp.model.HistorialMontos;
 import gp.model.Resoluciones;
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface ListasGeneralesDAO {
     public List<String> getExpedientes();
     public List<String> getInformes();
     public List<String> getResoluciones();
+    public List<HistorialMontos> getMontosHistorial(String codigo);
+    public HistorialMontos getMontoViable(String codigo);
 }
