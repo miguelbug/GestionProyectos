@@ -1,1 +1,3 @@
-function redireccionar(){window.location.href="http://localhost:8080/GestionProyectos/"}
+function redireccionar() {
+    window.location.href='http://172.16.89.130:8086/GestionProyectos/';
+}
