@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="ListasGenerales">
+    
+    <resultMap id="lista_Exp" type="String">
+        <result property="tramnum" column="NUMEROTRAMITE"/>
+    </resultMap>
+    
+    <resultMap id="lista_Exp3" type="String">
+        <result property="numeroResolucion" column="NUMERORESO"/>
+    </resultMap>
+    
+    <select id="getExpedientes" resultMap="lista_Exp">
+        SELECT TRAM_NUM AS NUMEROTRAMITE FROM vw_ogpl002@DB_LINK_TRAMITE
+        WHERE DEPE_COD='1001872'
+        GROUP BY TRAM_NUM
+    </select>
+    
+    <select id="getInformesOPYP" resultMap="lista_Exp">
+        SELECT DOCU_NOMBREINT||' N° '||DOCU_CORRELAINT||'-'||DOCU_SIGLASINT||'-'||DOCU_ANIOINT AS NUMEROTRAMITE
+        FROM DOCUS_INTERNOS@GP_DBLINK
+        WHERE DOCU_SIGLASINT LIKE '%OPYP%'
+        AND DOCU_NOMBREINT='INFORME'
+        ORDER BY DOCU_CORRELAINT DESC
+    </select>
+    
+    <select id="getResoluciones" resultMap="lista_Exp3">
+        SELECT RESO_NUM AS NUMERORESO FROM vw_ogpl003@DB_LINK_TRAMITE
+        GROUP BY RESO_NUM
+    </select>
+    
+</mapper>

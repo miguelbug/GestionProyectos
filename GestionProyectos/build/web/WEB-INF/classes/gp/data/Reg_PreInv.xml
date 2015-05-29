@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="RegistroPreInversion">
+    
+    <resultMap id="lista_origen" type="gp.model.Origen">
+        <result property="codigo" column="ID_DEP"/>
+        <result property="nombre" column="NOMBRE_DEP"/>
+    </resultMap>
+    
+    <resultMap id="lista_opi" type="gp.model.Opi_responsable">
+        <result property="codigo" column="ID_OPI"/>
+        <result property="nombre" column="NOMBRE_OPI"/>
+    </resultMap>
+    
+    <resultMap id="lista_ne" type="gp.model.Nivel_Estudio">
+        <result property="codigo" column="ID_NIVEL"/>
+        <result property="nombre" column="NOMBRE_NIVEL"/>
+    </resultMap>
+    
+    <resultMap id="get_IdOr" type="Integer">
+        <result property="origen" column="ID_DEP"/>
+    </resultMap>
+    
+    <resultMap id="get_IdOpi" type="Integer">
+        <result property="origen" column="ID_OPI"/>
+    </resultMap>
+    
+    <resultMap id="get_IdNiv" type="Integer">
+        <result property="origen" column="ID_NIVEL"/>
+    </resultMap>
+    
+    <resultMap id="get_IdUsu" type="Integer">
+        <result property="origen" column="ID_USUARIO"/>
+    </resultMap>
+    
+    <resultMap id="get_MontoViab" type="String">
+        <result property="monto" column="ID_USUARIO"/>
+    </resultMap>
+    
+    <resultMap id="validarProyecto" type="String">
+        <result property="codigo" column="IDPROY"/>
+    </resultMap>
+    
+    <select id="getOpi" resultMap="lista_opi">
+        SELECT ID_OPI,NOMBRE_OPI FROM OPI_RESP
+    </select>
+    
+    <select id="getNivEst" resultMap="lista_ne">
+        SELECT ID_NIVEL,NOMBRE_NIVEL FROM NIVEL_ESTUD
+    </select>
+    
+    <select id="getOrigenes" resultMap="lista_origen" parameterType="string">
+        SELECT ID_DEP,NOMBRE_DEP FROM DEPENDENCIA WHERE TIPO_DEPE=#{tipo}
+    </select>
+ 
+    <insert id="insert_ag" parameterType="gp.model.AspectosGenerales">
+        INSERT INTO PROYECTO (ID_PROYECTO,NOMBRE_PROY,MONTO_VIAB,FECHA_VIAB,INFORME_TECN,EXP_ADMIN,ID_DEP,ID_OPI,ID_NIVEL,ID_USUARIO,NUM_RR)
+        VALUES (#{codigo},#{nombre},#{montoViabilidad},#{fechaViabilidad},#{informeTecnico},#{expedAdm},#{origen},#{opiResp},#{nivEstud},#{usuario},#{numRR})
+    </insert>
+     
+    <insert id="insert_comp" parameterType="gp.model.Componentes">
+        INSERT INTO COMPONENTES (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,TIPO_REG,ID_PROYECTO,NUM_MONTO)
+        VALUES (#{montoExpTec},#{montoInfra},#{montoEquipMov},#{montoSuperv},#{montoCapac},#{montoOtros},#{fecharegistro},#{montoModif},#{tipoRegistro},#{codigoProy},#{numMonto})
+    </insert>
+     
+    <select id="getIdOrigen" resultMap="get_IdOr" parameterType="String">
+        SELECT ID_DEP FROM DEPENDENCIA WHERE NOMBRE_DEP=#{nombre}
+    </select>
+    
+    <select id="getIdOpi" resultMap="get_IdOpi" parameterType="String">
+        SELECT ID_OPI FROM OPI_RESP WHERE NOMBRE_OPI=#{nombre}
+    </select>
+    
+    <select id="getIdNivel" resultMap="get_IdNiv" parameterType="String">
+        SELECT ID_NIVEL FROM NIVEL_ESTUD WHERE NOMBRE_NIVEL=#{nombre}
+    </select>
+    
+    <select id="getIdUsuario" resultMap="get_IdUsu" parameterType="String">
+        SELECT ID_USUARIO FROM USUARIO WHERE USU_NOMBRE=#{nombre}
+    </select>
+    <select id="getMontoViab" resultMap="get_MontoViab" parameterType="String">
+        SELECT MONTO_VIAB FROM PROYECTO WHERE ID_PROYECTO=#{codigo}
+    </select>
+
+    <select id="validarProy" resultMap="validarProyecto" parameterType="String">
+        SELECT ID_PROYECTO as IDPROY FROM PROYECTO WHERE ID_PROYECTO=#{codigo}
+    </select>
+</mapper>

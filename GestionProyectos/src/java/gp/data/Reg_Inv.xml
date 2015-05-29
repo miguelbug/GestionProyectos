@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="RegistroInversion">
+    
+    <resultMap id="resultado" type="String">
+        <result property="nombre_exp" column="NUMERODOCU"/>
+    </resultMap>
+    
+    <resultMap id="resultado2" type="String">
+        <result property="nombre_exp" column="IDEXP"/>
+    </resultMap>
+    
+    <resultMap id="resultado3" type="Integer">
+        <result property="id" column="IDRORDR"/>
+    </resultMap>
+    
+    <select id="getNumeroExp" resultMap="resultado" parameterType="java.util.HashMap">
+        SELECT MAX(PE.NUMERO_EXP)+1 AS NUMERODOCU FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
+        WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND PE.ID_PROYECTO=#{codigo}
+        AND TD.ID_TIPOSDOCUS=#{tipo}
+    </select>
+    
+    <select id="getNumeroDocumento" resultMap="resultado" parameterType="java.util.HashMap">
+        SELECT MAX(ND.NUMERO_DOCU)+1 AS NUMERODOCU FROM NUEVOS_DOCUMENTOS ND, PROY_EXPT PE, TIPOS_DOCUMENTOS TD
+        WHERE ND.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND PE.ID_PROYECTO=#{codigo}
+        AND ND.ID_TIPOSDOCUS=#{tipo}
+        AND PE.NUMERO_EXP=#{numeroExp}
+        AND ND.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+    </select>
+    
+    <select id="getListaExp" resultMap="resultado" parameterType="java.util.HashMap">
+        SELECT TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP AS NUMERODOCU FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
+        WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND PE.ID_PROYECTO=#{codigo}
+        AND TD.ID_TIPOSDOCUS=#{tipo}
+        GROUP BY TD.NOMBRE_TIPODOCU,PE.NUMERO_EXP
+        ORDER BY PE.NUMERO_EXP
+    </select>
+    
+    <insert id="insert_nuevoExp" parameterType="gp.model.NuevosDocumentos">
+        INSERT INTO PROY_EXPT (NUMERO_EXP,MONTO,RR,FECHA,ID_PROYECTO,ID_TIPOSDOCUS)
+        VALUES (#{numeroDocu},#{monto},#{resolucion},#{fecha},#{idProy},#{tipodocu})
+        
+    </insert>
+    
+    <insert id="insert_nuevoDoc" parameterType="gp.model.NuevosDocumentos">
+        INSERT INTO NUEVOS_DOCUMENTOS (NUMERO_DOCU,MONTO,RR,FECHA,ID_TIPOSDOCUS,ID_PROYEXPT)
+        VALUES (#{numeroDocu},#{monto},#{resolucion},#{fecha},#{tipodocu},#{exptecn})
+    </insert>
+    
+    <insert id="insert_nuevoDocContrato" parameterType="gp.model.NuevosDocumentos">
+        INSERT INTO NUEVOS_DOCUMENTOS (CODIGO_DOCU,MONTO,FECHA,ID_TIPOSDOCUS,ID_PROYEXPT)
+        VALUES (#{codigoContrato},#{monto},#{fecha},#{tipodocu},#{exptecn})
+    </insert>
+    
+    <select id="getIdExpTecn" resultMap="resultado2" parameterType="java.util.HashMap">
+        SELECT ID_PROYEXPT AS IDEXP FROM PROY_EXPT
+        WHERE ID_PROYECTO=#{codigo}
+        AND ID_TIPOSDOCUS=#{tipo}
+        AND NUMERO_EXP=#{numero}
+    </select>
+    
+    <insert id="insert_nuevaEjec" parameterType="gp.model.Ejecucion">
+        INSERT INTO EJECUCION (MES,ANIO,MONTO,ID_PROYECTO,ID_TIPOSDOCUS,ID_RORDR,FECHA)
+        VALUES (#{mes},#{anio},#{monto},#{idProyecto},#{idTiposDocus},#{idRORDR},#{fecha})
+    </insert>
+    
+    <select id="validarProy" resultMap="resultado2" parameterType="String">
+        SELECT ID_PROYECTO AS IDEXP FROM PROYECTO
+        WHERE ID_PROYECTO=#{codigo}
+    </select>
+    
+    <select id="getListaCoincidencia" resultMap="resultado2" parameterType="String">
+        SELECT ID_PROYECTO AS IDEXP FROM PROYECTO
+        WHERE ID_PROYECTO LIKE '%'||#{codigo}||'%' 
+    </select>
+    
+    <select id="getIdrordr" resultMap="resultado3" parameterType="String">
+        SELECT ID_RORDR AS IDRORDR FROM RO_RDR
+        WHERE NOMBRE=#{nombre}
+    </select>
+</mapper>

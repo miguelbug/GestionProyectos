@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="MontosData">
+ 
+    <resultMap id="result" type="gp.model.Montos">
+        <result property="monto" column="MONTO"/>
+        <result property="fecha" column="FECHA"/>
+    </resultMap>
+    
+    <resultMap id="numMonto" type="String">
+        <result property="monto" column="NUMEROMONTO"/>
+    </resultMap>
+    
+    <select id="numMonto_select" resultMap="numMonto" parameterType="String">
+        SELECT MAX(NUM_MONTO) AS NUMEROMONTO FROM COMPONENTES WHERE ID_PROYECTO=#{codigo}
+    </select>
+    
+    <select id="get_MontModif" resultMap="result" parameterType="String">
+        SELECT R1.MONTO AS MONTO, TO_CHAR(R1.FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM (SELECT MONTO_MODIF AS MONTO,
+        FECHA_REG AS FECHA_REG
+        FROM COMPONENTES
+        WHERE ID_PROYECTO=#{codigo}
+        AND TIPO_REG ='1'
+        ORDER BY FECHA_REG DESC)R1
+
+    </select>
+    
+    <select id="get_Monto1" resultMap="result" parameterType="String">
+        SELECT DECODE(EXP_TECN,'0','SIN CAMBIOS',EXP_TECN) AS MONTO,
+        TO_CHAR(FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM COMPONENTES
+        WHERE ID_PROYECTO=#{codigo}
+        AND TIPO_REG ='1'
+    </select>
+    
+    <select id="get_Monto2" resultMap="result" parameterType="String">
+        SELECT DECODE(INFRAESTRUCTURA,'0','SIN CAMBIOS',INFRAESTRUCTURA) AS MONTO,
+        TO_CHAR(FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM COMPONENTES
+        WHERE ID_PROYECTO=#{codigo}
+        AND TIPO_REG ='1'
+    </select>
+    
+    <select id="get_Monto3" resultMap="result" parameterType="String">
+        SELECT DECODE(EQUIP_MOBIL,'0','SIN CAMBIOS',EQUIP_MOBIL) AS MONTO,
+        TO_CHAR(FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM COMPONENTES
+        WHERE ID_PROYECTO=#{codigo}
+        AND TIPO_REG ='1'
+    </select>
+    
+    <select id="get_Monto4" resultMap="result" parameterType="String">
+        SELECT DECODE(SUPERVISION,'0','SIN CAMBIOS',SUPERVISION) AS MONTO,
+        TO_CHAR(FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM COMPONENTES
+        WHERE ID_PROYECTO=#{codigo}
+        AND TIPO_REG ='1'
+    </select>
+    
+    <select id="get_Monto5" resultMap="result" parameterType="String">
+        SELECT DECODE(CAPACITACION,'0','SIN CAMBIOS',CAPACITACION) AS MONTO,
+        TO_CHAR(FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM COMPONENTES
+        WHERE ID_PROYECTO=#{codigo}
+        AND TIPO_REG ='1'
+    </select>
+    
+    <select id="get_Monto6" resultMap="result" parameterType="String">
+        SELECT DECODE(OTROS,'0','SIN CAMBIOS',OTROS) AS MONTO,
+        TO_CHAR(FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM COMPONENTES
+        WHERE ID_PROYECTO=#{codigo}
+        AND TIPO_REG ='1'
+    </select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UsuarioData">
+
+    <resultMap id="result" type="gp.model.Usuario">
+        <result property="usuario" column="USU_NOMBRE"/>
+        <result property="clave" column="CLAVE"/>
+        <result property="estado" column="ESTADO"/>
+        <result property="tipoNombre" column="TIPO_NOMBRE"/>
+        <result property="nombreUsuario" column="NOMBRE"/>
+
+    </resultMap>
+
+    <select id="getUsuario" resultMap="result" parameterType="java.util.Map" >
+        SELECT U.USU_NOMBRE AS USU_NOMBRE,
+        U.CLAVE AS CLAVE,
+        U.ESTADO AS ESTADO,
+        TU.NOMBRE_TIPO AS TIPO_NOMBRE,
+        U.NOMBRE_PERSONA||' '||U.APELLIDOS_PERSONA AS NOMBRE
+        
+        FROM USUARIO U, TIPO_USUARIO TU
+        WHERE U.USU_NOMBRE=#{usuario}
+        AND U.CLAVE=#{clave}
+        AND U.ESTADO='A'
+        AND U.ID_TIPOUSUARIO=TU.ID_TIPOUSUARIO
+    </select>
+
+</mapper>

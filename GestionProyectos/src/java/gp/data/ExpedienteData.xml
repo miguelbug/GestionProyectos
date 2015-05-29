@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="ExpedienteData">
+ 
+    <resultMap id="result" type="gp.model.Expedientes">
+        <result property="tramnum" column="TRAM_NUM"/>
+        <result property="fecha" column="FECHA"/>
+        <result property="asunto" column="ASUNTO"/>
+        <result property="destino" column="DESTINO"/>
+        <result property="origen" column="ORIGEN"/>
+        <result property="siglas" column="SIGLAS"/>
+    </resultMap>
+ 
+    <select id="getAll" resultMap="result">
+        SELECT TRAM_NUM,
+        TO_CHAR(FECHA,'DD/MM/YYYY HH24:MI:SS') as FECHA,
+        ASUNTO,
+        DESTINO,
+        ORIGEN,
+        SIGLAS
+        FROM TEMPORAL
+    </select>
+ 
+</mapper>

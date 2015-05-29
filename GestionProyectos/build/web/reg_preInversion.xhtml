@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+    <title>REGISTRO PRE INVERSION</title>
+    <link rel="stylesheet" type="text/css" href="resources/css2/estilos.css" />
+    <script language="JavaScript" src="./resources/js/caducarSesiones.js" type="text/javascript"/>
+</h:head>
+<h:body>
+    <ui:composition template="./menucentral.xhtml">
+        <ui:define name="content">
+            <h:form id="form">
+                <p:tabView id="tab" dynamic="true" activeIndex="#{registroPreInversion.numerotab}">
+                    <p:ajax event="tabChange" listener="#{registroPreInversion.onTabChange}" update="tab"/>
+                    <p:tab title="ASPECTOS GENERALES" id="tab1" >
+                        <center>
+                            <h3>ASPECTOS GENERALES</h3>
+                            <br></br>
+                            <h:panelGrid columns="2" id="regPreInvAG" cellspacing="10">
+                                <p:outputLabel value="Código"/>
+                                <p:inputText value="#{registroPreInversion.codigo}" style="text-transform:uppercase;" disabled="#{registroPreInversion.estado2}">
+                                    <p:ajax event="change" listener="#{registroPreInversion.almacenarCodigo()}" update="guardarAPG"/>
+                                </p:inputText>
+                                
+                                <p:outputLabel value="Nombre:"/>
+                                <p:inputTextarea rows="2" cols="45" value="#{registroPreInversion.nombre_proy}" style="text-transform:uppercase;" disabled="#{registroPreInversion.estado2}"/>
+                               
+                                <p:outputLabel value="Tipo de Origen"/>
+                                <p:selectOneMenu value="#{registroPreInversion.tipo_origen}" disabled="#{registroPreInversion.estado2}">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                    <f:selectItem itemLabel="Facultad" itemValue="2"/>
+                                    <f:selectItem itemLabel="Dependencia" itemValue="1"/>
+                                    <p:ajax event="change" listener="#{registroPreInversion.llenar_origen()}" update="origenSelect"/>
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="Origen:"/>
+                                <p:selectOneMenu value="#{registroPreInversion.origen}" filter="true" filterMatchMode="contains" styleClass="adicSO" id="origenSelect" disabled="#{registroPreInversion.estado2}">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                    <f:selectItems value="#{registroPreInversion.lista_origen}"/>
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="Monto de Viabilidad: S/."/>
+                                <pe:inputNumber value="#{registroPreInversion.montoD}" thousandSeparator="," decimalSeparator=".">  
+                                    <f:validateDoubleRange minimum="50"/>
+                                    <p:ajax event="change" listener="#{registroPreInversion.almacenarMonto()}"/>
+                                </pe:inputNumber>
+                                
+                                <p:outputLabel value="Fecha de Viabilidad:"/>
+                                <h:panelGrid columns="2">
+                                    <p:inputMask value="#{registroPreInversion.fecha_viab_aux}" mask="99/99/9999" disabled="#{registroPreInversion.estado2}"/>
+                                    <p:outputLabel value="#{registroPreInversion.hora}"/>
+                                </h:panelGrid>
+                                
+                                <p:outputLabel value="Informe Técnico:"/>
+                                <p:selectOneMenu value="#{registroPreInversion.informe_tecnico}" disabled="#{registroPreInversion.estado2}" filter="true" filterMatchMode="contains" styleClass="adicSO" editable="true">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                    <f:selectItems value="#{registroPreInversion.informes}"/>
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="Expediente Adm:"/>
+                                <p:selectOneMenu value="#{registroPreInversion.exped_administ}" disabled="#{registroPreInversion.estado2}" filter="true" filterMatchMode="contains" styleClass="adicSO" editable="true">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                    <f:selectItems value="#{registroPreInversion.expedientes}"/>
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="Número de RR:"/>
+                                <p:selectOneMenu value="#{registroPreInversion.numero_RR}" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}" editable="true">
+                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                    <f:selectItems value="#{registroPreInversion.resoluciones}"/>
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="OPI Responsable:"/>
+                                <p:selectOneMenu value="#{registroPreInversion.opi_resp}" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                    <f:selectItems value="#{registroPreInversion.lista_opi}"/>
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel value="Nivel de Estudio:"/>
+                                <p:selectOneMenu value="#{registroPreInversion.nivel_estud}" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                    <f:selectItems value="#{registroPreInversion.lista_nivel}"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <br></br>
+                            <br></br>
+                            <p:commandButton id="guardarAPG" value="Guardar" icon="ui-icon-arrowthickstop-1-s" disabled="#{registroPreInversion.estado4}" oncomplete="PF('confirmacionDialog').show()">
+                            </p:commandButton>
+                        </center>
+                         <!-- disabled="#{registroPreInversion.estado}"  styleClass="#{registroPreInversion.color}"
+                                                        <p:inputText value="#{registroPreInversion.exp_tecnico}">
+                                    <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
+                                </p:inputText>-->
+                    </p:tab>
+                    <p:tab title="COMPONENTES" id="tab2" disabled="#{registroPreInversion.estado}">
+                        <center>
+                            <h3>COMPONENTES</h3>
+                            <br></br>
+                            <h:panelGrid columns="2" id="regPreInComp" cellspacing="8">
+                                <p:outputLabel value=""/>
+                                <p:outputLabel value="Monto"/>
+                                <p:outputLabel value="Exp. Técnico: S/."/>
+                                <pe:inputNumber value="#{registroPreInversion.exp_tecnicoD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                    <f:validateDoubleRange minimum="50"/>
+                                    <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
+                                </pe:inputNumber>
+                                <p:outputLabel value="Infraestructura: S/."/>
+                                <pe:inputNumber value="#{registroPreInversion.infraestructuraD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                    <f:validateDoubleRange minimum="50"/>
+                                    <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
+                                </pe:inputNumber>
+                                <p:outputLabel value="Equipamiento y Mobiliario: S/."/>
+                                <pe:inputNumber value="#{registroPreInversion.equip_mobiliD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                    <f:validateDoubleRange minimum="50"/>
+                                    <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
+                                </pe:inputNumber>
+                                <p:outputLabel value="Supervisión: S/."/>
+                                <pe:inputNumber value="#{registroPreInversion.supervisionD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                    <f:validateDoubleRange minimum="50"/>
+                                    <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
+                                </pe:inputNumber>
+                                <p:outputLabel value="Capacitación: S/."/>
+                                <pe:inputNumber value="#{registroPreInversion.capacitacionD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                    <f:validateDoubleRange minimum="50"/>
+                                    <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
+                                </pe:inputNumber>
+                                <p:outputLabel value="Otros: S/."/>
+                                <pe:inputNumber value="#{registroPreInversion.otrosD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                    <f:validateDoubleRange minimum="50"/>
+                                    <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
+                                </pe:inputNumber>
+                                <p:outputLabel value="Total: S/."/>
+                                <p:outputLabel value="#{registroPreInversion.total}" id="sumaTotal" styleClass="#{registroPreInversion.color}">
+                                </p:outputLabel>
+                            </h:panelGrid>
+                            <br></br>
+                            <br></br>
+                            <p:commandButton id="guardarComp" value="Guardar" icon="ui-icon-arrowthickstop-1-s" actionListener="#{registroPreInversion.Guardar_Comp()}" disabled="#{registroPreInversion.estado3}" update="tab"></p:commandButton>
+                        </center>
+                    </p:tab>
+
+                </p:tabView>
+                <p:dialog id="confirm" header="Confirmación" widgetVar="confirmacionDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" position="center center">
+                    <center>
+                        <p:outputLabel value="¿ESTÁ SEGURO DE LOS DATOS A GUARDAR?"/>
+                        <br></br>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="SÍ" actionListener="#{registroPreInversion.GuardarAG()}" update=":form:"/>
+                        <p:commandButton value="NO">
+                            <f:ajax event="click" onevent="confirmacionDialog.hide()"/>
+                        </p:commandButton>
+                    </h:panelGrid>
+                    </center>
+                </p:dialog>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

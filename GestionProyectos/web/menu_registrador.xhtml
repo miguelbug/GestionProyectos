@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <link rel="stylesheet" type="text/css" href="resources/css2/estilos.css" />
+        <script language="JavaScript" src="./resources/js/caducarSesiones.js" type="text/javascript"/>
+    </h:head>
+    <h:body style="background-color: #CCCCFF;">
+        <p:graphicImage url="/image/banner3.jpg" width="100%"/>
+        <h:form id="f2">            
+            <p:menubar>
+                <p:submenu label="REGISTRO" icon="ui-icon-pencil">
+                    <p:menuitem value="Pre Inversión" action="reg_preInversion?faces-redirect=true"/>
+                    <p:menuitem value="Inversión" action="reg_Inversion?faces-redirect=true"/>
+                    <p:menuitem value="Post Inversión"/>
+                </p:submenu>
+                <p:submenu label="BÚSQUEDA" icon="ui-icon-pencil">
+                    <p:menuitem value="Pre Inversión"  action="busq_preInversion?faces-redirect=true"/>
+                    <p:menuitem value="Inversión"/>
+                    <p:menuitem value="Post Inversión"/>
+                </p:submenu>
+                <p:submenu label="REPORTES" icon="ui-icon-wrench" styleClass="conf">
+                    <p:menuitem value="Pre Inversión"/>
+                    <p:menuitem value="Inversión"/>
+                    <p:menuitem value="Post Inversión"/>
+                </p:submenu>
+
+                <p:submenu label=" #{loginBean.usu.nombreUsuario}" icon="ui-icon-person" style="position:absolute; right:3px;" styleClass="conf">
+                    <p:menuitem value ="Salir" action="#{loginBean.logout()}" icon="ui-icon-close" />
+                </p:submenu>
+            </p:menubar>
+            <br></br>
+            <p:idleMonitor onidle="PF('sessionTimeOutDialog').show()" timeout="1800000"/><!-- control del timeout-->
+        </h:form>
+        <!-- Inicio control del timeout -->
+        <p:dialog header="SESIÓN CADUCADA" widgetVar="sessionTimeOutDialog" modal="true" closable="false" width="400" visible="false">
+            <h:form>
+                <center>
+                    <h:outputText value="Su sesión ha caducado, pulse el botón para reiniciar su sesión." /><br />
+                    <input type="submit" value="Reiniciar" onclick="setTimeout('redireccionar()', 0);"/>
+                </center>
+            </h:form>
+        </p:dialog>
+        <!-- Fin control del timeout -->
+    </h:body>
+</html>

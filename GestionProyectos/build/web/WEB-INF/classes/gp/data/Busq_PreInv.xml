@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="BusqPreInversion">
+    
+    <resultMap id="lista_busqPreInv" type="gp.model.BusqPreInversion">
+        <result property="c1" column="CODIGO"/>
+        <result property="c2" column="NOMBRE"/>
+        <result property="c3" column="ORIGEN"/>
+        <result property="c4" column="MONTOV"/>
+        <result property="c5" column="FECHAMOV"/>
+        <result property="c6" column="INFORMETECN"/>
+        <result property="c7" column="EXPADMIN"/>
+        <result property="c8" column="RESOLUC"/>
+        <result property="c9" column="NOMBOPI"/>
+        <result property="c10" column="NOMBNIV"/>
+        <result property="c11" column="EXPTECN"/>
+        <result property="c12" column="INFRA"/>
+        <result property="c13" column="EQUIPMOB"/>
+        <result property="c14" column="SUPERVISION"/>
+        <result property="c15" column="CAPACITACION"/>
+        <result property="c16" column="OTROS"/>
+        <result property="c17" column="FECHAMODIF"/>
+        <result property="c18" column="MONTOMODIF"/>
+    </resultMap>
+    
+    <resultMap id="lista_componentesHistorial" type="gp.model.busquedaPreInversionMontos">
+        <result property="exp_tecn" column="EXP_TECN"/>
+        <result property="infraestructura" column="INFRA"/>
+        <result property="equip_mobil" column="EQUIP_MOBIL"/>
+        <result property="supervision" column="SUPERV"/>
+        <result property="capacitacion" column="CAPACIT"/>
+        <result property="otros" column="OTROS"/>
+        <result property="fecha_reg" column="FECHA_REG"/>
+    </resultMap>
+    
+    <resultMap id="listaComponentesDeMonto" type="gp.model.busquedaPreInversionMontos">
+        <result property="exp_tecn" column="EXP_TECN"/>
+        <result property="infraestructura" column="INFRA"/>
+        <result property="equip_mobil" column="EQUIP_MOBIL"/>
+        <result property="supervision" column="SUPERV"/>
+        <result property="capacitacion" column="CAPACIT"/>
+        <result property="otros" column="OTROS"/>
+        <result property="idcomp" column="IDCOMP"/>
+    </resultMap>
+    
+    <resultMap id="validarProyecto" type="String">
+        <result property="codigo" column="IDPROY"/>
+    </resultMap>
+    
+    <select id="getBPI" resultMap="lista_busqPreInv" parameterType="String">
+        SELECT P.ID_PROYECTO AS CODIGO,
+        P.NOMBRE_PROY AS NOMBRE,
+        D.NOMBRE_DEP AS ORIGEN,
+        P.MONTO_VIAB AS MONTOV,
+        TO_CHAR(P.FECHA_VIAB,'DD/MM/YYYY') AS FECHAMOV,
+        P.INFORME_TECN AS INFORMETECN,
+        P.EXP_ADMIN AS EXPADMIN,
+        P.NUM_RR AS RESOLUC,
+        OP.NOMBRE_OPI AS NOMBOPI,
+        NE.NOMBRE_NIVEL AS NOMBNIV,
+        CO.EXP_TECN AS EXPTECN,
+        CO.INFRAESTRUCTURA AS INFRA,
+        CO.EQUIP_MOBIL AS EQUIPMOB,
+        CO.SUPERVISION AS SUPERVISION,
+        CO.CAPACITACION AS CAPACITACION,
+        CO.OTROS AS OTROS,
+        TO_CHAR(CO.FECHA_REG,'DD/MM/YYYY') AS FECHAMODIF,
+        CO.MONTO_MODIF AS MONTOMODIF
+        
+        FROM PROYECTO P, DEPENDENCIA D, OPI_RESP OP, NIVEL_ESTUD NE, COMPONENTES CO
+        WHERE P.ID_DEP=D.ID_DEP
+        AND P.ID_OPI=OP.ID_OPI
+        AND P.ID_NIVEL=NE.ID_NIVEL
+        AND P.ID_PROYECTO=CO.ID_PROYECTO
+        AND P.ID_PROYECTO=#{codigo}
+        AND TIPO_REG = (SELECT MAX (TIPO_REG) FROM COMPONENTES where ID_PROYECTO=#{codigo})
+        AND NUM_MONTO = (SELECT MAX (NUM_MONTO) FROM COMPONENTES where ID_PROYECTO=#{codigo})
+    </select>
+    
+    <insert id="insert_gnc" parameterType="gp.model.GuardarNuevComp">
+        INSERT INTO COMPONENTES (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,TIPO_REG,ID_PROYECTO,NUM_MONTO)
+        VALUES (#{exp_tecn},#{infraestructura},#{equip_mobil},#{supervision},#{capacitacion},#{otros},#{fecha_reg},#{monto_modif},#{tipo_reg},#{id_proyecto},#{num_monto})
+    </insert>
+    
+    <update id="update_Ag" parameterType="gp.model.AspectosGenerales">
+        UPDATE PROYECTO
+        SET
+        NOMBRE_PROY=#{nombre},
+        INFORME_TECN=#{informeTecnico},
+        MONTO_VIAB= #{montoViabilidad},
+        FECHA_VIAB = #{fechaViabilidad},
+        EXP_ADMIN=#{expedAdm},
+        ID_DEP=#{origen},
+        ID_OPI=#{opiResp},
+        ID_NIVEL=#{nivEstud},
+        NUM_RR=#{numRR}
+        WHERE ID_PROYECTO = #{codigo}
+    </update>
+    
+    <update id="update_Co" parameterType="gp.model.Componentes">
+        UPDATE COMPONENTES
+        SET
+        EXP_TECN=#{montoExpTec},
+        INFRAESTRUCTURA=#{montoInfra},
+        EQUIP_MOBIL=#{montoEquipMov},
+        SUPERVISION=#{montoSuperv},
+        CAPACITACION=#{montoCapac},
+        OTROS=#{montoOtros},
+        FECHA_REG=#{fecharegistro},
+        MONTO_MODIF=#{montoModif}
+        
+        WHERE ID_PROYECTO = #{codigoProy}
+        AND ID_COMP=#{idcomp}
+    </update>
+    
+    <select id="getMontosHistorial" resultMap="lista_componentesHistorial" parameterType="String">
+        SELECT EXP_TECN AS EXP_TECN,
+               INFRAESTRUCTURA AS INFRA,
+               EQUIP_MOBIL AS EQUIP_MOBIL,
+               SUPERVISION AS SUPERV,
+               CAPACITACION AS CAPACIT,
+               OTROS AS OTROS,
+               TO_CHAR(FECHA_REG,'DD/MM/YYYY') AS FECHA_REG
+        FROM COMPONENTES WHERE ID_PROYECTO=#{codigo}
+    </select>
+    
+    <select id="getComponenteDeMonto" resultMap="listaComponentesDeMonto" parameterType="java.util.Map">
+        SELECT EXP_TECN AS EXP_TECN,
+               INFRAESTRUCTURA AS INFRA,
+               EQUIP_MOBIL AS EQUIP_MOBIL,
+               SUPERVISION AS SUPERV,
+               CAPACITACION AS CAPACIT,
+               OTROS AS OTROS,
+               ID_COMP AS IDCOMP
+        FROM COMPONENTES WHERE ID_PROYECTO=#{codigo}
+        AND MONTO_MODIF||' - '||TO_CHAR(FECHA_REG,'DD/MM/YYYY') = #{montoFecha}
+    </select>
+    
+    <select id="validarProy" resultMap="validarProyecto" parameterType="String">
+        SELECT ID_PROYECTO as IDPROY FROM PROYECTO WHERE ID_PROYECTO=#{codigo}
+    </select>
+</mapper>

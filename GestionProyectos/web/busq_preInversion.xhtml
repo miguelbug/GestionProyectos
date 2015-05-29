@@ -1,0 +1,259 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:head>
+        <title>REGISTRO PRE INVERSION</title>
+        <link rel="stylesheet" type="text/css" href="resources/css2/estilos.css" />
+    </h:head>
+    <h:body>
+        <ui:composition template="./menucentral.xhtml">
+            <ui:define name="content">
+                <h:form id="form">
+                    <center>
+                        <h:panelGrid cellpadding="4" columns="4">
+                            <h:panelGrid columns="3" >
+                                <p:outputLabel value="SNIP : " style="color: white"/>
+                                <p:autoComplete id="autoCompleteLabel" value="#{busquedaPreInversion.b20}" completeMethod="#{busquedaPreInversion.coincidencias}"/>
+                                <p:commandButton value="Buscar" actionListener="#{busquedaPreInversion.cambiarAlBuscar()}" update=":form:" icon="ui-icon-search"/>
+                            </h:panelGrid>
+
+                            <h:panelGrid columns="2">
+                                <p:commandButton value="Agregar" actionListener="#{busquedaPreInversion.cambiarEstado()}" update=":form:tab" icon="ui-icon-plus" immediate="true" disabled="#{busquedaPreInversion.estado}"/>
+                                <p:commandButton value="Modificar" actionListener="#{busquedaPreInversion.cambiarEstado2()}" update=":form:tab" icon="ui-icon ui-icon-pencil" immediate="true" disabled="#{busquedaPreInversion.estado}"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </center>
+                    <br></br>
+                    <p:tabView dynamic="true" id="tab">
+                        <p:tab title="ASPECTOS GENERALES" id="tab1" >
+                            <center>
+                                <h:panelGrid columns="2" id="regPreInvAG" cellspacing="6">
+                                    <p:outputLabel value="Código"/>
+                                    <p:inputText value="#{busquedaPreInversion.b1}" style="text-transform:uppercase;" disabled="#{busquedaPreInversion.estado9}">
+                                    </p:inputText>
+
+                                    <p:outputLabel value="Nombre:"/>
+                                    <p:inputTextarea rows="2" cols="45" value="#{busquedaPreInversion.b2}" style="text-transform:uppercase;" disabled="#{busquedaPreInversion.estado2}"/>
+
+                                    <p:outputLabel value="Lugar de Origen:" rendered="#{busquedaPreInversion.estado3}"/>
+                                    <p:inputTextarea rows="1" cols="45" value="#{busquedaPreInversion.b3}" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
+
+
+                                    <p:outputLabel value="Tipo de Origen" rendered="#{busquedaPreInversion.estado4}"/>
+                                    <p:selectOneMenu value="#{busquedaPreInversion.tipo_origen}" rendered="#{busquedaPreInversion.estado4}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItem itemLabel="Facultad" itemValue="2"/>
+                                        <f:selectItem itemLabel="Dependencia" itemValue="1"/>
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.llenar_origen()}" update="origenSelect"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Origen:" rendered="#{busquedaPreInversion.estado4}"/>
+                                    <p:selectOneMenu value="#{busquedaPreInversion.origen}" filter="true" filterMatchMode="contains" styleClass="adicSO" id="origenSelect" rendered="#{busquedaPreInversion.estado4}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaPreInversion.lista_origen}"/>
+                                    </p:selectOneMenu>
+
+
+                                    <p:outputLabel value="Monto de Viabilidad:"/>
+                                    <pe:inputNumber value="#{busquedaPreInversion.b4D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado2}" emptyValue="empty" required="false">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+
+
+                                    <p:outputLabel value="Fecha de Viabilidad:"/>
+                                    <p:inputMask value="#{busquedaPreInversion.b5}" mask="99/99/9999" disabled="#{busquedaPreInversion.estado2}"/>
+
+                                    <p:outputLabel value="Monto Modificado:" rendered="#{busquedaPreInversion.estado5}"/>
+                                    <pe:inputNumber value="#{busquedaPreInversion.b6D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado9}" rendered="#{busquedaPreInversion.estado5}">
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+
+                                    <p:outputLabel value="Fecha Modificado:" rendered="#{busquedaPreInversion.estado5}"/>
+                                    <p:inputMask value="#{busquedaPreInversion.b7}" mask="99/99/9999" disabled="#{busquedaPreInversion.estado9}" rendered="#{busquedaPreInversion.estado5}"/>
+
+                                    <p:outputLabel value="Montos Modificados:" rendered="#{busquedaPreInversion.estado6}"/>
+                                    <p:dataList value="#{busquedaPreInversion.mdf}" var="car" type="ordered" rendered="#{busquedaPreInversion.estado6}" id="datalistID">
+                                        <f:facet name="header">
+                                            Montos Anteriores
+                                        </f:facet>
+                                        <center>
+                                            #{car.monto} - #{car.fecha}                                            
+                                        </center>
+                                    </p:dataList>
+
+                                    <p:outputLabel value="Nuevo Monto a Agregar:" rendered="#{busquedaPreInversion.estado6}"/>
+                                    <pe:inputNumber value="#{busquedaPreInversion.b24D}" thousandSeparator="," decimalSeparator="." rendered="#{busquedaPreInversion.estado6}" emptyValue="empty" required="false">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.guardarMontoModificado()}"/>
+                                    </pe:inputNumber>
+                                    
+                                    <p:outputLabel value="Fecha de Modificacion: " rendered="#{busquedaPreInversion.estado6}"/>
+                                    <p:inputMask value="#{busquedaPreInversion.fmm}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado6}">
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.guardarFechaModificacion()}"/>
+                                    </p:inputMask>
+
+                                    <p:outputLabel value="Escoja el Monto para Actualizar: " rendered="#{busquedaPreInversion.estado4}"/>
+                                    <p:selectOneMenu value="#{busquedaPreInversion.b25}" id="listaMontos" rendered="#{busquedaPreInversion.estado4}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaPreInversion.montosModif}"/>
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.getComponentesDeMonto()}" update="tab"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Monto Seleccionado: " rendered="#{busquedaPreInversion.estado4}"/>
+                                    <pe:inputNumber value="#{busquedaPreInversion.b26D}" thousandSeparator="," decimalSeparator="." rendered="#{busquedaPreInversion.estado4}" emptyValue="empty" required="false">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.guardarMontoSeleccionado()}" />
+                                    </pe:inputNumber>
+
+                                    <p:outputLabel value="Fecha Seleccionada: " rendered="#{busquedaPreInversion.estado4}"/>
+                                    <p:inputMask value="#{busquedaPreInversion.nuevaFecha}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado4}">
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.guardarFechaSeleccionada()}"/>
+                                    </p:inputMask>
+
+                                    <p:outputLabel value="Informe Técnico:" rendered="#{busquedaPreInversion.estado3}"/>
+                                    <p:inputText value="#{busquedaPreInversion.b8}" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
+
+                                    <p:outputLabel value="Expediente Adm:" rendered="#{busquedaPreInversion.estado3}"/>
+                                    <p:inputText value="#{busquedaPreInversion.b9}" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
+
+                                    <p:outputLabel value="Número de RR:" rendered="#{busquedaPreInversion.estado3}"/>
+                                    <p:inputText value="#{busquedaPreInversion.b10}" style="text-transform:uppercase;" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
+
+                                    <p:outputLabel value="OPI Responsable:" rendered="#{busquedaPreInversion.estado3}"/>
+                                    <p:inputText value="#{busquedaPreInversion.b11}" style="text-transform:uppercase;" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
+
+                                    <p:outputLabel value="Nivel de Estudio:" rendered="#{busquedaPreInversion.estado3}"/>
+                                    <p:inputText value="#{busquedaPreInversion.b12}" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
+
+
+                                    <p:outputLabel value="Informe Técnico:" rendered="#{busquedaPreInversion.estado4}"/>
+                                    <p:selectOneMenu value="#{busquedaPreInversion.b8}" style="text-transform:uppercase;" filter="true" filterMatchMode="contains" styleClass="adicSO" rendered="#{busquedaPreInversion.estado4}" editable="true">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaPreInversion.informes}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Expediente Adm:" rendered="#{busquedaPreInversion.estado4}"/>
+                                    <p:selectOneMenu value="#{busquedaPreInversion.b9}" style="text-transform:uppercase;" filter="true" filterMatchMode="contains" styleClass="adicSO" rendered="#{busquedaPreInversion.estado4}" editable="true">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaPreInversion.expedientes}"/>
+                                    </p:selectOneMenu>                                   
+
+                                    <p:outputLabel value="Número de RR:" rendered="#{busquedaPreInversion.estado4}"/>
+                                    <p:selectOneMenu value="#{busquedaPreInversion.b10}" style="text-transform:uppercase;" filter="true" filterMatchMode="contains" styleClass="adicSO" rendered="#{busquedaPreInversion.estado4}" editable="true">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaPreInversion.resoluciones}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="OPI Responsable:" rendered="#{busquedaPreInversion.estado4}"/>
+                                    <p:selectOneMenu value="#{busquedaPreInversion.b11}" filter="true" filterMatchMode="contains" styleClass="adicSO" rendered="#{busquedaPreInversion.estado4}" >
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaPreInversion.lista_opi}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Nivel de Estudio:" rendered="#{busquedaPreInversion.estado4}"/>
+                                    <p:selectOneMenu value="#{busquedaPreInversion.b12}" filter="true" filterMatchMode="contains" styleClass="adicSO" rendered="#{busquedaPreInversion.estado4}" >
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaPreInversion.lista_nivel}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <br></br>
+                                <br></br>
+                                <h:panelGrid cellpadding="4" columns="2">
+                                    <p:commandButton value="Guardar" disabled="#{busquedaPreInversion.estado8}" actionListener="#{busquedaPreInversion.modificarAspectosGenerales()}" icon="ui-icon ui-icon-check" update="tab" immediate="true"></p:commandButton>
+                                    <p:commandButton value="Cancelar" disabled="#{busquedaPreInversion.estado8}" actionListener="#{busquedaPreInversion.cambiarCanelar()}" update=":form:" icon="ui-icon ui-icon-close" immediate="true"></p:commandButton>
+                                </h:panelGrid>
+                            </center>
+                        </p:tab>
+                        <p:tab title="COMPONENTES" id="tab2">
+                            <center>
+                                <br></br>
+                                <br></br>
+
+                                <h:panelGrid columns="2" id="regPreInComp" cellspacing="6">
+                                    <p:outputLabel value=""/>
+                                    <p:outputLabel value="Monto"/>
+
+                                    <p:outputLabel value="Exp. Técnico:"/>
+                                    <pe:inputNumber value="#{busquedaPreInversion.b13D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
+                                    </pe:inputNumber>
+
+                                    <p:outputLabel value="Infraestructura:"/>
+                                    <pe:inputNumber value="#{busquedaPreInversion.b14D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
+                                    </pe:inputNumber>
+
+                                    <p:outputLabel value="Equipamiento y Mobiliario:"/>
+                                    <pe:inputNumber value="#{busquedaPreInversion.b15D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
+                                    </pe:inputNumber>
+
+                                    <p:outputLabel value="Supervisión:"/>
+                                    <pe:inputNumber value="#{busquedaPreInversion.b16D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
+                                    </pe:inputNumber>
+
+                                    <p:outputLabel value="Capacitación:"/>
+                                    <pe:inputNumber value="#{busquedaPreInversion.b17D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
+                                    </pe:inputNumber>
+
+                                    <p:outputLabel value="Otros"/>
+                                    <pe:inputNumber value="#{busquedaPreInversion.b18D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
+                                    </pe:inputNumber>
+
+                                    <p:outputLabel value="Total:"/>
+                                    <p:outputLabel value="#{busquedaPreInversion.b19}" id="totalBusqPreInv" styleClass="#{busquedaPreInversion.color}"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <p:commandButton value="Historial" icon="ui-icon-circle-zoomin" actionListener="#{busquedaPreInversion.mostrarHistorial()}" update=":form:historialComponentes" oncomplete="PF('historialComp').show()" immediate="true"/>
+                                <br></br>
+                                <br></br>
+                                <h:panelGrid cellpadding="4" columns="2">
+                                    <p:commandButton value="Guardar" id="guardComp" disabled="#{busquedaPreInversion.estado11}" actionListener="#{busquedaPreInversion.agregar_Actualizar()}" icon="ui-icon ui-icon-check" immediate="true" update="tab"></p:commandButton>
+                                    <p:commandButton value="Cancelar" id="cancelarComp" disabled="#{busquedaPreInversion.estado11}" actionListener="#{busquedaPreInversion.cambiarCanelar()}" update=":form:" icon="ui-icon ui-icon-close" immediate="true"></p:commandButton>
+                                </h:panelGrid>
+                            </center>
+                        </p:tab>
+                    </p:tabView>
+                    <p:dialog header="Historial de Componentes" modal="true" showEffect="fade" widgetVar="historialComp" hideEffect="fade" resizable="false" position="center center" id="historialComponentes" closeOnEscape="true">
+                        <p:dataTable var="historial" value="#{busquedaPreInversion.bqpim}" id="historialComponentesTable">
+                            <p:column headerText="FECHA" style="width: 9%; text-align: center" >
+                                <h:outputText value="#{historial.fecha_reg}" />
+                            </p:column>
+                            <p:column headerText="EXPEDIENTE TECNICO" style="width: 10%; text-align: center">
+                                <h:outputText value="#{historial.exp_tecn}" />
+                            </p:column>
+                            <p:column headerText="INFRAESTRUCTURA" style="width: 10%; text-align: center">
+                                <h:outputText value="#{historial.infraestructura}" />
+                            </p:column>
+                            <p:column headerText="EQUIPAMIENTO Y MOBILIDAD" style="width: 15%; text-align: center">
+                                <h:outputText value="#{historial.equip_mobil}" />
+                            </p:column>
+                            <p:column headerText="SUPERVISION" style="width: 10%; text-align: center">
+                                <h:outputText value="#{historial.supervision}" />
+                            </p:column>
+                            <p:column headerText="CAPACITACION" style="width: 10%;text-align: center">
+                                <h:outputText value="#{historial.capacitacion}" />
+                            </p:column>
+                            <p:column headerText="OTROS" style="width: 10%;text-align: center">
+                                <h:outputText value="#{historial.otros}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

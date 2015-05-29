@@ -1,0 +1,224 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <h:head>
+        <title>REGISTRO PRE INVERSION</title>
+        <link rel="stylesheet" type="text/css" href="resources/css2/estilos.css" />
+        <script language="JavaScript" src="./resources/js/caducarSesiones.js" type="text/javascript"/>
+    </h:head>
+    <h:body>
+        <ui:composition template="./menucentral.xhtml">
+            <ui:define name="content">
+                <h:form id="form">
+                    <center>
+                        <h:panelGrid cellpadding="3" columns="3">
+                            <p:outputLabel value="SNIP : " style="color: #036fab"/>
+                            <p:autoComplete id="autoCompleteLabel" value="#{registroInversion.cod_proy}" completeMethod="#{registroInversion.coincidencias}"/>
+                            <p:commandButton value="Buscar" icon="ui-icon-search" actionListener="#{registroInversion.mostrar()}" update=":form:"/>
+                        </h:panelGrid>
+                    </center>
+                    <br></br>
+                    <p:tabView orientation="left" rendered="#{registroInversion.mostrar}" dynamic="true" id="tab">
+                        <p:ajax event="tabChange" listener="#{registroInversion.onTabChange}" update="tab"/>
+                        <p:tab title="REGISTRO DE EXPEDIENTE TÉCNICO" id="tab1">
+                            <center>
+                                <br></br>
+                                <h2>REGISTRO DE EXPEDIENTE TÉCNICO</h2>
+                                <h3 id="nombreExpediente">EXPEDIENTE TÉCNICO N° #{registroInversion.nombreExp}</h3>
+                                <br></br>
+                                <h:panelGrid columns="2" cellpadding="6">
+                                    <p:outputLabel value="Monto S/"/>
+                                    <pe:inputNumber value="#{registroInversion.montoD}" thousandSeparator="," decimalSeparator=".">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:outputLabel value="R.R."/>
+                                    <p:selectOneMenu value="#{registroInversion.resolucion}" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
+                                        <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                        <f:selectItems value="#{registroInversion.resoluciones}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Fecha"/>
+                                    <p:inputMask mask="99/99/9999" value="#{registroInversion.fechaaux}"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <h:panelGrid>
+                                    <p:commandButton value="Aceptar" actionListener="#{registroInversion.guardarNuevoExpTecn()}" icon="ui-icon-check" update="tab">
+                                    </p:commandButton>
+                                </h:panelGrid>
+
+                            </center>
+                        </p:tab>
+                        <p:tab title="REGISTRO DE ADICIONAL(ES)" id="tab2">
+                            <center>
+                                <br></br>
+                                <h2>REGISTRO DE ADICIONAL</h2>
+                                <p:selectOneMenu value="#{registroInversion.adicional}" filter="true" effect="fade" id="adicionalSO" styleClass="adicSO" filterMatchMode="contains">
+                                    <f:selectItems value="#{registroInversion.listaExpedientes}"/>
+                                    <p:ajax event="change" listener="#{registroInversion.getAdicionales()}" update="tab"/>
+                                </p:selectOneMenu>
+                                <br></br>
+                                <h3 id="nombreAdicional">ADICIONAL N° #{registroInversion.nombredocu1}</h3>
+                                <br></br>
+                                <h:panelGrid columns="2" cellpadding="6">
+                                    <p:outputLabel value="Monto"/>
+                                    <pe:inputNumber value="#{registroInversion.monto_adicD}" thousandSeparator="," decimalSeparator=".">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:outputLabel value="R.R."/>
+                                    <p:selectOneMenu value="#{registroInversion.resolucion_adic}" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
+                                        <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                        <f:selectItems value="#{registroInversion.resoluciones}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Fecha"/>
+                                    <p:inputMask mask="99/99/9999" value="#{registroInversion.fechaaux_adic}"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <h:panelGrid>
+                                    <p:commandButton value="Aceptar" actionListener="#{registroInversion.guardarNuevoAdicional()}" icon="ui-icon-check" update="tab"/>
+                                </h:panelGrid>
+                            </center>
+                        </p:tab>
+                        <p:tab title="REGISTRO DE DEDUCTIVO(S)" id="tab3">
+                            <center>
+                                <br></br>
+                                <h2>REGISTRO DE DEDUCTIVO</h2>
+                                <p:selectOneMenu value="#{registroInversion.deductivo}" filter="true" effect="fade" filterMatchMode="contains" id="deductivoSo" styleClass="dedSO">
+                                    <f:selectItems value="#{registroInversion.listaExpedientes}"/>
+                                    <p:ajax event="change" listener="#{registroInversion.getDeductivos()}" update="tab"/>
+                                </p:selectOneMenu>
+                                <br></br>
+                                <h3 id="nombreDeductivo">DEDUCTIVO N° #{registroInversion.nombredocu2}</h3>
+                                <br></br>
+                                <h:panelGrid columns="2" cellpadding="6">
+                                    <p:outputLabel value="Monto"/>
+                                    <pe:inputNumber value="#{registroInversion.monto_deducD}" thousandSeparator="," decimalSeparator=".">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:outputLabel value="R.R."/>
+                                    <p:selectOneMenu value="#{registroInversion.resolucion_deduc}" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
+                                        <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                        <f:selectItems value="#{registroInversion.resoluciones}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Fecha"/>
+                                    <p:inputMask mask="99/99/9999" value="#{registroInversion.fechaaux_deduc}"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <h:panelGrid>
+                                    <p:commandButton value="Aceptar" actionListener="#{registroInversion.guardarNuevoDeductivo()}" icon="ui-icon-check" update="tab"/>
+                                </h:panelGrid>
+                            </center>
+                        </p:tab>
+                        <p:tab title="REGISTRO DE CONTRATO(S)" id="tab4">
+                            <center>
+                                <br></br>
+                                <h2>REGISTRO DE CONTRATO</h2>
+                                <p:selectOneMenu value="#{registroInversion.contrato}" filter="true" effect="fade" filterMatchMode="contains" id="deductivoSo2" styleClass="dedSO">
+                                    <f:selectItems value="#{registroInversion.listaExpedientes}"/>
+                                </p:selectOneMenu>
+                                <br></br>
+                                <br></br>
+                                <h:panelGrid columns="2">
+                                    <p:outputLabel value="CONTRATO N° "></p:outputLabel>
+                                    <p:inputText value="#{registroInversion.nombredocu3}"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <h:panelGrid columns="2" cellpadding="6">
+                                    <p:outputLabel value="Monto"/>
+                                    <pe:inputNumber value="#{registroInversion.monto_contratoD}" thousandSeparator="," decimalSeparator=".">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:outputLabel value="Fecha"/>
+                                    <p:inputMask mask="99/99/9999" value="#{registroInversion.fecha_contrato}"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <h:panelGrid>
+                                    <p:commandButton value="Aceptar" actionListener="#{registroInversion.guardarNuevoContrato()}" icon="ui-icon-check" update="tab"/>
+                                </h:panelGrid>
+                            </center>
+                        </p:tab>
+                        <p:tab title="REGISTRO DE EJECUCIÓN" id="tab5">
+                            <center>
+                                <br></br>
+                                <h2>REGISTRO DE EJECUCIÓN</h2>
+                                <h:panelGrid columns="4" cellspacing="6">
+                                    <p:outputLabel value="Mes"/>
+                                    <p:selectOneMenu value="#{registroInversion.mes}" filter="true" filterMatchMode="contains">
+                                        <f:selectItems value="#{registroInversion.lista_mes}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Año"/>
+                                    <p:selectOneMenu value="#{registroInversion.anio}" filter="true" filterMatchMode="contains">
+                                        <f:selectItems value="#{registroInversion.lista_anio}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <br></br>
+                                <h:panelGrid columns="3" id="regPreInComp" cellpadding="6">
+                                    <p:outputLabel value=""/>
+                                    <p:outputLabel value="Monto"/>
+                                    <p:outputLabel value=""/>
+                                    <p:outputLabel value="Exp. Técnico: S/."/>
+                                    <pe:inputNumber value="#{registroInversion.exp_tecnicoD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{registroInversion.sumaComponentes()}" update="sumatot"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{registroInversion.t1}">
+                                        <f:selectItems value="#{registroInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Infraestructura: S/."/>
+                                    <pe:inputNumber value="#{registroInversion.infraestructuraD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{registroInversion.sumaComponentes()}" update="sumatot"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{registroInversion.t2}">
+                                        <f:selectItems value="#{registroInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Equipamiento y Mobiliario: S/."/>
+                                    <pe:inputNumber value="#{registroInversion.equip_mobiliD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{registroInversion.sumaComponentes()}" update="sumatot"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{registroInversion.t3}">
+                                        <f:selectItems value="#{registroInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Supervisión: S/."/>
+                                    <pe:inputNumber value="#{registroInversion.supervisionD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{registroInversion.sumaComponentes()}" update="sumatot"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{registroInversion.t4}">
+                                        <f:selectItems value="#{registroInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Capacitación: S/."/>
+                                    <pe:inputNumber value="#{registroInversion.capacitacionD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{registroInversion.sumaComponentes()}" update="sumatot"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{registroInversion.t5}">
+                                        <f:selectItems value="#{registroInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Otros: S/."/>
+                                    <pe:inputNumber value="#{registroInversion.otrosD}" thousandSeparator="," decimalSeparator="." emptyValue="empty">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                        <p:ajax event="change" listener="#{registroInversion.sumaComponentes()}" update="sumatot"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{registroInversion.t6}">
+                                        <f:selectItems value="#{registroInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Total: S/."/>
+                                    <p:outputLabel value="#{registroInversion.total}" id="sumatot"></p:outputLabel>
+                                </h:panelGrid><br></br>
+                                <h:panelGrid>
+                                    <p:commandButton value="Aceptar" actionListener="#{registroInversion.registroEjecucion()}" icon="ui-icon-check" update="tab"/>
+                                </h:panelGrid>
+
+                            </center>
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
