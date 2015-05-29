@@ -91,7 +91,7 @@
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.guardarMontoModificado()}"/>
                                     </pe:inputNumber>
-                                    
+
                                     <p:outputLabel value="Fecha de Modificacion: " rendered="#{busquedaPreInversion.estado6}"/>
                                     <p:inputMask value="#{busquedaPreInversion.fmm}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado6}">
                                         <p:ajax event="change" listener="#{busquedaPreInversion.guardarFechaModificacion()}"/>
@@ -217,7 +217,7 @@
                                     <p:outputLabel value="#{busquedaPreInversion.b19}" id="totalBusqPreInv" styleClass="#{busquedaPreInversion.color}"/>
                                 </h:panelGrid>
                                 <br></br>
-                                <p:commandButton value="Historial" icon="ui-icon-circle-zoomin" actionListener="#{busquedaPreInversion.mostrarHistorial()}" update=":form:historialComponentes" oncomplete="PF('historialComp').show()" immediate="true"/>
+                                <p:commandButton value="Historial" icon="ui-icon-circle-zoomin" actionListener="#{busquedaPreInversion.mostrarHistorial()}" update=":form:historialMontos,:form:historialComponentesTable" oncomplete="PF('historialComp').show()" immediate="true"/>
                                 <br></br>
                                 <br></br>
                                 <h:panelGrid cellpadding="4" columns="2">
@@ -227,7 +227,24 @@
                             </center>
                         </p:tab>
                     </p:tabView>
-                    <p:dialog header="Historial de Componentes" modal="true" showEffect="fade" widgetVar="historialComp" hideEffect="fade" resizable="false" position="center center" id="historialComponentes" closeOnEscape="true">
+                    <p:dialog header="Historial de Componentes" modal="true" showEffect="fade" widgetVar="historialComp" hideEffect="fade" resizable="true" position="center center" id="historialComponentes" closeOnEscape="true">
+                        <p:outputLabel value="Historial de Montos"/>
+                        <br></br>
+                        <p:dataTable var="variab" value="#{busquedaPreInversion.historialMontos}" id="historialMontos" style="width: 40%">
+                            <p:column headerText="MODIFICADO" style="width: 4%; text-align: center">
+                                <h:outputText value="#{variab.nombreMonto}" />
+                            </p:column>
+                            <p:column headerText="MONTO" style="width: 3%; text-align: center" >
+                                <h:outputText value="#{variab.montoviable}" />
+                            </p:column>
+                            <p:column headerText="FECHA" style="width: 3%; text-align: center">
+                                <h:outputText value="#{variab.fecha}" />
+                            </p:column>
+                        </p:dataTable>
+                        <br></br>
+                        <br></br>
+                        <p:outputLabel value="Historial de Componentes"/>
+                        <br></br>
                         <p:dataTable var="historial" value="#{busquedaPreInversion.bqpim}" id="historialComponentesTable">
                             <p:column headerText="FECHA" style="width: 9%; text-align: center" >
                                 <h:outputText value="#{historial.fecha_reg}" />
