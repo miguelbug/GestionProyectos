@@ -6,6 +6,7 @@
 
 package gp.model;
 
+import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -15,7 +16,7 @@ import javax.faces.bean.RequestScoped;
  */
 @ManagedBean
 @RequestScoped
-public class Registro_Inversion {
+public class Registro_Inversion implements Serializable{
 
     private String nombre_exp;
     private String codigo;

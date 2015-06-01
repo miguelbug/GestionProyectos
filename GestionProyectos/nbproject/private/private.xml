@@ -5,8 +5,10 @@
         <group>
             <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/data/ListasGenerales.xml</file>
             <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/bean/BusquedaPreInversion.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/dao/ListasGeneralesDAO.java</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/model/busquedaPreInversionMontos.java</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/data/Busq_PreInv.xml</file>
             <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/web/busq_preInversion.xhtml</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/daoImpl/BusqPreInversionDaoImpl.java</file>
             <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/daoImpl/ListasGeneralesDaoImpl.java</file>
         </group>
     </open-files>

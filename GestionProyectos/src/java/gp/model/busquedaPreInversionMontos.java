@@ -6,6 +6,7 @@
 
 package gp.model;
 
+import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -15,7 +16,7 @@ import javax.faces.bean.RequestScoped;
  */
 @ManagedBean
 @RequestScoped
-public class busquedaPreInversionMontos {
+public class busquedaPreInversionMontos implements Serializable{
 
     private String exp_tecn;
     private String infraestructura;
@@ -93,4 +94,5 @@ public class busquedaPreInversionMontos {
         this.idcomp = idcomp;
     }
     
+      
 }

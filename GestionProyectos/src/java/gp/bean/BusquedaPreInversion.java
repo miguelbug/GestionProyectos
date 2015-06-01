@@ -187,7 +187,7 @@ public class BusquedaPreInversion {
         for (int i = 0; i < lista.size(); i++) {
             b13D = Double.parseDouble(lista.get(i).getExp_tecn());
             b14D = Double.parseDouble(lista.get(i).getInfraestructura());
-            b15D = Double.parseDouble(lista.get(i).getEquip_mobil());
+            b15D =Double.parseDouble(lista.get(i).getEquip_mobil());
             b16D = Double.parseDouble(lista.get(i).getSupervision());
             b17D = Double.parseDouble(lista.get(i).getCapacitacion());
             b18D = Double.parseDouble(lista.get(i).getOtros());
@@ -255,9 +255,9 @@ public class BusquedaPreInversion {
                 historialMontos.add(listaaux.get(i));
             }
             bqpim = bpi.getMontoHistorial(b20);
-            System.out.println("ACA ES: " + bqpim.size() + " " + historialMontos.size());
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
