@@ -6,6 +6,7 @@
 
 package gp.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -16,7 +17,7 @@ import javax.faces.bean.RequestScoped;
  */
 @ManagedBean
 @RequestScoped
-public class Ejecucion {
+public class Ejecucion implements Serializable{
 
     private Integer idEjecucion;
     private String mes;

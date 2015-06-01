@@ -133,7 +133,7 @@ public class BusquedaPreInversion {
         widhtcomp = "";
         rpd = new RegistroPreInversionDaoImpl();
         rid = new RegistroInversionDaoImpl();
-        historialMontos= new ArrayList<HistorialMontos>();
+        historialMontos = new ArrayList<HistorialMontos>();
         estado10 = -1;
         estado = true;
         estado4 = false;
@@ -187,7 +187,7 @@ public class BusquedaPreInversion {
         for (int i = 0; i < lista.size(); i++) {
             b13D = Double.parseDouble(lista.get(i).getExp_tecn());
             b14D = Double.parseDouble(lista.get(i).getInfraestructura());
-            b15D = Double.parseDouble(lista.get(i).getEquip_mobil());
+            b15D =Double.parseDouble(lista.get(i).getEquip_mobil());
             b16D = Double.parseDouble(lista.get(i).getSupervision());
             b17D = Double.parseDouble(lista.get(i).getCapacitacion());
             b18D = Double.parseDouble(lista.get(i).getOtros());
@@ -249,15 +249,15 @@ public class BusquedaPreInversion {
         bqpim.clear();
         try {
             historialMontos.add(lgd.getMontoViable(b20));
-            List<HistorialMontos> listaaux= new ArrayList<HistorialMontos>();
-            listaaux=lgd.getMontosHistorial(b20);
-            for(int i=0;i<listaaux.size();i++){
+            List<HistorialMontos> listaaux = new ArrayList<HistorialMontos>();
+            listaaux = lgd.getMontosHistorial(b20);
+            for (int i = 0; i < listaaux.size(); i++) {
                 historialMontos.add(listaaux.get(i));
-            }            
+            }
             bqpim = bpi.getMontoHistorial(b20);
-            System.out.println("ACA ES: "+bqpim.size()+" "+historialMontos.size());
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -395,7 +395,8 @@ public class BusquedaPreInversion {
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         } else {
             estado = false;
-            estado8 = false;
+            estado8 = true;
+            estado11 = true;
 
             listaBPI = bpi.listaBusqPI(b20);
             for (int i = 0; i < listaBPI.size(); i++) {
@@ -464,22 +465,18 @@ public class BusquedaPreInversion {
         b19 = String.valueOf(valor);
         if (estado10 == 0) {
             if (Double.parseDouble(b19) == Double.parseDouble(aux1)) {
-                System.out.println(estado10 + " " + b19 + " " + aux1 + " " + "iguales");
                 color = "clase1";
                 estado11 = false;
             } else {
-                System.out.println(estado10 + " " + b19 + " " + aux1 + " " + "diferentes");
                 color = "clase2";
                 estado11 = true;
             }
         } else {
             if (estado10 == 1) {
                 if (Double.parseDouble(b19) == Double.parseDouble(b24Daux)) {
-                    System.out.println(estado10 + " " + b19 + " " + b24Daux + " " + "iguales");
                     color = "clase1";
                     estado11 = false;
                 } else {
-                    System.out.println(estado10 + " " + b19 + " " + b24Daux + " " + "diferentes");
                     color = "clase2";
                     estado11 = true;
                 }
@@ -522,6 +519,8 @@ public class BusquedaPreInversion {
             RequestContext.getCurrentInstance().showMessageInDialog(message);
             mdf.clear();
             mdf = montd.getMontosModificados(b20);
+            b24D=0.0;
+            fmm="";
         } catch (Exception e) {
             System.out.println(e.getMessage());
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HAN GUARDADO LOS COMPONENTES");
@@ -539,9 +538,13 @@ public class BusquedaPreInversion {
         estado7 = false;
         estado8 = true;
         estado11 = false;
-        mdf = montd.getMontosModificados(b20);
+        estado9 = true;
         estado10 = 1;
         limpiarComponentes();
+        System.out.println("AGREGAR");
+        mdf.clear();
+        mdf = montd.getMontosModificados(b20);
+        
     }
 
     public void cambiarEstado2() {
@@ -559,6 +562,8 @@ public class BusquedaPreInversion {
         getExpedientesLista();
         getInformesLista();
         getResolucionesLista();
+        System.out.println("MODIFICAR");
+        montosModif.clear();
         List<Montos> listaaux = montd.getMontosModificados(b20);
         for (int i = 0; i < listaaux.size(); i++) {
             this.montosModif.add(listaaux.get(i).getMonto() + " - " + listaaux.get(i).getFecha());

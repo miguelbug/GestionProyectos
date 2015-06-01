@@ -7,6 +7,7 @@
 package gp.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -18,21 +19,21 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class HistorialMontos implements Serializable{
 
-    private String montoviable;
+    private BigDecimal montoviable;
     private String fecha;
     private String nombreMonto;
     
     public HistorialMontos() {
     }
 
-    public String getMontoviable() {
+    public BigDecimal getMontoviable() {
         return montoviable;
     }
 
-    public void setMontoviable(String montoviable) {
+    public void setMontoviable(BigDecimal montoviable) {
         this.montoviable = montoviable;
     }
-
+    
     public String getFecha() {
         return fecha;
     }
