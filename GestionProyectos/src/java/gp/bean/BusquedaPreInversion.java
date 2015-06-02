@@ -402,6 +402,7 @@ public class BusquedaPreInversion {
             estado11 = true;
 
             listaBPI_1 = bpi.listaBusqPI(b20);
+            System.out.println("LISTA1: "+listaBPI_1.size());
             listaBPI_2 = bpi.listaBusqPI_2(b20);
             for (int i = 0; i < listaBPI_1.size(); i++) {
                 b1 = listaBPI_1.get(i).getC1();
