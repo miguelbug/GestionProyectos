@@ -138,4 +138,20 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
         return list;
     }
 
+    @Override
+    public List<BusqPreInversion> listaBusqPI_2(String codigo) {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<BusqPreInversion> list = null;
+        try {
+            list = session.selectList("BusqPreInversion.getBPI_2", codigo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
 }

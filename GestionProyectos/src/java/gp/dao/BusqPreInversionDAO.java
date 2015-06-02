@@ -19,6 +19,7 @@ import java.util.List;
  */
 public interface BusqPreInversionDAO {
     public List<BusqPreInversion> listaBusqPI(String codigo);
+    public List<BusqPreInversion> listaBusqPI_2(String codigo);
     public void guardarNuevosComponentes(GuardarNuevComp gnc);
     public void actualizarAspectosGenerales(AspectosGenerales ag);
     public void actualizarComponentes(Componentes c);

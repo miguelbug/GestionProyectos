@@ -16,6 +16,9 @@
         <result property="c8" column="RESOLUC"/>
         <result property="c9" column="NOMBOPI"/>
         <result property="c10" column="NOMBNIV"/>
+    </resultMap>
+    
+    <resultMap id="lista_busqPreInv2" type="gp.model.BusqPreInversion">
         <result property="c11" column="EXPTECN"/>
         <result property="c12" column="INFRA"/>
         <result property="c13" column="EQUIPMOB"/>
@@ -56,12 +59,22 @@
         D.NOMBRE_DEP AS ORIGEN,
         P.MONTO_VIAB AS MONTOV,
         TO_CHAR(P.FECHA_VIAB,'DD/MM/YYYY') AS FECHAMOV,
-        P.INFORME_TECN AS INFORMETECN,
-        P.EXP_ADMIN AS EXPADMIN,
-        P.NUM_RR AS RESOLUC,
+        DECODE(P.INFORME_TECN,NULL,'SIN INFORME',P.INFORME_TECN) AS INFORMETECN,
+        DECODE(P.EXP_ADMIN,NULL,'SIN EXPEDIENTE',P.EXP_ADMIN) AS EXPADMIN,
+        DECODE(P.NUM_RR,NULL,'SIN RESOLUCION',P.NUM_RR) AS RESOLUC,
         OP.NOMBRE_OPI AS NOMBOPI,
-        NE.NOMBRE_NIVEL AS NOMBNIV,
-        CO.EXP_TECN AS EXPTECN,
+        NE.NOMBRE_NIVEL AS NOMBNIV
+        
+        
+        FROM PROYECTO P, DEPENDENCIA D, OPI_RESP OP, NIVEL_ESTUD NE
+        WHERE P.ID_DEP=D.ID_DEP
+        AND P.ID_OPI=OP.ID_OPI
+        AND P.ID_NIVEL=NE.ID_NIVEL
+        AND P.ID_PROYECTO=#{codigo}
+    </select>
+    
+    <select id="getBPI_2" resultMap="lista_busqPreInv2" parameterType="String">
+        SELECT CO.EXP_TECN AS EXPTECN,
         CO.INFRAESTRUCTURA AS INFRA,
         CO.EQUIP_MOBIL AS EQUIPMOB,
         CO.SUPERVISION AS SUPERVISION,
@@ -70,14 +83,9 @@
         TO_CHAR(CO.FECHA_REG,'DD/MM/YYYY') AS FECHAMODIF,
         CO.MONTO_MODIF AS MONTOMODIF
         
-        FROM PROYECTO P, DEPENDENCIA D, OPI_RESP OP, NIVEL_ESTUD NE, COMPONENTES CO
-        WHERE P.ID_DEP=D.ID_DEP
-        AND P.ID_OPI=OP.ID_OPI
-        AND P.ID_NIVEL=NE.ID_NIVEL
-        AND P.ID_PROYECTO=CO.ID_PROYECTO
+        FROM PROYECTO P, COMPONENTES CO
+        WHERE P.ID_PROYECTO=CO.ID_PROYECTO
         AND P.ID_PROYECTO=#{codigo}
-        AND TIPO_REG = (SELECT MAX (TIPO_REG) FROM COMPONENTES where ID_PROYECTO=#{codigo})
-        AND NUM_MONTO = (SELECT MAX (NUM_MONTO) FROM COMPONENTES where ID_PROYECTO=#{codigo})
     </select>
     
     <insert id="insert_gnc" parameterType="gp.model.GuardarNuevComp">

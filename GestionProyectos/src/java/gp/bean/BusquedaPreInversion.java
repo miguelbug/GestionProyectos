@@ -85,7 +85,8 @@ public class BusquedaPreInversion {
     private boolean estado11;
     private boolean estado12;
     private int estado10;
-    private List<BusqPreInversion> listaBPI;
+    private List<BusqPreInversion> listaBPI_1;
+    private List<BusqPreInversion> listaBPI_2;
     private String cantidad;
     private BusqPreInversionDAO bpi;
     private MontosDAO montd;
@@ -122,7 +123,8 @@ public class BusquedaPreInversion {
 
     public BusquedaPreInversion() {
         cantidad = "2";
-        listaBPI = new ArrayList<BusqPreInversion>();
+        listaBPI_1 = new ArrayList<BusqPreInversion>();
+        listaBPI_2 = new ArrayList<BusqPreInversion>();
         bpi = new BusqPreInversionDaoImpl();
         mdf = new ArrayList<Montos>();
         montd = new MontosDaoImpl();
@@ -187,7 +189,7 @@ public class BusquedaPreInversion {
         for (int i = 0; i < lista.size(); i++) {
             b13D = Double.parseDouble(lista.get(i).getExp_tecn());
             b14D = Double.parseDouble(lista.get(i).getInfraestructura());
-            b15D =Double.parseDouble(lista.get(i).getEquip_mobil());
+            b15D = Double.parseDouble(lista.get(i).getEquip_mobil());
             b16D = Double.parseDouble(lista.get(i).getSupervision());
             b17D = Double.parseDouble(lista.get(i).getCapacitacion());
             b18D = Double.parseDouble(lista.get(i).getOtros());
@@ -386,6 +388,7 @@ public class BusquedaPreInversion {
     }
 
     public void cambiarAlBuscar() {
+        limpiarComponentes();
         FacesMessage message = null;
         if (b20 == "") {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "DEBE LLENAR EL CAMPO");
@@ -398,33 +401,36 @@ public class BusquedaPreInversion {
             estado8 = true;
             estado11 = true;
 
-            listaBPI = bpi.listaBusqPI(b20);
-            for (int i = 0; i < listaBPI.size(); i++) {
-                b1 = listaBPI.get(i).getC1();
-                b2 = listaBPI.get(i).getC2();
-                b3 = listaBPI.get(i).getC3();
-                b4D = Double.parseDouble(listaBPI.get(i).getC4());
-                b5 = listaBPI.get(i).getC5();
-                b8 = listaBPI.get(i).getC6();
-                b9 = listaBPI.get(i).getC7();
-                b10 = listaBPI.get(i).getC8();
-                b11 = listaBPI.get(i).getC9();
-                b12 = listaBPI.get(i).getC10();
-                b13D = Double.parseDouble(listaBPI.get(i).getC11());
-                b14D = Double.parseDouble(listaBPI.get(i).getC12());
-                b15D = Double.parseDouble(listaBPI.get(i).getC13());
-                b16D = Double.parseDouble(listaBPI.get(i).getC14());
-                b17D = Double.parseDouble(listaBPI.get(i).getC15());
-                b18D = Double.parseDouble(listaBPI.get(i).getC16());
-                b7 = listaBPI.get(i).getC17();
-                b6D = Double.parseDouble(listaBPI.get(i).getC18());
+            listaBPI_1 = bpi.listaBusqPI(b20);
+            listaBPI_2 = bpi.listaBusqPI_2(b20);
+            for (int i = 0; i < listaBPI_1.size(); i++) {
+                b1 = listaBPI_1.get(i).getC1();
+                b2 = listaBPI_1.get(i).getC2();
+                b3 = listaBPI_1.get(i).getC3();
+                b4D = Double.parseDouble(listaBPI_1.get(i).getC4());
+                b5 = listaBPI_1.get(i).getC5();
+                b8 = listaBPI_1.get(i).getC6();
+                b9 = listaBPI_1.get(i).getC7();
+                b10 = listaBPI_1.get(i).getC8();
+                b11 = listaBPI_1.get(i).getC9();
+                b12 = listaBPI_1.get(i).getC10();
             }
-            BigDecimal suma1 = new BigDecimal(b13D);
-            BigDecimal suma2 = new BigDecimal(b14D);
-            BigDecimal suma3 = new BigDecimal(b15D);
-            BigDecimal suma4 = new BigDecimal(b16D);
-            BigDecimal suma5 = new BigDecimal(b17D);
-            BigDecimal suma6 = new BigDecimal(b18D);
+            for (int i = 0; i < listaBPI_2.size(); i++) {
+                b13D = Double.parseDouble(listaBPI_2.get(i).getC11() == null ? "0.0" : listaBPI_2.get(i).getC11());
+                b14D = Double.parseDouble(listaBPI_2.get(i).getC12() == null ? "0.0" : listaBPI_2.get(i).getC12());
+                b15D = Double.parseDouble(listaBPI_2.get(i).getC13() == null ? "0.0" : listaBPI_2.get(i).getC13());
+                b16D = Double.parseDouble(listaBPI_2.get(i).getC14() == null ? "0.0" : listaBPI_2.get(i).getC14());
+                b17D = Double.parseDouble(listaBPI_2.get(i).getC15() == null ? "0.0" : listaBPI_2.get(i).getC15());
+                b18D = Double.parseDouble(listaBPI_2.get(i).getC16() == null ? "0.0" : listaBPI_2.get(i).getC16());
+                b7 = listaBPI_2.get(i).getC17();
+                b6D = Double.parseDouble(listaBPI_2.get(i).getC18() == null ? "0.0" : listaBPI_2.get(i).getC18());
+            }
+            BigDecimal suma1 = new BigDecimal(b13D == null ? 0.0 : b13D);
+            BigDecimal suma2 = new BigDecimal(b14D == null ? 0.0 : b14D);
+            BigDecimal suma3 = new BigDecimal(b15D == null ? 0.0 : b15D);
+            BigDecimal suma4 = new BigDecimal(b16D == null ? 0.0 : b16D);
+            BigDecimal suma5 = new BigDecimal(b17D == null ? 0.0 : b17D);
+            BigDecimal suma6 = new BigDecimal(b18D == null ? 0.0 : b18D);
             BigDecimal suma = suma1.add(suma2).add(suma3).add(suma4).add(suma5).add(suma6);
             b19 = String.valueOf(suma);
         }
@@ -519,8 +525,8 @@ public class BusquedaPreInversion {
             RequestContext.getCurrentInstance().showMessageInDialog(message);
             mdf.clear();
             mdf = montd.getMontosModificados(b20);
-            b24D=0.0;
-            fmm="";
+            b24D = 0.0;
+            fmm = "";
         } catch (Exception e) {
             System.out.println(e.getMessage());
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HAN GUARDADO LOS COMPONENTES");
@@ -544,7 +550,7 @@ public class BusquedaPreInversion {
         System.out.println("AGREGAR");
         mdf.clear();
         mdf = montd.getMontosModificados(b20);
-        
+
     }
 
     public void cambiarEstado2() {
@@ -765,12 +771,20 @@ public class BusquedaPreInversion {
         this.cantidad = cantidad;
     }
 
-    public List getListaBPI() {
-        return listaBPI;
+    public List<BusqPreInversion> getListaBPI_1() {
+        return listaBPI_1;
     }
 
-    public void setListaBPI(List listaBPI) {
-        this.listaBPI = listaBPI;
+    public void setListaBPI_1(List<BusqPreInversion> listaBPI_1) {
+        this.listaBPI_1 = listaBPI_1;
+    }
+
+    public List<BusqPreInversion> getListaBPI_2() {
+        return listaBPI_2;
+    }
+
+    public void setListaBPI_2(List<BusqPreInversion> listaBPI_2) {
+        this.listaBPI_2 = listaBPI_2;
     }
 
     public BusqPreInversionDAO getBpi() {
