@@ -509,6 +509,9 @@ public class BusquedaPreInversion {
         FacesMessage message = null;
         try {
             String numero = montd.getNumMonto(b20);
+            if(numero==null || numero==""){
+                numero="0";
+            }
             int numero_parse = Integer.parseInt(numero) + 1;
             gnc.setNum_monto(Double.parseDouble(String.valueOf(numero_parse)));
             gnc.setExp_tecn(b13D == null ? 0.0 : b13D);
@@ -530,6 +533,7 @@ public class BusquedaPreInversion {
             fmm = "";
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HAN GUARDADO LOS COMPONENTES");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         }
@@ -561,7 +565,7 @@ public class BusquedaPreInversion {
         estado5 = false;
         estado6 = false;
         estado7 = false;
-        estado9 = false;
+        estado9 = true;
         estado8 = false;
         estado10 = 0;
         estado11 = false;

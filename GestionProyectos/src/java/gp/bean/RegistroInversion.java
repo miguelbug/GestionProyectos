@@ -54,8 +54,8 @@ public class RegistroInversion {
 
     private String cod_proy;
     private boolean mostrar;
-    private String adicional;
-    private String deductivo;
+    private String adicional=" ";
+    private String deductivo=" ";
 
     private String monto_contrato;
     private Double monto_contratoD = null;
@@ -270,13 +270,26 @@ public class RegistroInversion {
 
     public String partirCadena(String valor) {
         StringTokenizer stk = new StringTokenizer(valor, " ");
-        String[] cadena = new String[4];
+        String[] cadena;
+        String retorna="";
+        if(valor.equals("Seleccione Expediente")){
+            cadena = new String[2];
+        }else{
+            cadena = new String[4];
+        }
         int i = 0;
         while (stk.hasMoreElements()) {
             cadena[i] = stk.nextToken();
             i++;
         }
-        return cadena[3];
+        if(cadena.length==2){
+            retorna=cadena[1];
+        }else{
+            if(cadena.length==4){
+                retorna=cadena[3];
+            }
+        }
+        return retorna;
     }
 
     public void guardarNuevoAdicional() {
@@ -371,32 +384,41 @@ public class RegistroInversion {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
     public void getAdicionales() {
         try {
-            
-            System.out.println("CODIGO PROY ADICIONALES: "+cod_proy);
-            nombredocu1 = rid.getNombreDocumentos(cod_proy, "2", partirCadena(adicional));
-            if (nombredocu1 == null) {
+            System.out.println("CODIGO PROY ADICIONALES: "+cod_proy+" ADICIONAL: "+adicional);
+            if(adicional.equals(" ") || adicional.equals("")){
+                System.out.println("por defecto Ad");
                 nombredocu1 = "1";
+            }else{
+                System.out.println("consulta BD AD");
+                nombredocu1 = rid.getNombreDocumentos(cod_proy, "2", partirCadena(adicional));
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
 
         }
     }
 
     public void getDeductivos() {
         try {
-            System.out.println("CODIGO PROY DEDUCTIVOS: "+cod_proy);
-            nombredocu2 = rid.getNombreDocumentos(cod_proy, "3", partirCadena(deductivo));
-            if (nombredocu2 == null) {
+            System.out.println("CODIGO PROY DEDUCTIVOS: "+cod_proy+" DEDUCTIVO: "+deductivo);
+            if(deductivo.equals(" ") || deductivo.equals("")){
+                System.out.println("por defecto ded");
                 nombredocu2 = "1";
+            }else{
+                System.out.println("consulta BD ded");
+                nombredocu2 = rid.getNombreDocumentos(cod_proy, "3", partirCadena(deductivo));
             }
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -430,7 +452,6 @@ public class RegistroInversion {
 
     public void iniciarListaExpediente() {
         listaExpedientes.clear();
-        listaExpedientes.add("Seleccione Expediente");
         List listaaux = rid.getExpedientes(cod_proy, "1");
         for (int i = 0; i < listaaux.size(); i++) {
             listaExpedientes.add(listaaux.get(i).toString());

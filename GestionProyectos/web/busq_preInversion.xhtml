@@ -60,21 +60,21 @@
 
 
                                     <p:outputLabel value="Monto de Viabilidad:"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b4D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado2}" emptyValue="empty" required="false">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b4D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado2}" emptyValue="empty" required="false" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
 
 
                                     <p:outputLabel value="Fecha de Viabilidad:"/>
-                                    <p:inputMask value="#{busquedaPreInversion.b5}" mask="99/99/9999" disabled="#{busquedaPreInversion.estado2}"/>
+                                    <p:inputMask value="#{busquedaPreInversion.b5}" mask="99/99/9999" disabled="#{busquedaPreInversion.estado2}" style="text-align: right"/>
 
                                     <p:outputLabel value="Monto Modificado:" rendered="#{busquedaPreInversion.estado5}"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b6D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado9}" rendered="#{busquedaPreInversion.estado5}">
+                                    <pe:inputNumber value="#{busquedaPreInversion.b6D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado9}" rendered="#{busquedaPreInversion.estado5}"  style="text-align: right">
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Fecha Modificado:" rendered="#{busquedaPreInversion.estado5}"/>
-                                    <p:inputMask value="#{busquedaPreInversion.b7}" mask="99/99/9999" disabled="#{busquedaPreInversion.estado9}" rendered="#{busquedaPreInversion.estado5}"/>
+                                    <p:inputMask value="#{busquedaPreInversion.b7}" mask="99/99/9999" disabled="#{busquedaPreInversion.estado9}" rendered="#{busquedaPreInversion.estado5}" style="text-align: right"/>
 
                                     <p:outputLabel value="Montos Modificados:" rendered="#{busquedaPreInversion.estado6}"/>
                                     <p:dataList value="#{busquedaPreInversion.mdf}" var="car" type="ordered" rendered="#{busquedaPreInversion.estado6}" id="datalistID">
@@ -87,13 +87,13 @@
                                     </p:dataList>
 
                                     <p:outputLabel value="Nuevo Monto a Agregar:" rendered="#{busquedaPreInversion.estado6}"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b24D}" thousandSeparator="," decimalSeparator="." rendered="#{busquedaPreInversion.estado6}" emptyValue="empty" required="false">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b24D}" thousandSeparator="," decimalSeparator="." rendered="#{busquedaPreInversion.estado6}" emptyValue="empty" required="false"  style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.guardarMontoModificado()}"/>
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Fecha de Modificacion: " rendered="#{busquedaPreInversion.estado6}"/>
-                                    <p:inputMask value="#{busquedaPreInversion.fmm}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado6}">
+                                    <p:inputMask value="#{busquedaPreInversion.fmm}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado6}" style="text-align: right">
                                         <p:ajax event="change" listener="#{busquedaPreInversion.guardarFechaModificacion()}"/>
                                     </p:inputMask>
 
@@ -105,21 +105,21 @@
                                     </p:selectOneMenu>
 
                                     <p:outputLabel value="Monto Seleccionado: " rendered="#{busquedaPreInversion.estado4}"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b26D}" thousandSeparator="," decimalSeparator="." rendered="#{busquedaPreInversion.estado4}" emptyValue="empty" required="false">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b26D}" thousandSeparator="," decimalSeparator="." rendered="#{busquedaPreInversion.estado4}" emptyValue="empty" required="false"  style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.guardarMontoSeleccionado()}" />
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Fecha Seleccionada: " rendered="#{busquedaPreInversion.estado4}"/>
-                                    <p:inputMask value="#{busquedaPreInversion.nuevaFecha}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado4}">
+                                    <p:inputMask value="#{busquedaPreInversion.nuevaFecha}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado4}" style="text-align: right">
                                         <p:ajax event="change" listener="#{busquedaPreInversion.guardarFechaSeleccionada()}"/>
                                     </p:inputMask>
 
                                     <p:outputLabel value="Informe Técnico:" rendered="#{busquedaPreInversion.estado3}"/>
-                                    <p:inputText value="#{busquedaPreInversion.b8}" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
+                                    <p:inputText value="#{busquedaPreInversion.b8}" style="text-transform:uppercase;" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
 
                                     <p:outputLabel value="Expediente Adm:" rendered="#{busquedaPreInversion.estado3}"/>
-                                    <p:inputText value="#{busquedaPreInversion.b9}" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
+                                    <p:inputText value="#{busquedaPreInversion.b9}" style="text-transform:uppercase;" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
 
                                     <p:outputLabel value="Número de RR:" rendered="#{busquedaPreInversion.estado3}"/>
                                     <p:inputText value="#{busquedaPreInversion.b10}" style="text-transform:uppercase;" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
@@ -178,37 +178,37 @@
                                     <p:outputLabel value="Monto"/>
 
                                     <p:outputLabel value="Exp. Técnico:"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b13D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b13D}"  style="text-align: right" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Infraestructura:"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b14D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b14D}" style="text-align: right" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Equipamiento y Mobiliario:"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b15D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b15D}" style="text-align: right" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Supervisión:"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b16D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b16D}" style="text-align: right" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Capacitación:"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b17D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b17D}" style="text-align: right" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Otros"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b18D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b18D}" style="text-align: right" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado7}" emptyValue="empty" required="false">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.sumaComponentes()}" update="totalBusqPreInv,guardComp"/>
                                     </pe:inputNumber>
