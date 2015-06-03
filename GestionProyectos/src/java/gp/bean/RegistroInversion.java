@@ -234,6 +234,7 @@ public class RegistroInversion {
             getAdicionales();
             getDeductivos();
             mostrar = true;
+            this.listaExpedientes.clear();
         } else {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "PROYECTO NO REGISTRADO");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
