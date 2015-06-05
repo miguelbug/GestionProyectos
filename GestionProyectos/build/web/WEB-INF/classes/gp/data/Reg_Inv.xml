@@ -17,6 +17,28 @@
         <result property="id" column="IDRORDR"/>
     </resultMap>
     
+    <resultMap id="resultado4" type="String">
+        <result property="etapa" column="ETAPA"/>
+    </resultMap>
+    
+    <resultMap id="resultado5" type="Integer">
+        <result property="idproyexpt" column="IDPROYEXPT"/>
+    </resultMap>
+    
+    <resultMap id="resultado6" type="Integer">
+        <result property="validar" column="CANTIDAD"/>
+    </resultMap>
+    
+    <resultMap id="resultado7" type="gp.model.EjecucionMostrado">
+        <result property="nombreTipoDocu" column="NOMBRETIPODOCU"/>
+        <result property="nombRoRdR" column="RORDR"/>
+        <result property="mes" column="MES"/>
+        <result property="anio" column="ANIO"/>
+        <result property="monto" column="MONTOEJECUTADO"/>
+        <result property="monto2" column="MONTOPRELIMINAR"/>
+    </resultMap>
+    
+    
     <select id="getNumeroExp" resultMap="resultado" parameterType="java.util.HashMap">
         SELECT MAX(PE.NUMERO_EXP)+1 AS NUMERODOCU FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
         WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
@@ -43,8 +65,8 @@
     </select>
     
     <insert id="insert_nuevoExp" parameterType="gp.model.NuevosDocumentos">
-        INSERT INTO PROY_EXPT (NUMERO_EXP,MONTO,RR,FECHA,ID_PROYECTO,ID_TIPOSDOCUS)
-        VALUES (#{numeroDocu},#{monto},#{resolucion},#{fecha},#{idProy},#{tipodocu})
+        INSERT INTO PROY_EXPT (NUMERO_EXP,MONTO,RR,FECHA,ID_PROYECTO,ID_TIPOSDOCUS,ETAPA)
+        VALUES (#{numeroDocu},#{monto},#{resolucion},#{fecha},#{idProy},#{tipodocu},#{etapa})
         
     </insert>
     
@@ -66,9 +88,21 @@
     </select>
     
     <insert id="insert_nuevaEjec" parameterType="gp.model.Ejecucion">
-        INSERT INTO EJECUCION (MES,ANIO,MONTO,ID_PROYECTO,ID_TIPOSDOCUS,ID_RORDR,FECHA)
-        VALUES (#{mes},#{anio},#{monto},#{idProyecto},#{idTiposDocus},#{idRORDR},#{fecha})
+        INSERT INTO EJECUCION (MES,ANIO,MONTO,ID_TIPOSDOCUS,ID_RORDR,FECHA,MONTO2,ID_PROYEXPT)
+        VALUES (#{mes},#{anio},#{monto},#{idTiposDocus},#{idRORDR},#{fecha},#{monto2},#{idProyectoExpt})
     </insert>
+    
+    <update id="updateEjec" parameterType="gp.model.Ejecucion">
+        UPDATE EJECUCION
+        SET
+        MES=#{mes},
+        ANIO=#{anio},
+        MONTO=#{monto},
+        ID_RORDR=#{idRORDR},
+        MONTO2=#{monto2}
+        WHERE ID_PROYEXPT = #{idProyectoExpt}
+        and ID_TIPOSDOCUS=#{idTiposDocus}
+    </update>
     
     <select id="validarProy" resultMap="resultado2" parameterType="String">
         SELECT ID_PROYECTO AS IDEXP FROM PROYECTO
@@ -84,4 +118,40 @@
         SELECT ID_RORDR AS IDRORDR FROM RO_RDR
         WHERE NOMBRE=#{nombre}
     </select>
+    
+    <select id="getListaEtapas" resultMap="resultado4" parameterType="String">
+        SELECT ETAPA AS ETAPA FROM PROY_EXPT
+        WHERE ID_PROYECTO=#{idproy}
+        ORDER BY ETAPA ASC
+    </select>
+    
+    <select id="getIdProyExpt" resultMap="resultado5" parameterType="String">
+        SELECT ID_PROYEXPT AS IDPROYEXPT FROM PROY_EXPT
+        WHERE ID_PROYECTO=#{codigo}
+        AND ETAPA=#{etapa}
+    </select>
+    
+    <select id="validarProy2" resultMap="resultado6" parameterType="java.util.HashMap">        
+        SELECT COUNT(*) AS CANTIDAD
+        FROM PROY_EXPT PE, EJECUCION E
+        WHERE PE.ID_PROYECTO=#{codigo}
+        AND PE.ETAPA=#{etapa}
+        AND PE.ID_PROYEXPT=E.ID_PROYEXPT
+    </select>
+    
+    <select id="getMontosEjecutados" resultMap="resultado7" parameterType="String">
+        SELECT TD.NOMBRE_TIPODOCU as NOMBRETIPODOCU,
+        RD.NOMBRE AS RORDR,
+        E.MES AS MES, 
+        E.ANIO AS ANIO,
+        E.MONTO AS MONTOEJECUTADO,
+        E.MONTO2 AS MONTOPRELIMINAR
+        FROM EJECUCION E, PROY_EXPT PE, TIPOS_DOCUMENTOS TD, RO_RDR RD
+        WHERE E.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND E.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND E.ID_RORDR=RD.ID_RORDR
+        AND PE.ID_PROYECTO=#{codigo}
+        AND PE.ID_PROYEXPT=#{id}
+    </select>
+    
 </mapper>

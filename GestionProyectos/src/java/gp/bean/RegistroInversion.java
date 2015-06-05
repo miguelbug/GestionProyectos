@@ -10,6 +10,7 @@ import gp.dao.RegistroInversionDAO;
 import gp.daoImpl.ListasGeneralesDaoImpl;
 import gp.daoImpl.RegistroInversionDaoImpl;
 import gp.model.Ejecucion;
+import gp.model.EjecucionMostrado;
 import gp.model.NuevosDocumentos;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -33,7 +34,7 @@ import org.primefaces.event.TabChangeEvent;
 public class RegistroInversion {
 
     private String monto;
-    private Double montoD =null;
+    private Double montoD = null;
     private String resolucion;
     private Date fecha;
     private String fechaaux;
@@ -54,8 +55,8 @@ public class RegistroInversion {
 
     private String cod_proy;
     private boolean mostrar;
-    private String adicional=" ";
-    private String deductivo=" ";
+    private String adicional = " ";
+    private String deductivo = " ";
 
     private String monto_contrato;
     private Double monto_contratoD = null;
@@ -68,13 +69,20 @@ public class RegistroInversion {
     private List lista_anio;
 
     private Double exp_tecnicoD = null;
+    private Double exp_tecnicoPre = null;
     private Double infraestructuraD = null;
+    private Double infraestructuraPre = null;
     private Double equip_mobiliD = null;
+    private Double equip_mobiliPre = null;
     private Double supervisionD = null;
+    private Double supervisionPre = null;
     private Double capacitacionD = null;
+    private Double capacitacionPre = null;
     private Double otrosD = null;
+    private Double otrosPre = null;
     private String total;
     private Double totalD = null;
+    private Double totalPre = null;
     private String contrato;
 
     private List lista_T;
@@ -91,10 +99,13 @@ public class RegistroInversion {
     private String nombredocu2;
     private String nombredocu3;
     private ListasGeneralesDAO lgd;
-
+    private List<String> etapas;
+    private String etapa;
     private List<String> resoluciones;
+    private boolean esta;
 
     public RegistroInversion() {
+        etapas = new ArrayList<String>();
         fecha = new Date();
         FacesContext facesContext = FacesContext.getCurrentInstance();
         String currentPage = facesContext.getViewRoot().getViewId();
@@ -142,6 +153,71 @@ public class RegistroInversion {
         }
     }
 
+    public void llenarMontos() {
+        System.out.println("LLENAR MONTOS");
+        int i = -1;
+        if (!etapa.equals(" ")) {
+            i = rid.validarProyecto(cod_proy, etapa);
+            if (i > 0) {
+                System.out.println("VALIDACION: "+i);
+                esta = true;//se actualiza
+                getMontosEjecucion(cod_proy);
+            } else {
+                if (i == 0) {
+                    limpiarEjecucion();
+                    System.out.println("VALIDACION: "+i);
+                    esta = false;//se ingresa nuevos registros
+                }
+            }
+        }
+    }
+
+    public void getMontosEjecucion(String codigo) {
+        List<EjecucionMostrado> lista = rid.getMontosEjecutados(codigo, String.valueOf(rid.getIdProyExpt(cod_proy, etapa)));
+        System.out.println("Dimension: " + lista.size());
+        if (lista.size() != 0) {
+            this.exp_tecnicoD = Double.parseDouble(lista.get(0).getMonto());
+            exp_tecnicoPre = Double.parseDouble(lista.get(0).getMonto2());
+            this.t1 = lista.get(0).getNombRoRdR();
+
+            this.infraestructuraD = Double.parseDouble(lista.get(1).getMonto());
+            this.infraestructuraPre = Double.parseDouble(lista.get(1).getMonto2());
+            this.t2 = lista.get(1).getNombRoRdR();
+
+            this.equip_mobiliD = Double.parseDouble(lista.get(2).getMonto());
+            this.equip_mobiliPre = Double.parseDouble(lista.get(2).getMonto2());
+            this.t3 = lista.get(2).getNombRoRdR();
+
+            this.supervisionD = Double.parseDouble(lista.get(3).getMonto());
+            this.supervisionPre = Double.parseDouble(lista.get(3).getMonto2());
+            this.t4 = lista.get(3).getNombRoRdR();
+
+            this.capacitacionD = Double.parseDouble(lista.get(4).getMonto());
+            this.capacitacionPre = Double.parseDouble(lista.get(4).getMonto2());
+            this.t5 = lista.get(4).getNombRoRdR();
+
+            this.otrosD = Double.parseDouble(lista.get(5).getMonto());
+            this.otrosPre = Double.parseDouble(lista.get(5).getMonto2());
+            this.t6 = lista.get(5).getNombRoRdR();
+
+            this.mes = lista.get(0).getMes();
+            this.anio = lista.get(0).getAnio();
+        } else {
+            limpiarEjecucion();
+        }
+
+    }
+
+    public void getListaEtapas() {
+        etapas.clear();
+        try {
+            System.out.println(cod_proy);
+            etapas = rid.getListaEtapas(cod_proy);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public void getResolucionesLista() {
         try {
             resoluciones = lgd.getResoluciones();
@@ -178,23 +254,66 @@ public class RegistroInversion {
         FacesMessage message = null;
         Date date = new Date();
         try {
-            List<Ejecucion> ejecu = new ArrayList<Ejecucion>();
-            ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), exp_tecnicoD, Integer.parseInt(cod_proy), 1, rid.getIDRoRdR(t1), date));
-            ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), infraestructuraD, Integer.parseInt(cod_proy), 5, rid.getIDRoRdR(t2), date));
-            ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), equip_mobiliD, Integer.parseInt(cod_proy), 8, rid.getIDRoRdR(t3), date));
-            ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), supervisionD, Integer.parseInt(cod_proy), 9, rid.getIDRoRdR(t4), date));
-            ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), capacitacionD, Integer.parseInt(cod_proy), 6, rid.getIDRoRdR(t5), date));
-            ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), otrosD, Integer.parseInt(cod_proy), 7, rid.getIDRoRdR(t6), date));
-            rid.guardarEjecucion(ejecu);
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS NUEVOS MONTOS EJECUTADOS");
-            RequestContext.getCurrentInstance().showMessageInDialog(message);
+            if (esta == false) {
+                System.out.println("SE GUARDA");
+                List<Ejecucion> ejecu = new ArrayList<Ejecucion>();
+                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), exp_tecnicoD == null ? 0.0 : exp_tecnicoD, 1, rid.getIDRoRdR(t1), date, exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre, rid.getIdProyExpt(cod_proy, etapa)));
+                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), infraestructuraD == null ? 0.0 : infraestructuraD, 5, rid.getIDRoRdR(t2), date, this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre, rid.getIdProyExpt(cod_proy, etapa)));
+                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), equip_mobiliD == null ? 0.0 : equip_mobiliD, 8, rid.getIDRoRdR(t3), date, equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre, rid.getIdProyExpt(cod_proy, etapa)));
+                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), supervisionD == null ? 0.0 : supervisionD, 9, rid.getIDRoRdR(t4), date, supervisionPre == null ? 0.0 : this.supervisionPre, rid.getIdProyExpt(cod_proy, etapa)));
+                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), capacitacionD == null ? 0.0 : capacitacionD, 6, rid.getIDRoRdR(t5), date, capacitacionPre == null ? 0.0 : this.capacitacionPre, rid.getIdProyExpt(cod_proy, etapa)));
+                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), otrosD == null ? 0.0 : otrosD, 7, rid.getIDRoRdR(t6), date, otrosPre == null ? 0.0 : this.otrosPre, rid.getIdProyExpt(cod_proy, etapa)));
+
+                rid.guardarEjecucion(ejecu);
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS NUEVOS MONTOS");
+                RequestContext.getCurrentInstance().showMessageInDialog(message);
+            } else {
+                if (esta == true) {
+                    System.out.println("SE ACTUALIZA");
+                    System.out.println(exp_tecnicoPre+" "+infraestructuraPre+" "+equip_mobiliPre+" "+supervisionPre+" "+capacitacionPre+" "+otrosPre);
+                    List<Ejecucion> ejecu = new ArrayList<Ejecucion>();
+                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), exp_tecnicoD == null ? 0.0 : exp_tecnicoD, 1, rid.getIDRoRdR(t1), date, exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre, rid.getIdProyExpt(cod_proy, etapa)));
+                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), infraestructuraD == null ? 0.0 : infraestructuraD, 5, rid.getIDRoRdR(t2), date, this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre, rid.getIdProyExpt(cod_proy, etapa)));
+                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), equip_mobiliD == null ? 0.0 : equip_mobiliD, 8, rid.getIDRoRdR(t3), date, equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre, rid.getIdProyExpt(cod_proy, etapa)));
+                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), supervisionD == null ? 0.0 : supervisionD, 9, rid.getIDRoRdR(t4), date, supervisionPre == null ? 0.0 : this.supervisionPre, rid.getIdProyExpt(cod_proy, etapa)));
+                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), capacitacionD == null ? 0.0 : capacitacionD, 6, rid.getIDRoRdR(t5), date, capacitacionPre == null ? 0.0 : this.capacitacionPre, rid.getIdProyExpt(cod_proy, etapa)));
+                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), otrosD == null ? 0.0 : otrosD, 7, rid.getIDRoRdR(t6), date, otrosPre == null ? 0.0 : this.otrosPre, rid.getIdProyExpt(cod_proy, etapa)));
+                    System.out.println(ejecu.get(0).getMonto2()+"  "+ejecu.get(0).getMonto());
+                    rid.ActualizarMontosEjecutados(ejecu,String.valueOf(rid.getIdProyExpt(cod_proy, etapa)));
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN ACTUALIZADO LOS MONTOS");
+                    RequestContext.getCurrentInstance().showMessageInDialog(message);
+                }
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NUEVOS COMPONENTES NO GUARDADOS");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         }
-        mes = "Enero";
 
+    }
+
+    public void limpiarEjecucion() {
+        exp_tecnicoD = null;
+        infraestructuraD = null;
+        equip_mobiliD = null;
+        supervisionD = null;
+        capacitacionD = null;
+        otrosD = null;
+        exp_tecnicoPre = null;
+        infraestructuraPre = null;
+        equip_mobiliPre = null;
+        supervisionPre = null;
+        capacitacionPre = null;
+        otrosPre = null;
+        t1 = " ";
+        t2 = " ";
+        t3 = " ";
+        t4 = " ";
+        t5 = " ";
+        t6 = " ";
+        etapa = " ";
+        mes = " ";
+        anio = " ";
     }
 
     public void sumaComponentes() {
@@ -221,6 +340,7 @@ public class RegistroInversion {
     public void mostrar() {
         FacesMessage message = null;
         boolean es = true;
+        getListaEtapas();
         try {
             System.out.println("ESTE ES EL CODIGO: " + cod_proy);
             String casa = rid.validarProy(cod_proy);
@@ -247,6 +367,7 @@ public class RegistroInversion {
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
             nd.setNumeroDocu(Integer.parseInt(nombreExp));
+            nd.setEtapa(Integer.parseInt(nombreExp));
             nombreExpaux = nombreExp;
             nd.setMonto(montoD);
             nd.setResolucion(resolucion);
@@ -272,10 +393,10 @@ public class RegistroInversion {
     public String partirCadena(String valor) {
         StringTokenizer stk = new StringTokenizer(valor, " ");
         String[] cadena;
-        String retorna="";
-        if(valor.equals("Seleccione Expediente")){
+        String retorna = "";
+        if (valor.equals("Seleccione Expediente")) {
             cadena = new String[2];
-        }else{
+        } else {
             cadena = new String[4];
         }
         int i = 0;
@@ -283,11 +404,11 @@ public class RegistroInversion {
             cadena[i] = stk.nextToken();
             i++;
         }
-        if(cadena.length==2){
-            retorna=cadena[1];
-        }else{
-            if(cadena.length==4){
-                retorna=cadena[3];
+        if (cadena.length == 2) {
+            retorna = cadena[1];
+        } else {
+            if (cadena.length == 4) {
+                retorna = cadena[3];
             }
         }
         return retorna;
@@ -378,7 +499,7 @@ public class RegistroInversion {
 
     public void getNombreExpediente() {
         try {
-            System.out.println("CODIGO PROY EXP: "+cod_proy);
+            System.out.println("CODIGO PROY EXP: " + cod_proy);
             nombreExp = rid.getNombreExpediente(cod_proy, "1");
             if (nombreExp == null) {
                 nombreExp = "1";
@@ -391,11 +512,11 @@ public class RegistroInversion {
 
     public void getAdicionales() {
         try {
-            System.out.println("CODIGO PROY ADICIONALES: "+cod_proy+" ADICIONAL: "+adicional);
-            if(adicional.equals(" ") || adicional.equals("")){
+            System.out.println("CODIGO PROY ADICIONALES: " + cod_proy + " ADICIONAL: " + adicional);
+            if (adicional.equals(" ") || adicional.equals("")) {
                 System.out.println("por defecto Ad");
                 nombredocu1 = "1";
-            }else{
+            } else {
                 System.out.println("consulta BD AD");
                 nombredocu1 = rid.getNombreDocumentos(cod_proy, "2", partirCadena(adicional));
             }
@@ -408,15 +529,15 @@ public class RegistroInversion {
 
     public void getDeductivos() {
         try {
-            System.out.println("CODIGO PROY DEDUCTIVOS: "+cod_proy+" DEDUCTIVO: "+deductivo);
-            if(deductivo.equals(" ") || deductivo.equals("")){
+            System.out.println("CODIGO PROY DEDUCTIVOS: " + cod_proy + " DEDUCTIVO: " + deductivo);
+            if (deductivo.equals(" ") || deductivo.equals("")) {
                 System.out.println("por defecto ded");
                 nombredocu2 = "1";
-            }else{
+            } else {
                 System.out.println("consulta BD ded");
                 nombredocu2 = rid.getNombreDocumentos(cod_proy, "3", partirCadena(deductivo));
             }
-            
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -865,6 +986,94 @@ public class RegistroInversion {
 
     public void setResoluciones(List<String> resoluciones) {
         this.resoluciones = resoluciones;
+    }
+
+    public Double getExp_tecnicoPre() {
+        return exp_tecnicoPre;
+    }
+
+    public void setExp_tecnicoPre(Double exp_tecnicoPre) {
+        this.exp_tecnicoPre = exp_tecnicoPre;
+    }
+
+    public Double getInfraestructuraPre() {
+        return infraestructuraPre;
+    }
+
+    public void setInfraestructuraPre(Double infraestructuraPre) {
+        this.infraestructuraPre = infraestructuraPre;
+    }
+
+    public Double getEquip_mobiliPre() {
+        return equip_mobiliPre;
+    }
+
+    public void setEquip_mobiliPre(Double equip_mobiliPre) {
+        this.equip_mobiliPre = equip_mobiliPre;
+    }
+
+    public Double getSupervisionPre() {
+        return supervisionPre;
+    }
+
+    public void setSupervisionPre(Double supervisionPre) {
+        this.supervisionPre = supervisionPre;
+    }
+
+    public Double getCapacitacionPre() {
+        return capacitacionPre;
+    }
+
+    public void setCapacitacionPre(Double capacitacionPre) {
+        this.capacitacionPre = capacitacionPre;
+    }
+
+    public Double getOtrosPre() {
+        return otrosPre;
+    }
+
+    public void setOtrosPre(Double otrosPre) {
+        this.otrosPre = otrosPre;
+    }
+
+    public Double getTotalPre() {
+        return totalPre;
+    }
+
+    public void setTotalPre(Double totalPre) {
+        this.totalPre = totalPre;
+    }
+
+    public ListasGeneralesDAO getLgd() {
+        return lgd;
+    }
+
+    public void setLgd(ListasGeneralesDAO lgd) {
+        this.lgd = lgd;
+    }
+
+    public List<String> getEtapas() {
+        return etapas;
+    }
+
+    public void setEtapas(List<String> etapas) {
+        this.etapas = etapas;
+    }
+
+    public String getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(String etapa) {
+        this.etapa = etapa;
+    }
+
+    public boolean isEsta() {
+        return esta;
+    }
+
+    public void setEsta(boolean esta) {
+        this.esta = esta;
     }
 
 }

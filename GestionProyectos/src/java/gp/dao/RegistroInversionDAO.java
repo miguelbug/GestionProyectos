@@ -7,6 +7,7 @@
 package gp.dao;
 
 import gp.model.Ejecucion;
+import gp.model.EjecucionMostrado;
 import gp.model.NuevosDocumentos;
 import gp.model.Registro_Inversion;
 import gp.model.busquedaPreInversionMontos;
@@ -28,4 +29,9 @@ public interface RegistroInversionDAO {
     public String validarProy(String codigo);
     public List<String> getCoincidencias(String codigo);
     public Integer getIDRoRdR(String nombre);
+    public List<String> getListaEtapas(String idproy);
+    public Integer getIdProyExpt(String codigo, String etapa);
+    public Integer validarProyecto(String codigo, String etapa);
+    public List<EjecucionMostrado> getMontosEjecutados(String codigo, String id);
+    public void ActualizarMontosEjecutados(List<Ejecucion> ejecu , String idproy);
 }

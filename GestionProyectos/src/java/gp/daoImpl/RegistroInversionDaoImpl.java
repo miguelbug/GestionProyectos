@@ -8,6 +8,7 @@ package gp.daoImpl;
 import gp.connectionFactory.MyBatisConnectionFactory;
 import gp.dao.RegistroInversionDAO;
 import gp.model.Ejecucion;
+import gp.model.EjecucionMostrado;
 import gp.model.NuevosDocumentos;
 import gp.model.Registro_Inversion;
 import gp.model.busquedaPreInversionMontos;
@@ -31,6 +32,77 @@ public class RegistroInversionDaoImpl implements RegistroInversionDAO {
 
     public RegistroInversionDaoImpl() {
         sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
+    }
+
+    @Override
+    public List<EjecucionMostrado> getMontosEjecutados(String codigo, String id) {
+        List<EjecucionMostrado> list = null;
+        System.out.println(codigo+" "+id);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("codigo", codigo);
+        map.put("id", id);
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            list = session.selectList("RegistroInversion.getMontosEjecutados", map);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("ERROR EN EL getMontosEjecutados");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
+    public Integer validarProyecto(String codigo, String etapa) {
+        Integer proyexpt = null;
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("codigo", codigo);
+        map.put("etapa", etapa);
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            proyexpt = session.selectOne("RegistroInversion.validarProy2", map);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("ERROR EN EL IMPL validarProy");
+        } finally {
+            session.close();
+        }
+        return proyexpt;
+    }
+
+    @Override
+    public Integer getIdProyExpt(String codigo, String etapa) {
+        Integer proyexpt = null;
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("codigo", codigo);
+        map.put("etapa", etapa);
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            proyexpt = session.selectOne("RegistroInversion.getIdProyExpt", map);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("ERROR EN EL IMPL getnumonto");
+        } finally {
+            session.close();
+        }
+        return proyexpt;
+    }
+
+    @Override
+    public List<String> getListaEtapas(String idproy) {
+        List<String> list = null;
+        System.out.println(idproy);
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            list = session.selectList("RegistroInversion.getListaEtapas", idproy);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
     }
 
     @Override
@@ -80,6 +152,24 @@ public class RegistroInversionDaoImpl implements RegistroInversionDAO {
     }
 
     @Override
+    public void ActualizarMontosEjecutados(List<Ejecucion> ejecu, String idproyexpt) {
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            for (int i = 0; i < ejecu.size(); i++) {
+                System.out.println(ejecu.get(i).getMonto()+"  "+ejecu.get(i).getMonto2());
+                session.insert("RegistroInversion.updateEjec", ejecu.get(i));
+                session.commit();
+            }
+        } catch (Exception e) {
+            System.out.println("RegistroInversion.insert_nuevaEjec");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
     public void guardarEjecucion(List<Ejecucion> ej) {
         SqlSession session = sqlSessionFactory.openSession();
         try {
@@ -88,7 +178,7 @@ public class RegistroInversionDaoImpl implements RegistroInversionDAO {
                 session.commit();
             }
         } catch (Exception e) {
-            System.out.println("RegistroInversion.insert_nuevoExp");
+            System.out.println("RegistroInversion.insert_nuevaEjec");
             System.out.println(e.getMessage());
             e.printStackTrace();
         } finally {

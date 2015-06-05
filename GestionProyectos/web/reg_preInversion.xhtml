@@ -45,7 +45,7 @@
                                     </p:selectOneMenu>
 
                                     <p:outputLabel value="Monto de Viabilidad: S/."/>
-                                    <pe:inputNumber value="#{registroPreInversion.montoD}" thousandSeparator="," decimalSeparator="." style="text-transform:uppercase;">  
+                                    <pe:inputNumber value="#{registroPreInversion.montoD}" thousandSeparator="," decimalSeparator="." style="text-transform:uppercase;text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{registroPreInversion.almacenarMonto()}"/>
                                     </pe:inputNumber>
@@ -100,38 +100,37 @@
                                     <p:outputLabel value=""/>
                                     <p:outputLabel value="Monto"/>
                                     <p:outputLabel value="Exp. Técnico: S/."/>
-                                    <pe:inputNumber value="#{registroPreInversion.exp_tecnicoD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-transform:uppercase;">  
+                                    <pe:inputNumber value="#{registroPreInversion.exp_tecnicoD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
                                     </pe:inputNumber>
                                     <p:outputLabel value="Infraestructura: S/."/>
-                                    <pe:inputNumber value="#{registroPreInversion.infraestructuraD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-transform:uppercase;">  
+                                    <pe:inputNumber value="#{registroPreInversion.infraestructuraD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
                                     </pe:inputNumber>
                                     <p:outputLabel value="Equipamiento y Mobiliario: S/."/>
-                                    <pe:inputNumber value="#{registroPreInversion.equip_mobiliD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-transform:uppercase;">  
+                                    <pe:inputNumber value="#{registroPreInversion.equip_mobiliD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
                                     </pe:inputNumber>
                                     <p:outputLabel value="Supervisión: S/."/>
-                                    <pe:inputNumber value="#{registroPreInversion.supervisionD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-transform:uppercase;">  
+                                    <pe:inputNumber value="#{registroPreInversion.supervisionD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
                                     </pe:inputNumber>
                                     <p:outputLabel value="Capacitación: S/."/>
-                                    <pe:inputNumber value="#{registroPreInversion.capacitacionD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-transform:uppercase;">  
+                                    <pe:inputNumber value="#{registroPreInversion.capacitacionD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
                                     </pe:inputNumber>
                                     <p:outputLabel value="Otros: S/."/>
-                                    <pe:inputNumber value="#{registroPreInversion.otrosD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-transform:uppercase;">  
+                                    <pe:inputNumber value="#{registroPreInversion.otrosD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
                                     </pe:inputNumber>
                                     <p:outputLabel value="Total: S/."/>
-                                    <p:outputLabel value="#{registroPreInversion.total}" id="sumaTotal" styleClass="#{registroPreInversion.color}">
-                                    </p:outputLabel>
+                                    <p:outputLabel value="#{registroPreInversion.totalD}"  id="sumaTotal" styleClass="#{registroPreInversion.color}" style="text-align: right"></p:outputLabel>
                                 </h:panelGrid>
                                 <br></br>
                                 <br></br>

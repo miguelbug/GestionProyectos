@@ -27,6 +27,7 @@ public class NuevosDocumentos implements Serializable{
     private Integer numeroDocu;
     private String idProy;
     private String codigoContrato;
+    private Integer etapa;
     
     public NuevosDocumentos() {
     }
@@ -98,6 +99,14 @@ public class NuevosDocumentos implements Serializable{
     @Override
     public String toString() {
         return "NuevosDocumentos{" + "monto=" + monto + ", resolucion=" + resolucion + ", fecha=" + fecha + ", exptecn=" + exptecn + ", tipodocu=" + tipodocu + ", numeroDocu=" + numeroDocu + ", idProy=" + idProy + ", codigoContrato=" + codigoContrato + '}';
+    }
+
+    public Integer getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(Integer etapa) {
+        this.etapa = etapa;
     }
 
     

@@ -64,6 +64,8 @@ public class BusquedaPreInversion {
     private Double b17D = null;
     private Double b18D = null;
     private String b19;
+    private Double b19D = null;
+    private BigDecimal b19B = new BigDecimal("0.0");
     private String b20;
     private String b21;
     private String b22;
@@ -402,7 +404,7 @@ public class BusquedaPreInversion {
             estado11 = true;
 
             listaBPI_1 = bpi.listaBusqPI(b20);
-            System.out.println("LISTA1: "+listaBPI_1.size());
+            System.out.println("LISTA1: " + listaBPI_1.size());
             listaBPI_2 = bpi.listaBusqPI_2(b20);
             for (int i = 0; i < listaBPI_1.size(); i++) {
                 b1 = listaBPI_1.get(i).getC1();
@@ -469,21 +471,25 @@ public class BusquedaPreInversion {
             valor = valor.add(nuevo);
             i++;
         }
-        b19 = String.valueOf(valor);
+        b19B=b19B.add(valor);
         if (estado10 == 0) {
-            if (Double.parseDouble(b19) == Double.parseDouble(aux1)) {
+            if (Double.parseDouble(String.valueOf(b19B)) == Double.parseDouble(aux1)) {
+                System.out.println("iguales 0");
                 color = "clase1";
                 estado11 = false;
             } else {
+                System.out.println("diferentes 0");
                 color = "clase2";
                 estado11 = true;
             }
         } else {
             if (estado10 == 1) {
-                if (Double.parseDouble(b19) == Double.parseDouble(b24Daux)) {
+                if (Double.parseDouble(String.valueOf(b19B)) == Double.parseDouble(b24Daux)) {
+                    System.out.println("iguales 1");
                     color = "clase1";
                     estado11 = false;
                 } else {
+                    System.out.println("iguales 1");
                     color = "clase2";
                     estado11 = true;
                 }
@@ -509,8 +515,8 @@ public class BusquedaPreInversion {
         FacesMessage message = null;
         try {
             String numero = montd.getNumMonto(b20);
-            if(numero==null || numero==""){
-                numero="0";
+            if (numero == null || numero == "") {
+                numero = "0";
             }
             int numero_parse = Integer.parseInt(numero) + 1;
             gnc.setNum_monto(Double.parseDouble(String.valueOf(numero_parse)));
@@ -1210,6 +1216,22 @@ public class BusquedaPreInversion {
 
     public void setHistorialMontos(List<HistorialMontos> historialMontos) {
         this.historialMontos = historialMontos;
+    }
+
+    public Double getB19D() {
+        return b19D;
+    }
+
+    public void setB19D(Double b19D) {
+        this.b19D = b19D;
+    }
+
+    public BigDecimal getB19B() {
+        return b19B;
+    }
+
+    public void setB19B(BigDecimal b19B) {
+        this.b19B = b19B;
     }
 
 }

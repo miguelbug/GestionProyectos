@@ -43,7 +43,7 @@
                                     <p:outputLabel value="Lugar de Origen:" rendered="#{busquedaPreInversion.estado3}"/>
                                     <p:inputTextarea rows="1" cols="45" value="#{busquedaPreInversion.b3}" disabled="#{busquedaPreInversion.estado2}" rendered="#{busquedaPreInversion.estado3}"/>
 
-                                    
+
                                     <p:outputLabel value="Tipo de Origen" rendered="#{busquedaPreInversion.estado4}"/>
                                     <p:selectOneMenu value="#{busquedaPreInversion.tipo_origen}" rendered="#{busquedaPreInversion.estado4}">
                                         <f:selectItem itemLabel="Seleccione" itemValue=" "/>
@@ -214,7 +214,7 @@
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Total:"/>
-                                    <p:outputLabel value="#{busquedaPreInversion.b19}" id="totalBusqPreInv" styleClass="#{busquedaPreInversion.color}"/>
+                                    <p:outputLabel value="#{busquedaPreInversion.b19B}" id="totalBusqPreInv" styleClass="#{busquedaPreInversion.color}" style="text-align: right"/>
                                 </h:panelGrid>
                                 <br></br>
                                 <p:commandButton value="Historial" icon="ui-icon-circle-zoomin" actionListener="#{busquedaPreInversion.mostrarHistorial()}" update=":form:historialMontos,:form:historialComponentesTable" oncomplete="PF('historialComp').show()" immediate="true"/>
@@ -227,10 +227,10 @@
                             </center>
                         </p:tab>
                     </p:tabView>
-                    <p:dialog dynamic="true" header="HISTORIAL" modal="true" showEffect="fade" widgetVar="historialComp" hideEffect="fade"  position="center center" id="historialComponentes" closeOnEscape="true" style="width: 45%">
+                    <p:dialog dynamic="true" header="HISTORIAL" modal="true" showEffect="fade" widgetVar="historialComp" hideEffect="fade" id="historialComponentes" closeOnEscape="true" styleClass="DialogMontos">
                         <p:outputLabel value="Historial de Montos"/>
                         <br></br>
-                        <p:dataTable var="variab" value="#{busquedaPreInversion.historialMontos}" id="historialMontos" style="width: 40%">
+                        <p:dataTable var="variab" value="#{busquedaPreInversion.historialMontos}" id="historialMontos">
                             <p:column headerText="MODIFICADO" style="width: 4%; text-align: center">
                                 <h:outputText value="#{variab.nombreMonto}" />
                             </p:column>
@@ -245,7 +245,7 @@
                         <br></br>
                         <p:outputLabel value="Historial de los Componentes"/>
                         <br></br>
-                        <p:dataTable var="historial" value="#{busquedaPreInversion.bqpim}" id="historialComponentesTable" style="width: 60%">
+                        <p:dataTable var="historial" value="#{busquedaPreInversion.bqpim}" id="historialComponentesTable">
                             <p:column headerText="FECHA" style="width: 9%; text-align: center" >
                                 <h:outputText value="#{historial.fecha_reg}" />
                             </p:column>

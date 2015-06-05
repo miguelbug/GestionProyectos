@@ -311,8 +311,8 @@ public class RegistroPreInversion {
             valor = valor.add(nuevo);
             i++;
         }
-        total = String.valueOf(valor);
-        if (Double.parseDouble(total) == montoauxiliar) {
+        totalD = Double.parseDouble(String.valueOf(valor));
+        if (totalD == montoauxiliar) {
             color = "clase1";
             estado3 = false;
         } else {
