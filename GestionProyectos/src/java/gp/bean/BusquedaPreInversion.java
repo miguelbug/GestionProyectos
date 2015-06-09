@@ -116,7 +116,7 @@ public class BusquedaPreInversion {
     private List<String> montosModif;
     private String color;
     private String nuevaFecha;
-    private String aux1;
+    private BigDecimal aux1 = new BigDecimal("0.0");
     private String aux2;
     private Integer idcomp;
     private String fmm;
@@ -213,7 +213,8 @@ public class BusquedaPreInversion {
     }
 
     public void guardarMontoSeleccionado() {
-        aux1 = String.valueOf(b26D);
+        //aux1 = String.valueOf(b26D);
+        aux1 = aux1.add(BigDecimal.valueOf(b26D));
         System.out.println(aux1);
     }
 
@@ -361,7 +362,7 @@ public class BusquedaPreInversion {
             c.setCodigoProy(Integer.parseInt(b20));
             c.setFecharegistro(getDate(nuevaFecha));
             c.setMontoModif(b26D);
-            c.setMontoaux(Double.parseDouble(aux1));
+            c.setMontoaux(Double.parseDouble(String.valueOf(aux1)));
             c.setFechaaux(getDate(aux2));
             c.setIdcomp(idcomp);
             bpi.actualizarComponentes(c);
@@ -463,7 +464,6 @@ public class BusquedaPreInversion {
         cadena[4] = b17D == null ? 0.0 : b17D;
         cadena[5] = b18D == null ? 0.0 : b18D;
         while (i < cadena.length) {
-            System.out.println(cadena[i]);
             if (cadena[i].equals(0.00)) {
                 cadena[i] = 0.00;
             }
@@ -471,24 +471,29 @@ public class BusquedaPreInversion {
             valor = valor.add(nuevo);
             i++;
         }
-        b19B=b19B.add(valor);
+        this.b19 = String.valueOf(valor);
+        System.out.println(estado10);
         if (estado10 == 0) {
-            if (Double.parseDouble(String.valueOf(b19B)) == Double.parseDouble(aux1)) {
+            if (Double.parseDouble(b19) == Double.parseDouble(String.valueOf(aux1))) {
+                System.out.println(Double.parseDouble(b19) + " " + Double.parseDouble(String.valueOf(aux1)));
                 System.out.println("iguales 0");
                 color = "clase1";
                 estado11 = false;
             } else {
+                System.out.println(b19 + " " + aux1);
                 System.out.println("diferentes 0");
                 color = "clase2";
                 estado11 = true;
             }
         } else {
             if (estado10 == 1) {
-                if (Double.parseDouble(String.valueOf(b19B)) == Double.parseDouble(b24Daux)) {
+                if (Double.parseDouble(b19) == Double.parseDouble(b24Daux)) {
+                    System.out.println(Double.parseDouble(b19) + " " + Double.parseDouble(b24Daux));
                     System.out.println("iguales 1");
                     color = "clase1";
                     estado11 = false;
                 } else {
+                    System.out.println(b19 + " " + b24Daux);
                     System.out.println("iguales 1");
                     color = "clase2";
                     estado11 = true;
@@ -1162,14 +1167,6 @@ public class BusquedaPreInversion {
         this.b4D = b4D;
     }
 
-    public String getAux1() {
-        return aux1;
-    }
-
-    public void setAux1(String aux1) {
-        this.aux1 = aux1;
-    }
-
     public String getAux2() {
         return aux2;
     }
@@ -1232,6 +1229,14 @@ public class BusquedaPreInversion {
 
     public void setB19B(BigDecimal b19B) {
         this.b19B = b19B;
+    }
+
+    public BigDecimal getAux1() {
+        return aux1;
+    }
+
+    public void setAux1(BigDecimal aux1) {
+        this.aux1 = aux1;
     }
 
 }

@@ -214,7 +214,7 @@
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Total:"/>
-                                    <p:outputLabel value="#{busquedaPreInversion.b19B}" id="totalBusqPreInv" styleClass="#{busquedaPreInversion.color}" style="text-align: right"/>
+                                    <p:outputLabel value="#{busquedaPreInversion.b19}" id="totalBusqPreInv" styleClass="#{busquedaPreInversion.color}" style="text-align: right"/>
                                 </h:panelGrid>
                                 <br></br>
                                 <p:commandButton value="Historial" icon="ui-icon-circle-zoomin" actionListener="#{busquedaPreInversion.mostrarHistorial()}" update=":form:historialMontos,:form:historialComponentesTable" oncomplete="PF('historialComp').show()" immediate="true"/>
