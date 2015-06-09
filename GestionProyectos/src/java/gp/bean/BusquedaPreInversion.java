@@ -121,6 +121,7 @@ public class BusquedaPreInversion {
     private Integer idcomp;
     private String fmm;
     private String fmmaux;
+    private BigDecimal montoViable = new BigDecimal("0.0");
     private List<HistorialMontos> historialMontos;
 
     public BusquedaPreInversion() {
@@ -166,8 +167,14 @@ public class BusquedaPreInversion {
         llenar_NE();
     }
 
+    public void guardarMontoViabilidad() {
+        montoViable = montoViable.add(BigDecimal.valueOf((b4D)));
+        System.out.println("EL MONTO VIABLE ES: " + montoViable);
+    }
+
     public void guardarFechaModificacion() {
         fmmaux = fmm;
+        System.out.println("FECHA: " + fmmaux);
     }
 
     public void guardarMontoModificado() {
@@ -352,22 +359,41 @@ public class BusquedaPreInversion {
         FacesMessage message = null;
         try {
             Componentes c = new Componentes();
-            c.setNumMonto(Integer.parseInt(mont.getNumMonto(b1)));
-            c.setMontoExpTec(b13D);
-            c.setMontoInfra(b14D);
-            c.setMontoEquipMov(b15D);
-            c.setMontoSuperv(b16D);
-            c.setMontoCapac(b17D);
-            c.setMontoOtros(b18D);
-            c.setCodigoProy(Integer.parseInt(b20));
-            c.setFecharegistro(getDate(nuevaFecha));
-            c.setMontoModif(b26D);
-            c.setMontoaux(Double.parseDouble(String.valueOf(aux1)));
-            c.setFechaaux(getDate(aux2));
-            c.setIdcomp(idcomp);
-            bpi.actualizarComponentes(c);
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO LOS COMPONENTES");
-            RequestContext.getCurrentInstance().showMessageInDialog(message);
+            if (b26D == null) {
+                Date date= new Date();
+                c.setNumMonto(0);
+                c.setMontoExpTec(b13D);
+                c.setMontoInfra(b14D);
+                c.setMontoEquipMov(b15D);
+                c.setMontoSuperv(b16D);
+                c.setMontoCapac(b17D);
+                c.setMontoOtros(b18D);
+                c.setCodigoProy(Integer.parseInt(b20));
+                c.setFecharegistro(date);
+                c.setMontoModif(0.0);
+                c.setTipoRegistro("0");
+                rpd.RegistrarComponentes(c);
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS COMPONENTES");
+                RequestContext.getCurrentInstance().showMessageInDialog(message);
+            } else {
+                c.setNumMonto(Integer.parseInt(mont.getNumMonto(b1)));
+                c.setMontoExpTec(b13D);
+                c.setMontoInfra(b14D);
+                c.setMontoEquipMov(b15D);
+                c.setMontoSuperv(b16D);
+                c.setMontoCapac(b17D);
+                c.setMontoOtros(b18D);
+                c.setCodigoProy(Integer.parseInt(b20));
+                c.setFecharegistro(getDate(nuevaFecha));
+                c.setMontoModif(b26D);
+                c.setMontoaux(Double.parseDouble(String.valueOf(aux1)));
+                c.setFechaaux(getDate(aux2));
+                c.setIdcomp(idcomp);
+                bpi.actualizarComponentes(c);
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO LOS COMPONENTES");
+                RequestContext.getCurrentInstance().showMessageInDialog(message);
+            }
+
             mdf.clear();
             mdf = montd.getMontosModificados(b20);
         } catch (Exception e) {
@@ -474,17 +500,32 @@ public class BusquedaPreInversion {
         this.b19 = String.valueOf(valor);
         System.out.println(estado10);
         if (estado10 == 0) {
-            if (Double.parseDouble(b19) == Double.parseDouble(String.valueOf(aux1))) {
-                System.out.println(Double.parseDouble(b19) + " " + Double.parseDouble(String.valueOf(aux1)));
-                System.out.println("iguales 0");
-                color = "clase1";
-                estado11 = false;
+            if (b26D == null) {
+                if (Double.parseDouble(b19) == Double.parseDouble(String.valueOf(BigDecimal.valueOf((b4D))))) {
+                    System.out.println(Double.parseDouble(b19) + " MONTO VIABLE" + Double.parseDouble(String.valueOf(BigDecimal.valueOf((b4D)))));
+                    System.out.println("iguales 0");
+                    color = "clase1";
+                    estado11 = false;
+                } else {
+                    System.out.println(Double.parseDouble(b19) + " MONTO VIABLE" + Double.parseDouble(String.valueOf(BigDecimal.valueOf((b4D)))));
+                    System.out.println("diferentes 0");
+                    color = "clase2";
+                    estado11 = true;
+                }
             } else {
-                System.out.println(b19 + " " + aux1);
-                System.out.println("diferentes 0");
-                color = "clase2";
-                estado11 = true;
+                if (Double.parseDouble(b19) == Double.parseDouble(String.valueOf(aux1))) {
+                    System.out.println(Double.parseDouble(b19) + " " + Double.parseDouble(String.valueOf(aux1)));
+                    System.out.println("iguales 0");
+                    color = "clase1";
+                    estado11 = false;
+                } else {
+                    System.out.println(b19 + " " + aux1);
+                    System.out.println("diferentes 0");
+                    color = "clase2";
+                    estado11 = true;
+                }
             }
+
         } else {
             if (estado10 == 1) {
                 if (Double.parseDouble(b19) == Double.parseDouble(b24Daux)) {
@@ -1237,6 +1278,14 @@ public class BusquedaPreInversion {
 
     public void setAux1(BigDecimal aux1) {
         this.aux1 = aux1;
+    }
+
+    public BigDecimal getMontoViable() {
+        return montoViable;
+    }
+
+    public void setMontoViable(BigDecimal montoViable) {
+        this.montoViable = montoViable;
     }
 
 }
