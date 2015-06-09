@@ -417,6 +417,15 @@ public class BusquedaPreInversion {
     }
 
     public void cambiarAlBuscar() {
+        estado10 = -1;
+        estado4 = false;
+        estado3 = true;
+        estado5 = true;
+        estado6 = false;
+        estado2 = true;
+        estado7 = true;
+        estado9 = true;
+        estado12 = true;
         limpiarComponentes();
         FacesMessage message = null;
         if (b20 == "") {
