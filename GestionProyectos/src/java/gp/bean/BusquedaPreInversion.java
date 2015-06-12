@@ -86,6 +86,7 @@ public class BusquedaPreInversion {
     private boolean estado9;
     private boolean estado11;
     private boolean estado12;
+    private boolean estado14=true;
     private int estado10;
     private List<BusqPreInversion> listaBPI_1;
     private List<BusqPreInversion> listaBPI_2;
@@ -193,6 +194,7 @@ public class BusquedaPreInversion {
     }
 
     public void getComponentesDeMonto() {
+        estado14=false;
         List<busquedaPreInversionMontos> lista = new ArrayList<busquedaPreInversionMontos>();
         lista = bpi.getComponentesDeMonto(b25, b20);
         for (int i = 0; i < lista.size(); i++) {
@@ -216,13 +218,12 @@ public class BusquedaPreInversion {
         b25aux = partirMonto(0);
         b26D = Double.parseDouble(partirMonto(0));
         nuevaFecha = partirMonto(2);
-
     }
 
     public void guardarMontoSeleccionado() {
         //aux1 = String.valueOf(b26D);
         aux1 = aux1.add(BigDecimal.valueOf(b26D));
-        System.out.println(aux1);
+        System.out.println("AUX1: "+aux1);
     }
 
     public void guardarFechaSeleccionada() {
@@ -359,7 +360,7 @@ public class BusquedaPreInversion {
         FacesMessage message = null;
         try {
             Componentes c = new Componentes();
-            if (b26D == null) {
+            if (b26D == null || idcomp==null) {
                 Date date= new Date();
                 c.setNumMonto(0);
                 c.setMontoExpTec(b13D);
@@ -370,13 +371,20 @@ public class BusquedaPreInversion {
                 c.setMontoOtros(b18D);
                 c.setCodigoProy(Integer.parseInt(b20));
                 c.setFecharegistro(date);
-                c.setMontoModif(0.0);
+                if(b26D==null){
+                    c.setMontoModif(0.0);
+                }
+                else{
+                    if(idcomp==null){
+                        c.setMontoModif(b26D);
+                    }
+                }
                 c.setTipoRegistro("0");
                 rpd.RegistrarComponentes(c);
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS COMPONENTES");
                 RequestContext.getCurrentInstance().showMessageInDialog(message);
             } else {
-                c.setNumMonto(Integer.parseInt(mont.getNumMonto(b1)));
+                c.setNumMonto((Integer) (mont.getNumMonto(b20)==null?0:mont.getNumMonto(b20)));
                 c.setMontoExpTec(b13D);
                 c.setMontoInfra(b14D);
                 c.setMontoEquipMov(b15D);
@@ -591,6 +599,9 @@ public class BusquedaPreInversion {
             mdf.clear();
             mdf = montd.getMontosModificados(b20);
             b24D = 0.0;
+            System.out.println("LIMPA");
+            limpiarComponentes();
+            System.out.println("DESPUES DE LIMPIAR");
             fmm = "";
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -1295,6 +1306,14 @@ public class BusquedaPreInversion {
 
     public void setMontoViable(BigDecimal montoViable) {
         this.montoViable = montoViable;
+    }
+
+    public boolean isEstado14() {
+        return estado14;
+    }
+
+    public void setEstado14(boolean estado14) {
+        this.estado14 = estado14;
     }
 
 }

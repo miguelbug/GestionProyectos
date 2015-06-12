@@ -8,6 +8,7 @@ package gp.dao;
 
 import gp.model.Ejecucion;
 import gp.model.EjecucionMostrado;
+import gp.model.Historial;
 import gp.model.NuevosDocumentos;
 import gp.model.Registro_Inversion;
 import gp.model.busquedaPreInversionMontos;
@@ -21,9 +22,9 @@ public interface RegistroInversionDAO {
     public List<Registro_Inversion> getExpedientes(String codigo, String tipo);
     public String getNombreExpediente(String codigo, String tipo);
     public String getNombreDocumentos(String codigo, String tipo, String exp);
-    public void guardarNuevoExpTecn(NuevosDocumentos dato);
-    public void guardarNuevoDocumento(NuevosDocumentos dato);
-    public void guardarNuevoDocumentoContrato(NuevosDocumentos dato);
+    public void guardarNuevoExpTecn(NuevosDocumentos dato, Historial h, String numero, String id, String etapa);
+    public void guardarNuevoDocumento(NuevosDocumentos dato,Historial h,Integer numerodocu ,String exptecn, Integer tipodocu);
+    public void guardarNuevoDocumentoContrato(NuevosDocumentos dato, Historial h,String codigocont,String codigproy, String c);
     public String getIdExpedienteTecn(String proy, String tipo,String numero);
     public void guardarEjecucion(List<Ejecucion> e);
     public String validarProy(String codigo);
@@ -34,4 +35,5 @@ public interface RegistroInversionDAO {
     public Integer validarProyecto(String codigo, String etapa);
     public List<EjecucionMostrado> getMontosEjecutados(String codigo, String id);
     public void ActualizarMontosEjecutados(List<Ejecucion> ejecu , String idproy);
+    public Integer getIdProyExpt2(Integer numero, Integer idproy, Integer etapa);
 }

@@ -20,6 +20,7 @@ public class Registro_Inversion implements Serializable{
 
     private String nombre_exp;
     private String codigo;
+    private Integer idproye;
     
     public Registro_Inversion() {
     }
@@ -38,6 +39,14 @@ public class Registro_Inversion implements Serializable{
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public Integer getIdproye() {
+        return idproye;
+    }
+
+    public void setIdproye(Integer idproye) {
+        this.idproye = idproye;
     }
     
 }

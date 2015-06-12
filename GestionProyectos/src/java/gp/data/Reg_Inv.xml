@@ -13,6 +13,10 @@
         <result property="nombre_exp" column="IDEXP"/>
     </resultMap>
     
+    <resultMap id="resultado21" type="Integer">
+        <result property="idproye" column="IDEXP"/>
+    </resultMap>
+    
     <resultMap id="resultado3" type="Integer">
         <result property="id" column="IDRORDR"/>
     </resultMap>
@@ -65,19 +69,32 @@
     </select>
     
     <insert id="insert_nuevoExp" parameterType="gp.model.NuevosDocumentos">
-        INSERT INTO PROY_EXPT (NUMERO_EXP,MONTO,RR,FECHA,ID_PROYECTO,ID_TIPOSDOCUS,ETAPA)
-        VALUES (#{numeroDocu},#{monto},#{resolucion},#{fecha},#{idProy},#{tipodocu},#{etapa})
-        
+        INSERT INTO PROY_EXPT (NUMERO_EXP,ID_PROYECTO,ID_TIPOSDOCUS,ETAPA)
+        VALUES (#{numeroDocu},#{idProy},#{tipodocu},#{etapa})
+    </insert>
+    <insert id="guardar_historial" parameterType="gp.model.Historial">
+        INSERT INTO HISTORIALEXPCONT (MONTO,FECHA,NUMERO_RR,ID_PROYEXPT)
+        VALUES (#{monto},#{fecha},#{resolucion},#{idproy})
+    </insert>
+    
+    <insert id="guardar_historialAdicDeduc" parameterType="gp.model.Historial">
+        INSERT INTO HISTORIALEXPCONT (MONTO,FECHA,NUMERO_RR,ID_NUEVDOC)
+        VALUES (#{monto},#{fecha},#{resolucion},#{idnuevodoc})
+    </insert>
+    
+    <insert id="guardar_historialContrato" parameterType="gp.model.Historial">
+        INSERT INTO HISTORIALEXPCONT (MONTO,FECHA,ID_NUEVDOC)
+        VALUES (#{monto},#{fecha},#{idproy})
     </insert>
     
     <insert id="insert_nuevoDoc" parameterType="gp.model.NuevosDocumentos">
-        INSERT INTO NUEVOS_DOCUMENTOS (NUMERO_DOCU,MONTO,RR,FECHA,ID_TIPOSDOCUS,ID_PROYEXPT)
-        VALUES (#{numeroDocu},#{monto},#{resolucion},#{fecha},#{tipodocu},#{exptecn})
+        INSERT INTO NUEVOS_DOCUMENTOS (NUMERO_DOCU,ID_TIPOSDOCUS,ID_PROYEXPT)
+        VALUES (#{numeroDocu},#{tipodocu},#{exptecn})
     </insert>
     
     <insert id="insert_nuevoDocContrato" parameterType="gp.model.NuevosDocumentos">
-        INSERT INTO NUEVOS_DOCUMENTOS (CODIGO_DOCU,MONTO,FECHA,ID_TIPOSDOCUS,ID_PROYEXPT)
-        VALUES (#{codigoContrato},#{monto},#{fecha},#{tipodocu},#{exptecn})
+        INSERT INTO NUEVOS_DOCUMENTOS (CODIGO_DOCU,ID_TIPOSDOCUS,ID_PROYEXPT)
+        VALUES (#{codigoContrato},#{tipodocu},#{exptecn})
     </insert>
     
     <select id="getIdExpTecn" resultMap="resultado2" parameterType="java.util.HashMap">
@@ -86,6 +103,30 @@
         AND ID_TIPOSDOCUS=#{tipo}
         AND NUMERO_EXP=#{numero}
     </select>
+    
+    <select id="getIdProyectoExpt" resultMap="resultado21" parameterType="java.util.HashMap">
+        SELECT ID_PROYEXPT AS IDEXP FROM PROY_EXPT
+        WHERE ID_PROYECTO=#{idproy}
+        AND ETAPA=#{etapa}
+        AND NUMERO_EXP=#{numero}
+    </select>
+    
+    <select id="getIdNuevosDocus" resultMap="resultado21" parameterType="java.util.HashMap">
+        SELECT ID_NUEVDOC AS IDEXP
+        FROM NUEVOS_DOCUMENTOS
+        WHERE CODIGO_DOCU=#{numerocontrato}
+        AND ID_PROYEXPT=#{idexpt}
+        AND ID_PROYEXPT IN (SELECT P.ID_PROYEXPT FROM PROY_EXPT P WHERE P.ID_PROYECTO=#{idproy})
+    </select>
+    
+    <select id="getIdNuevosDocus2" resultMap="resultado21" parameterType="java.util.HashMap">
+        SELECT ID_NUEVDOC AS IDEXP
+        FROM NUEVOS_DOCUMENTOS
+        WHERE NUMERO_DOCU=#{numerodocu}
+        AND ID_PROYEXPT=#{exptecn}
+        AND ID_TIPOSDOCUS=#{tipodocu}
+    </select>
+    
     
     <insert id="insert_nuevaEjec" parameterType="gp.model.Ejecucion">
         INSERT INTO EJECUCION (MES,ANIO,MONTO,ID_TIPOSDOCUS,ID_RORDR,FECHA,MONTO2,ID_PROYEXPT)

@@ -11,6 +11,7 @@ import gp.daoImpl.ListasGeneralesDaoImpl;
 import gp.daoImpl.RegistroInversionDaoImpl;
 import gp.model.Ejecucion;
 import gp.model.EjecucionMostrado;
+import gp.model.Historial;
 import gp.model.NuevosDocumentos;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -129,24 +130,17 @@ public class RegistroInversion {
 
     public void onTabChange(TabChangeEvent event) {
         if (event.getTab().getTitle().equals("REGISTRO DE ADICIONAL(ES)")) {
-            if (listaExpedientes.size() == 0) {
-                iniciarListaExpediente();
-            }
+            iniciarListaExpediente();
         } else {
             if (event.getTab().getTitle().equals("REGISTRO DE DEDUCTIVO(S)")) {
-                if (listaExpedientes.size() == 0) {
-                    iniciarListaExpediente();
-                }
+                iniciarListaExpediente();
             } else {
                 if (event.getTab().getTitle().equals("REGISTRO DE CONTRATO(S)")) {
-                    if (listaExpedientes.size() == 0) {
-                        iniciarListaExpediente();
-                    }
+                    iniciarListaExpediente();
                 } else {
                     if (event.getTab().getTitle().equals("REGISTRO DE EJECUCIÓN")) {
-                        if (listaExpedientes.size() == 0) {
-                            iniciarListaExpediente();
-                        }
+                        iniciarListaExpediente();
+                        getListaEtapas();
                     }
                 }
             }
@@ -159,13 +153,13 @@ public class RegistroInversion {
         if (!etapa.equals(" ")) {
             i = rid.validarProyecto(cod_proy, etapa);
             if (i > 0) {
-                System.out.println("VALIDACION: "+i);
+                System.out.println("VALIDACION: " + i);
                 esta = true;//se actualiza
                 getMontosEjecucion(cod_proy);
             } else {
                 if (i == 0) {
                     limpiarEjecucion();
-                    System.out.println("VALIDACION: "+i);
+                    System.out.println("VALIDACION: " + i);
                     esta = false;//se ingresa nuevos registros
                 }
             }
@@ -270,7 +264,7 @@ public class RegistroInversion {
             } else {
                 if (esta == true) {
                     System.out.println("SE ACTUALIZA");
-                    System.out.println(exp_tecnicoPre+" "+infraestructuraPre+" "+equip_mobiliPre+" "+supervisionPre+" "+capacitacionPre+" "+otrosPre);
+                    System.out.println(exp_tecnicoPre + " " + infraestructuraPre + " " + equip_mobiliPre + " " + supervisionPre + " " + capacitacionPre + " " + otrosPre);
                     List<Ejecucion> ejecu = new ArrayList<Ejecucion>();
                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), exp_tecnicoD == null ? 0.0 : exp_tecnicoD, 1, rid.getIDRoRdR(t1), date, exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre, rid.getIdProyExpt(cod_proy, etapa)));
                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), infraestructuraD == null ? 0.0 : infraestructuraD, 5, rid.getIDRoRdR(t2), date, this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre, rid.getIdProyExpt(cod_proy, etapa)));
@@ -278,8 +272,8 @@ public class RegistroInversion {
                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), supervisionD == null ? 0.0 : supervisionD, 9, rid.getIDRoRdR(t4), date, supervisionPre == null ? 0.0 : this.supervisionPre, rid.getIdProyExpt(cod_proy, etapa)));
                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), capacitacionD == null ? 0.0 : capacitacionD, 6, rid.getIDRoRdR(t5), date, capacitacionPre == null ? 0.0 : this.capacitacionPre, rid.getIdProyExpt(cod_proy, etapa)));
                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), otrosD == null ? 0.0 : otrosD, 7, rid.getIDRoRdR(t6), date, otrosPre == null ? 0.0 : this.otrosPre, rid.getIdProyExpt(cod_proy, etapa)));
-                    System.out.println(ejecu.get(0).getMonto2()+"  "+ejecu.get(0).getMonto());
-                    rid.ActualizarMontosEjecutados(ejecu,String.valueOf(rid.getIdProyExpt(cod_proy, etapa)));
+                    System.out.println(ejecu.get(0).getMonto2() + "  " + ejecu.get(0).getMonto());
+                    rid.ActualizarMontosEjecutados(ejecu, String.valueOf(rid.getIdProyExpt(cod_proy, etapa)));
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN ACTUALIZADO LOS MONTOS");
                     RequestContext.getCurrentInstance().showMessageInDialog(message);
                 }
@@ -366,15 +360,17 @@ public class RegistroInversion {
         String nombreExpaux = "";
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
+            Historial h = new Historial();
             nd.setNumeroDocu(Integer.parseInt(nombreExp));
             nd.setEtapa(Integer.parseInt(nombreExp));
-            nombreExpaux = nombreExp;
-            nd.setMonto(montoD);
-            nd.setResolucion(resolucion);
-            nd.setFecha(getDate(fechaaux));
             nd.setTipodocu(1);
             nd.setIdProy(cod_proy);
-            rid.guardarNuevoExpTecn(nd);
+            nombreExpaux = nombreExp;
+            h.setResolucion(resolucion);
+            h.setMonto(montoD);
+            h.setFecha(getDate(fechaaux));
+            System.out.println(nombreExp + " " + cod_proy + " " + nombreExp);
+            rid.guardarNuevoExpTecn(nd, h, nombreExp, cod_proy, nombreExp);
             getNombreExpediente();
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL EXPEDIENTE TÉCNICO N°: " + nombreExpaux);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -419,14 +415,18 @@ public class RegistroInversion {
         String nombredocu1aux = "";
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
+            Historial h= new Historial();
             nd.setNumeroDocu(Integer.parseInt(nombredocu1));
             nombredocu1aux = nombredocu1;
             nd.setExptecn(rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(adicional)));
-            nd.setMonto(monto_adicD);
-            nd.setResolucion(resolucion_adic);
-            nd.setFecha(getDate(fechaaux_adic));
+            //nd.setMonto(monto_adicD);
+            //nd.setResolucion(resolucion_adic);
+            //nd.setFecha(getDate(fechaaux_adic));
             nd.setTipodocu(2);
-            rid.guardarNuevoDocumento(nd);
+            h.setMonto(monto_adicD);
+            h.setResolucion(resolucion_adic);
+            h.setFecha(getDate(fechaaux_adic));
+            rid.guardarNuevoDocumento(nd,h,nd.getNumeroDocu(),nd.getExptecn(),nd.getTipodocu());
             getAdicionales();
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL ADICIONAL N°: " + nombredocu1aux);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -444,14 +444,18 @@ public class RegistroInversion {
         String nombredocu2aux = "";
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
+            Historial h= new Historial();
             nd.setNumeroDocu(Integer.parseInt(nombredocu2));
             nombredocu2aux = nombredocu2;
-            nd.setMonto(monto_deducD);
-            nd.setResolucion(resolucion_deduc);
-            nd.setFecha(getDate(fechaaux_deduc));
+            //nd.setMonto(monto_deducD);
+            //nd.setResolucion(resolucion_deduc);
+            //nd.setFecha(getDate(fechaaux_deduc));
             nd.setExptecn(rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(deductivo)));
             nd.setTipodocu(3);
-            rid.guardarNuevoDocumento(nd);
+            h.setMonto(monto_deducD);
+            h.setResolucion(resolucion_deduc);
+            h.setFecha(getDate(fechaaux_deduc));
+            rid.guardarNuevoDocumento(nd,h,nd.getNumeroDocu(),nd.getExptecn(),nd.getTipodocu());
             getDeductivos();
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL DEDUCTIVO N°: " + nombredocu2aux);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -469,12 +473,13 @@ public class RegistroInversion {
         FacesMessage message = null;
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
+            Historial h = new Historial();
             nd.setExptecn(rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(contrato)));
             nd.setCodigoContrato(nombredocu3);
-            nd.setMonto(monto_contratoD);
-            nd.setFecha(getDate(fecha_contrato));
+            h.setMonto(monto_contratoD);
+            h.setFecha(getDate(fecha_contrato));
             nd.setTipodocu(4);
-            rid.guardarNuevoDocumentoContrato(nd);
+            rid.guardarNuevoDocumentoContrato(nd, h, nombredocu3, cod_proy, nd.getExptecn());
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL CONTRATO: " + nombredocu3);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         } catch (Exception e) {
@@ -512,13 +517,16 @@ public class RegistroInversion {
 
     public void getAdicionales() {
         try {
-            System.out.println("CODIGO PROY ADICIONALES: " + cod_proy + " ADICIONAL: " + adicional);
-            if (adicional.equals(" ") || adicional.equals("")) {
+            System.out.println("CODIGO PROY ADICIONALES: " + cod_proy + " ADICIONAL: " + adicional + "-");
+
+            String numeroAdicional = rid.getNombreDocumentos(cod_proy, "2", partirCadena(adicional));
+            System.out.println("numeroAdicional: " + numeroAdicional);
+            if (adicional.equals(" ") || adicional.equals("") || numeroAdicional == null ) {
                 System.out.println("por defecto Ad");
                 nombredocu1 = "1";
             } else {
                 System.out.println("consulta BD AD");
-                nombredocu1 = rid.getNombreDocumentos(cod_proy, "2", partirCadena(adicional));
+                nombredocu1 = numeroAdicional;
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -530,12 +538,13 @@ public class RegistroInversion {
     public void getDeductivos() {
         try {
             System.out.println("CODIGO PROY DEDUCTIVOS: " + cod_proy + " DEDUCTIVO: " + deductivo);
-            if (deductivo.equals(" ") || deductivo.equals("")) {
+            String numeroDeductivo = rid.getNombreDocumentos(cod_proy, "3", partirCadena(deductivo));
+            if (deductivo.equals(" ") || deductivo.equals("") || numeroDeductivo == null) {
                 System.out.println("por defecto ded");
                 nombredocu2 = "1";
             } else {
                 System.out.println("consulta BD ded");
-                nombredocu2 = rid.getNombreDocumentos(cod_proy, "3", partirCadena(deductivo));
+                nombredocu2 = numeroDeductivo;
             }
 
         } catch (Exception e) {

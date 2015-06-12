@@ -78,7 +78,7 @@
                                     <p:inputMask value="#{busquedaPreInversion.b7}" mask="99/99/9999" disabled="#{busquedaPreInversion.estado9}" rendered="#{busquedaPreInversion.estado5}" style="text-align: right"/>
 
                                     <p:outputLabel value="Montos Modificados:" rendered="#{busquedaPreInversion.estado6}"/>
-                                    <p:dataList value="#{busquedaPreInversion.mdf}" var="car" type="ordered" rendered="#{busquedaPreInversion.estado6}" id="datalistID">
+                                    <p:dataList value="#{busquedaPreInversion.mdf}" emptyMessage="No hay Montos Registrados" var="car" type="ordered" rendered="#{busquedaPreInversion.estado6}" id="datalistID">
                                         <f:facet name="header">
                                             Montos Anteriores
                                         </f:facet>
@@ -106,13 +106,13 @@
                                     </p:selectOneMenu>
 
                                     <p:outputLabel value="Monto Seleccionado: " rendered="#{busquedaPreInversion.estado4}"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b26D}" thousandSeparator="," decimalSeparator="." rendered="#{busquedaPreInversion.estado4}" emptyValue="empty" required="false"  style="text-align: right">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b26D}" thousandSeparator="," decimalSeparator="." rendered="#{busquedaPreInversion.estado4}" disabled="#{busquedaPreInversion.estado14}" emptyValue="empty" required="false"  style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.guardarMontoSeleccionado()}" />
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Fecha Seleccionada: " rendered="#{busquedaPreInversion.estado4}"/>
-                                    <p:inputMask value="#{busquedaPreInversion.nuevaFecha}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado4}" style="text-align: right">
+                                    <p:inputMask value="#{busquedaPreInversion.nuevaFecha}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado4}" disabled="#{busquedaPreInversion.estado14}" style="text-align: right">
                                         <p:ajax event="change" listener="#{busquedaPreInversion.guardarFechaSeleccionada()}"/>
                                     </p:inputMask>
 
