@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="BusquedaInversion">
+    
+    <resultMap id="ExpTecn" type="gp.model.MostrarExpedientesTecnicos">
+        <result property="documento" column="DOCUMENTO"/>
+        <result property="monto" column="MONTO"/>
+        <result property="rr" column="RR"/>
+        <result property="fecha" column="FECHA"/>
+    </resultMap>
+    
+    <resultMap id="DetalleExpTecn" type="gp.model.DetalleExpTecnico">
+        <result property="documento" column="DOCUMENTO"/>
+        <result property="fecha" column="FECHA"/>
+        <result property="monto" column="MONTO"/>
+        <result property="resolucion" column="RR"/>
+    </resultMap>
+    
+    
+    <resultMap id="Ejecucion" type="gp.model.MostrarEjecucion">
+        <result property="mes" column="MES"/>
+        <result property="anio" column="ANIO"/>
+        <result property="montoPre" column="MONTO_PRELIMINAR"/>
+        <result property="montoEje" column="MONTO_EJECUTADO"/>
+        <result property="documento" column="DOCUMENTO"/>
+        <result property="rdrror" column="RNRRDR"/>
+        <result property="fecha" column="FECHA"/>
+    </resultMap>
+    
+    
+    <select id="getExpTecn" resultMap="ExpTecn" parameterType="String">
+        SELECT TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP AS DOCUMENTO,
+        H.MONTO AS MONTO,
+        H.NUMERO_RR AS RR,
+        TO_CHAR(H.FECHA,'DD/MM/YYYY') AS FECHA
+        FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD, HISTORIALEXPCONT H
+        WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND PE.ID_PROYEXPT=H.ID_PROYEXPT
+        AND PE.ID_PROYECTO=#{codigo}
+        ORDER BY TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP
+    </select>
+    
+    <select id="getEjecu" resultMap="Ejecucion" parameterType="String">
+        SELECT E.MES AS MES,
+        E.ANIO AS ANIO,
+        E.MONTO2 as MONTO_PRELIMINAR,
+        E.MONTO AS MONTO_EJECUTADO,
+        TD.NOMBRE_TIPODOCU AS DOCUMENTO,
+        ROR.NOMBRE AS RNRRDR,
+        TO_CHAR(E.FECHA,'DD/MM/YYYY') AS FECHA
+        FROM EJECUCION E, TIPOS_DOCUMENTOS TD, RO_RDR ROR, PROY_EXPT PE
+        WHERE E.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND E.ID_RORDR=ROR.ID_RORDR
+        AND PE.ID_PROYEXPT=E.ID_PROYEXPT
+        AND PE.ID_PROYECTO=#{codigo}
+    </select>
+    
+    <select id="getDetalleExpTecn" resultMap="DetalleExpTecn" parameterType="java.util.Map">
+        SELECT TD.NOMBRE_TIPODOCU||' N° '||DECODE(TD.NOMBRE_TIPODOCU,'CONTRATO',ND.CODIGO_DOCU,ND.NUMERO_DOCU) AS DOCUMENTO,
+        TO_CHAR(H.FECHA,'DD/MM/YYYY') AS FECHA,
+        H.MONTO AS MONTO,
+        DECODE(H.NUMERO_RR,NULL,'SIN RR',H.NUMERO_RR) AS RR
+        FROM NUEVOS_DOCUMENTOS ND, TIPOS_DOCUMENTOS TD, PROY_EXPT PE, TIPOS_DOCUMENTOS TD2, HISTORIALEXPCONT H
+        WHERE ND.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND ND.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND ND.ID_NUEVDOC=H.ID_NUEVDOC
+        AND PE.ID_TIPOSDOCUS=TD2.ID_TIPOSDOCUS
+        AND PE.ID_PROYECTO=#{codigo}
+        AND TD2.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP=#{expediente}
+        ORDER BY TD.NOMBRE_TIPODOCU||' N° '||DECODE(TD.NOMBRE_TIPODOCU,'CONTRATO',ND.CODIGO_DOCU,ND.NUMERO_DOCU)
+    </select>
+    
+</mapper>

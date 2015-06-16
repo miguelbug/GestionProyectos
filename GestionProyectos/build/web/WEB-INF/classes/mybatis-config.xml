@@ -30,5 +30,6 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         <mapper resource="gp/data/Montos.xml"/>
         <mapper resource="gp/data/Reg_Inv.xml"/>
         <mapper resource="gp/data/ListasGenerales.xml"/>
+        <mapper resource="gp/data/Busq_Inversion.xml"/>
     </mappers>
 </configuration>

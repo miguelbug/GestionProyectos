@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <head>
+        <title>BÚSQUEDA INVERSION</title>
+        <link rel="stylesheet" type="text/css" href="resources/css2/estilos.css" />
+    </head>
+    <h:body>
+        <ui:composition template="./menucentral.xhtml">
+            <ui:define name="content">
+                <h:form id="form">
+                    <center>
+                        <h:panelGrid columns="3">
+                            <p:outputLabel value="SNIP: "/>
+                            <p:autoComplete id="autoComplet" value="#{busquedaInversion.codigo}" completeMethod="#{busquedaInversion.coincidencias}"/>
+                            <p:commandButton value="Buscar" actionListener="#{busquedaInversion.buscar()}" update="form" icon="ui-con-search"/>
+                        </h:panelGrid>
+                    </center>
+                    <br></br>
+                    <p:tabView dynamic="true" id="tabM" rendered="#{busquedaInversion.estado}">
+                        <p:tab title="INFORMACION DEL PROYECTO" id="tabS1">
+                            <p:outputLabel value="Expedientes Técnicos: "/>
+                            <br></br>
+                            <br></br>
+                            <p:dataTable value="#{busquedaInversion.met}" var="busq">
+                                <p:ajax event="rowToggle" listener="#{busquedaInversion.onRowToggle}"/>
+                                <p:column style="width:16px">
+                                    <p:rowToggler />
+                                </p:column>
+                                <p:column headerText="DOCUMENTO" style="width: 9%; text-align: center" >
+                                    <h:outputText value="#{busq.documento}" />
+                                </p:column>
+                                <p:column headerText="MONTO" style="width: 10%; text-align: center">
+                                    <h:outputText value="#{busq.monto}" />
+                                </p:column>
+                                <p:column headerText="RESOLUCION" style="width: 10%; text-align: center">
+                                    <h:outputText value="#{busq.rr}" />
+                                </p:column>
+                                <p:column headerText="FECHA" style="width: 15%; text-align: center">
+                                    <h:outputText value="#{busq.fecha}" />
+                                </p:column>
+                                <p:rowExpansion>
+                                    <br></br>
+                                    <p:dataTable value="#{busquedaInversion.det}" var="detalle">
+                                        <p:column headerText="DOCUMENTO" style="width: 9%; text-align: center">
+                                            <h:outputText value="#{detalle.documento}" />
+                                        </p:column>
+                                        <p:column headerText="FECHA" style="width: 9%; text-align: center" >
+                                            <h:outputText value="#{detalle.fecha}" />
+                                        </p:column>
+                                        <p:column headerText="MONTO" style="width: 10%; text-align: center">
+                                            <h:outputText value="#{detalle.monto}" />
+                                        </p:column>
+                                        <p:column headerText="RESOLUCION" style="width: 10%; text-align: center">
+                                            <h:outputText value="#{detalle.resolucion}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                    <br></br>
+                                </p:rowExpansion>
+                            </p:dataTable>
+                            <br></br>
+                            <br></br>
+                            <p:outputLabel value="Ejecución:"/>
+                            <br></br>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Fecha Registro:"/>
+                                <p:outputLabel value="#{busquedaInversion.fecha}"/>
+                                <p:outputLabel value="Mes:"/>
+                                <p:outputLabel value="#{busquedaInversion.mes}"/>
+                                <p:outputLabel value="Año:"/>
+                                <p:outputLabel value="#{busquedaInversion.anio}"/>
+                            </h:panelGrid>
+                            <br></br>
+                            <p:dataTable value="#{busquedaInversion.mej}" var="ejecu">
+                                <p:column headerText="DOCUMENTO" style="width: 10%; text-align: center">
+                                    <h:outputText value="#{ejecu.documento}" />
+                                </p:column>
+                                <p:column headerText="MONTO PRELIMINAR" style="width: 9%; text-align: center" >
+                                    <h:outputText value="#{ejecu.montoPre}" />
+                                </p:column>
+                                <p:column headerText="MONTO EJECUTADO" style="width: 10%; text-align: center">
+                                    <h:outputText value="#{ejecu.montoEje}" />
+                                </p:column>
+                                <p:column headerText="TIPO" style="width: 15%; text-align: center">
+                                    <h:outputText value="#{ejecu.rdrror}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

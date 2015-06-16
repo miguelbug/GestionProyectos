@@ -516,10 +516,13 @@ public class RegistroInversion {
     }
 
     public void getAdicionales() {
+        String numeroAdicional="";
         try {
             System.out.println("CODIGO PROY ADICIONALES: " + cod_proy + " ADICIONAL: " + adicional + "-");
-
-            String numeroAdicional = rid.getNombreDocumentos(cod_proy, "2", partirCadena(adicional));
+            if(!adicional.equals(" ")){
+                numeroAdicional = rid.getNombreDocumentos(cod_proy, "2", partirCadena(adicional));
+            }
+            
             System.out.println("numeroAdicional: " + numeroAdicional);
             if (adicional.equals(" ") || adicional.equals("") || numeroAdicional == null ) {
                 System.out.println("por defecto Ad");
@@ -536,9 +539,12 @@ public class RegistroInversion {
     }
 
     public void getDeductivos() {
+        String numeroDeductivo="";
         try {
             System.out.println("CODIGO PROY DEDUCTIVOS: " + cod_proy + " DEDUCTIVO: " + deductivo);
-            String numeroDeductivo = rid.getNombreDocumentos(cod_proy, "3", partirCadena(deductivo));
+            if(!deductivo.equals(" ")){
+                numeroDeductivo= rid.getNombreDocumentos(cod_proy, "3", partirCadena(deductivo));
+            }
             if (deductivo.equals(" ") || deductivo.equals("") || numeroDeductivo == null) {
                 System.out.println("por defecto ded");
                 nombredocu2 = "1";
