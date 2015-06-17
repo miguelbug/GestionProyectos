@@ -80,4 +80,19 @@ public class BusquedaInversionDaoImpl implements BusquedaInversionDAO {
         return list;
     }
 
+    @Override
+    public String getNombreProy(String codigo) {
+        SqlSession session = sqlSessionFactory.openSession();
+        String list = null;
+        try {
+            list = session.selectOne("BusquedaInversion.getProy", codigo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
 }

@@ -15,20 +15,23 @@
             <ui:define name="content">
                 <h:form id="form">
                     <center>
-                        <h:panelGrid columns="3">
-                            <p:outputLabel value="SNIP: "/>
+                        <h:panelGrid columns="3" cellpadding="4">
+                            <p:outputLabel value="SNIP:"/>
                             <p:autoComplete id="autoComplet" value="#{busquedaInversion.codigo}" completeMethod="#{busquedaInversion.coincidencias}"/>
-                            <p:commandButton value="Buscar" actionListener="#{busquedaInversion.buscar()}" update="form" icon="ui-con-search"/>
+                            <p:commandButton value="Buscar" actionListener="#{busquedaInversion.buscar()}" update=":form:" icon="ui-icon ui-icon-search"/>
                         </h:panelGrid>
                     </center>
                     <br></br>
                     <p:tabView dynamic="true" id="tabM" rendered="#{busquedaInversion.estado}">
                         <p:tab title="INFORMACION DEL PROYECTO" id="tabS1">
-                            <p:outputLabel value="Expedientes Técnicos: "/>
+                            <p:outputLabel value="EXPEDIENTES TÉCNICOS"/>
                             <br></br>
                             <br></br>
-                            <p:dataTable value="#{busquedaInversion.met}" var="busq">
+                            <p:dataTable value="#{busquedaInversion.met}" var="busq" style="width: 60%" editable="true">
                                 <p:ajax event="rowToggle" listener="#{busquedaInversion.onRowToggle}"/>
+                                <p:ajax event="rowEdit" listener="#{busquedaInversion.onRowEdit}" />
+                                <p:ajax event="rowEditCancel" listener="#{busquedaInversion.onRowCancel}"/>
+
                                 <p:column style="width:16px">
                                     <p:rowToggler />
                                 </p:column>
@@ -36,13 +39,35 @@
                                     <h:outputText value="#{busq.documento}" />
                                 </p:column>
                                 <p:column headerText="MONTO" style="width: 10%; text-align: center">
-                                    <h:outputText value="#{busq.monto}" />
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{busq.monto}" /></f:facet>
+                                        <f:facet name="input">
+                                            <pe:inputNumber value="#{busq.monto}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="empty" style="text-align: right">  
+                                                <f:validateDoubleRange minimum="50"/>
+                                            </pe:inputNumber></f:facet>
+                                    </p:cellEditor>
                                 </p:column>
                                 <p:column headerText="RESOLUCION" style="width: 10%; text-align: center">
-                                    <h:outputText value="#{busq.rr}" />
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{busq.rr}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{busq.rr}" editable="true" filter="true" filterMatchMode="contains" styleClass="adicSO">
+                                                <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                                <f:selectItems value="#{busquedaInversion.resoluciones}"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
                                 </p:column>
-                                <p:column headerText="FECHA" style="width: 15%; text-align: center">
-                                    <h:outputText value="#{busq.fecha}" />
+                                <p:column headerText="FECHA" style="width: 9%; text-align: center">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{busq.fecha}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:inputMask mask="99/99/9999" value="#{busq.fecha}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
                                 </p:column>
                                 <p:rowExpansion>
                                     <br></br>
@@ -65,9 +90,10 @@
                             </p:dataTable>
                             <br></br>
                             <br></br>
-                            <p:outputLabel value="Ejecución:"/>
+                            <p:outputLabel value="EJECUCIÓN"/>
                             <br></br>
-                            <h:panelGrid columns="2">
+                            <br></br>
+                            <h:panelGrid columns="2" cellspacing="4">
                                 <p:outputLabel value="Fecha Registro:"/>
                                 <p:outputLabel value="#{busquedaInversion.fecha}"/>
                                 <p:outputLabel value="Mes:"/>
@@ -76,7 +102,7 @@
                                 <p:outputLabel value="#{busquedaInversion.anio}"/>
                             </h:panelGrid>
                             <br></br>
-                            <p:dataTable value="#{busquedaInversion.mej}" var="ejecu">
+                            <p:dataTable value="#{busquedaInversion.mej}" var="ejecu" style="width: 60%">
                                 <p:column headerText="DOCUMENTO" style="width: 10%; text-align: center">
                                     <h:outputText value="#{ejecu.documento}" />
                                 </p:column>
@@ -86,7 +112,7 @@
                                 <p:column headerText="MONTO EJECUTADO" style="width: 10%; text-align: center">
                                     <h:outputText value="#{ejecu.montoEje}" />
                                 </p:column>
-                                <p:column headerText="TIPO" style="width: 15%; text-align: center">
+                                <p:column headerText="TIPO" style="width: 7%; text-align: center">
                                     <h:outputText value="#{ejecu.rdrror}" />
                                 </p:column>
                             </p:dataTable>

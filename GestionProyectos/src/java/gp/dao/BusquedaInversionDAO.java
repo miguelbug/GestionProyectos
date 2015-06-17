@@ -19,4 +19,5 @@ public interface BusquedaInversionDAO {
     public List<MostrarExpedientesTecnicos> getListaExpedientesTecnicos(String codigo);
     public List<MostrarEjecucion> getEjecucion(String codigo);
     public List<DetalleExpTecnico> getDetalleExpedTecnico(String codigo, String exptecnico);
+    public String getNombreProy(String codigo);
 }

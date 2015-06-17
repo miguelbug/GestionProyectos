@@ -30,6 +30,9 @@
         <result property="fecha" column="FECHA"/>
     </resultMap>
     
+    <resultMap id="proyecto" type="String">
+        <result property="nombreProy" column="NOMBREPROY"/>
+    </resultMap>
     
     <select id="getExpTecn" resultMap="ExpTecn" parameterType="String">
         SELECT TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP AS DOCUMENTO,
@@ -71,6 +74,10 @@
         AND PE.ID_PROYECTO=#{codigo}
         AND TD2.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP=#{expediente}
         ORDER BY TD.NOMBRE_TIPODOCU||' N° '||DECODE(TD.NOMBRE_TIPODOCU,'CONTRATO',ND.CODIGO_DOCU,ND.NUMERO_DOCU)
+    </select>
+    
+    <select id="getProy" resultMap="proyecto" parameterType="String">
+        SELECT NOMBRE_PROY AS NOMBREPROY FROM PROYECTO WHERE ID_PROYECTO=#{codigo}
     </select>
     
 </mapper>
