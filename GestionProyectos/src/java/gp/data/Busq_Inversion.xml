@@ -6,6 +6,7 @@
 <mapper namespace="BusquedaInversion">
     
     <resultMap id="ExpTecn" type="gp.model.MostrarExpedientesTecnicos">
+        <result property="idhistorial" column="IDHISTO"/>
         <result property="documento" column="DOCUMENTO"/>
         <result property="monto" column="MONTO"/>
         <result property="rr" column="RR"/>
@@ -17,10 +18,13 @@
         <result property="fecha" column="FECHA"/>
         <result property="monto" column="MONTO"/>
         <result property="resolucion" column="RR"/>
+        <result property="idhistorial" column="IDHISTO"/>
+        <result property="idnuevodoc" column="IDNUEDOCU"/>
     </resultMap>
     
     
     <resultMap id="Ejecucion" type="gp.model.MostrarEjecucion">
+        <result property="idejecucion" column="IDEJECU"/>
         <result property="mes" column="MES"/>
         <result property="anio" column="ANIO"/>
         <result property="montoPre" column="MONTO_PRELIMINAR"/>
@@ -34,8 +38,18 @@
         <result property="nombreProy" column="NOMBREPROY"/>
     </resultMap>
     
+    <resultMap id="MesEjecu" type="String">
+        <result property="mes" column="MES"/>
+    </resultMap>
+    
+    <resultMap id="AnioEjecu" type="String">
+        <result property="anio" column="ANIO"/>
+    </resultMap>
+    
+    
     <select id="getExpTecn" resultMap="ExpTecn" parameterType="String">
-        SELECT TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP AS DOCUMENTO,
+        SELECT H.ID_HISTORIAL AS IDHISTO, 
+        TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP AS DOCUMENTO,
         H.MONTO AS MONTO,
         H.NUMERO_RR AS RR,
         TO_CHAR(H.FECHA,'DD/MM/YYYY') AS FECHA
@@ -62,7 +76,9 @@
     </select>
     
     <select id="getDetalleExpTecn" resultMap="DetalleExpTecn" parameterType="java.util.Map">
-        SELECT TD.NOMBRE_TIPODOCU||' N° '||DECODE(TD.NOMBRE_TIPODOCU,'CONTRATO',ND.CODIGO_DOCU,ND.NUMERO_DOCU) AS DOCUMENTO,
+        SELECT ND.ID_NUEVDOC AS IDNUEDOCU,
+        H.ID_HISTORIAL AS IDHISTO,
+        TD.NOMBRE_TIPODOCU||' N° '||DECODE(TD.NOMBRE_TIPODOCU,'CONTRATO',ND.CODIGO_DOCU,ND.NUMERO_DOCU) AS DOCUMENTO,
         TO_CHAR(H.FECHA,'DD/MM/YYYY') AS FECHA,
         H.MONTO AS MONTO,
         DECODE(H.NUMERO_RR,NULL,'SIN RR',H.NUMERO_RR) AS RR
@@ -79,5 +95,64 @@
     <select id="getProy" resultMap="proyecto" parameterType="String">
         SELECT NOMBRE_PROY AS NOMBREPROY FROM PROYECTO WHERE ID_PROYECTO=#{codigo}
     </select>
+
+    <update id="actualizarExpTecn" parameterType="gp.model.ExpedienteTecnico">
+        update HISTORIALEXPCONT set MONTO=#{monto}, fecha=#{fecha},NUMERO_RR=#{resolucion}
+        WHERE ID_HISTORIAL=#{idhistorial}
+    </update>
     
+    <update id="actualizarContrato1" parameterType="java.util.Map">
+        UPDATE NUEVOS_DOCUMENTOS SET CODIGO_DOCU=#{codigo}
+        WHERE ID_NUEVDOC=#{idnuevodocu}
+    </update>
+    <update id="actualizarContrato2" parameterType="gp.model.DocumentosNuevos">
+        UPDATE HISTORIALEXPCONT SET MONTO=#{monto},FECHA=TO_DATE(#{fecha},'DD/MM/YYYY')
+        WHERE ID_HISTORIAL=#{idhistorial}
+    </update>
+    
+    <update id="actualizarDocumentos" parameterType="gp.model.DocumentosNuevos">
+        update HISTORIALEXPCONT set MONTO=#{monto}, fecha=#{fecha}, NUMERO_RR=#{resolucion}
+        WHERE ID_HISTORIAL=#{idhistorial}
+    </update>
+    
+    <update id="actualizarEjecucion" parameterType="gp.model.ActualizarEjecucion">
+        UPDATE EJECUCION SET MONTO=#{montoE}, MONTO2=#{montoP},ID_RORDR=#{tiporor}
+        WHERE ID_EJECUCION=#{idejecu}
+    </update>
+    
+    <select id="getMesEjecu" parameterType="String" resultMap="MesEjecu">
+        SELECT E.MES AS MES
+        FROM EJECUCION E,PROY_EXPT PE, RO_RDR ROR
+        WHERE E.ID_RORDR=ROR.ID_RORDR
+        AND PE.ID_PROYEXPT=E.ID_PROYEXPT
+        AND PE.ID_PROYECTO=#{codigo}
+        GROUP BY E.MES
+    </select>
+    
+    <select id="getAnioEjecu" parameterType="String" resultMap="AnioEjecu">
+        SELECT E.ANIO AS ANIO
+        FROM EJECUCION E, TIPOS_DOCUMENTOS TD, RO_RDR ROR, PROY_EXPT PE
+        WHERE E.ID_RORDR=ROR.ID_RORDR
+        AND PE.ID_PROYEXPT=E.ID_PROYEXPT
+        AND PE.ID_PROYECTO=#{codigo}
+        GROUP BY E.ANIO
+    </select>
+    
+    <select id="getEjecucion" resultMap="Ejecucion" parameterType="String">
+        SELECT E.ID_EJECUCION AS IDEJECU, 
+        E.MES AS MES,
+        E.ANIO AS ANIO,
+        E.MONTO2 as MONTO_PRELIMINAR,
+        E.MONTO AS MONTO_EJECUTADO,
+        TD.NOMBRE_TIPODOCU AS DOCUMENTO,
+        ROR.NOMBRE AS RNRRDR,
+        TO_CHAR(E.FECHA,'DD/MM/YYYY') AS FECHA
+        FROM EJECUCION E, TIPOS_DOCUMENTOS TD, RO_RDR ROR, PROY_EXPT PE
+        WHERE E.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND E.ID_RORDR=ROR.ID_RORDR
+        AND PE.ID_PROYEXPT=E.ID_PROYEXPT
+        AND PE.ID_PROYECTO=#{codigo}
+        AND E.MES=#{mes}
+        AND E.ANIO=#{anio}
+    </select>
 </mapper>

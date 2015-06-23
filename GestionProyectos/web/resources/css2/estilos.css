@@ -1,1 +1,8 @@
-@charset "ISO-8859-1";body{font:80% "Trebuchet MS",sans-serif}.adicSO{width:160px}.dedSO{width:160px}.ui-selectonemenu label.ui-selectonemenu-label{width:151px}.clase1{color:green}.clase2{color:red}.DialogMontos{width:70%!important;height:49%!important;position:fixed!important}
+@charset "ISO-8859-1";
+body{font:80% "Trebuchet MS",sans-serif}
+.adicSO{width:160px}
+.dedSO{width:160px}
+.ui-selectonemenu label.ui-selectonemenu-label{width:151px}
+.clase1{color:green}.clase2{color:red}
+.DialogMontos{width:70%!important;height:49%!important;position:fixed!important}
+.ui-selectonemenu-label ui-inputfield ui-corner-all{width:95%!important}

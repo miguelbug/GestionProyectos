@@ -18,6 +18,7 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class MostrarExpedientesTecnicos implements Serializable{
 
+    private Integer idhistorial;
     private String documento;
     private String monto;
     private String rr;
@@ -56,6 +57,14 @@ public class MostrarExpedientesTecnicos implements Serializable{
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public Integer getIdhistorial() {
+        return idhistorial;
+    }
+
+    public void setIdhistorial(Integer idhistorial) {
+        this.idhistorial = idhistorial;
     }
     
 }

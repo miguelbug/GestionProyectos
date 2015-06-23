@@ -25,6 +25,7 @@ public class MostrarEjecucion implements Serializable{
     private String documento;
     private String rdrror;
     private String fecha;
+    private Integer idejecucion;
     
     public MostrarEjecucion() {
     }
@@ -83,6 +84,14 @@ public class MostrarEjecucion implements Serializable{
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public Integer getIdejecucion() {
+        return idejecucion;
+    }
+
+    public void setIdejecucion(Integer idejecucion) {
+        this.idejecucion = idejecucion;
     }
     
 }
