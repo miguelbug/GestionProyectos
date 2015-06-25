@@ -6,7 +6,10 @@
 
 package gp.dao;
 
+import gp.model.ActualizarEjecucion;
 import gp.model.DetalleExpTecnico;
+import gp.model.DocumentosNuevos;
+import gp.model.ExpedienteTecnico;
 import gp.model.MostrarEjecucion;
 import gp.model.MostrarExpedientesTecnicos;
 import java.util.List;
@@ -20,4 +23,14 @@ public interface BusquedaInversionDAO {
     public List<MostrarEjecucion> getEjecucion(String codigo);
     public List<DetalleExpTecnico> getDetalleExpedTecnico(String codigo, String exptecnico);
     public String getNombreProy(String codigo);
+    public void ActualizarExpTecnico(String docu,String fecha,Double monto,String resoul);
+    public Integer getIdProyExpt(String docu);
+    public void ActualizarExpedienteTecnico(ExpedienteTecnico e);
+    public void ActualizarContrato(DocumentosNuevos d);
+    public void ActualizarDocumentos(DocumentosNuevos d);
+    public void actualizaSoloContrato(String codigo, Integer d);
+    public List<String> getEjecucionMeses(String codigo);
+    public List<String> getEjecucionAnios(String codigo);
+    public List<MostrarEjecucion> getEjecucionMontos(String codigo, String mes, String anio);
+    public void actualizarMontoEjecucion(ActualizarEjecucion codigo);
 }

@@ -11,10 +11,16 @@ import gp.dao.RegistroInversionDAO;
 import gp.daoImpl.BusquedaInversionDaoImpl;
 import gp.daoImpl.ListasGeneralesDaoImpl;
 import gp.daoImpl.RegistroInversionDaoImpl;
+import gp.model.ActualizarEjecucion;
 import gp.model.DetalleExpTecnico;
+import gp.model.DocumentosNuevos;
+import gp.model.ExpedienteTecnico;
 import gp.model.MostrarEjecucion;
 import gp.model.MostrarExpedientesTecnicos;
+import gp.model.NuevosDocumentos;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -49,31 +55,40 @@ public class BusquedaInversion {
     private Double montoD = null;
     private String resolucionD;
     private String fechaD;
+    private List<String> meses;
+    private List<String> anios;
+    private RegistroInversionDAO ri;
 
     public BusquedaInversion() {
+        meses = new ArrayList<String>();
+        anios = new ArrayList<String>();
         met = new ArrayList<MostrarExpedientesTecnicos>();
         bid = new BusquedaInversionDaoImpl();
-        lgd= new ListasGeneralesDaoImpl();
+        lgd = new ListasGeneralesDaoImpl();
         resoluciones = new ArrayList<String>();
         estado = false;
+        fecha = "--";
         rid = new RegistroInversionDaoImpl();
         mej = new ArrayList<MostrarEjecucion>();
         det = new ArrayList<DetalleExpTecnico>();
-        resoluciones=lgd.getResoluciones();
+        resoluciones = lgd.getResoluciones();
+        ri = new RegistroInversionDaoImpl();
     }
 
     public void buscar() {
         FacesMessage message = null;
         try {
             met.clear();
-            mej.clear();
+            meses.clear();
+            anios.clear();
             met = bid.getListaExpedientesTecnicos(codigo);
             nombreProy = bid.getNombreProy(codigo);
             System.out.println("Dimension: " + met.size() + " " + nombreProy);
-            mej = bid.getEjecucion(codigo);
-            fecha = mej.get(0).getFecha();
-            mes = mej.get(0).getMes();
-            anio = mej.get(0).getAnio();
+            meses = bid.getEjecucionMeses(codigo);
+            System.out.println(meses.size());
+            anios = bid.getEjecucionAnios(codigo);
+            System.out.println(anios.size());
+            //mej = bid.getEjecucion(codigo);
             estado = true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -91,27 +106,117 @@ public class BusquedaInversion {
 
     }
 
-    public Double getMonto2(String dato) {
-        montoD = Double.parseDouble(dato);
-        return montoD;
+    public void llenarMontosEjecucion() {
+        mej.clear();
+        try {
+            mej = bid.getEjecucionMontos(codigo, mes, anio);
+            if (!mej.isEmpty()) {
+                System.out.println("ENTRA A FECHA");
+                fecha = mej.get(0).getFecha();
+            } else {
+                fecha = "";
+            }
+
+        } catch (Exception e) {
+            System.out.println("ERROR EJECU MONTOS");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    public String getRR(String dato) {
-        resolucionD = dato;
-        return resolucionD;
-    }
-
-    public String getFecha2(String dato) {
-        fechaD = dato;
-        return fechaD;
+    public Date getFecha(String f) {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            d = sdf.parse(f);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return d;
     }
 
     public void onRowEdit(RowEditEvent event) {
-        System.out.println(((MostrarExpedientesTecnicos)event.getObject()).getDocumento()+" "+((MostrarExpedientesTecnicos)event.getObject()).getFecha()+" "+((MostrarExpedientesTecnicos)event.getObject()).getMonto()+" "+((MostrarExpedientesTecnicos)event.getObject()).getRr() );
+        FacesMessage message = null;
+        String documento = "";
+        System.out.println(((MostrarExpedientesTecnicos) event.getObject()).getDocumento() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getFecha() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getMonto() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getRr() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getIdhistorial());
+        documento = ((MostrarExpedientesTecnicos) event.getObject()).getDocumento();
+        ExpedienteTecnico exp = new ExpedienteTecnico();
+        exp.setDocumento(((MostrarExpedientesTecnicos) event.getObject()).getDocumento());
+        exp.setFecha(getFecha(((MostrarExpedientesTecnicos) event.getObject()).getFecha()));
+        exp.setResolucion(((MostrarExpedientesTecnicos) event.getObject()).getRr());
+        exp.setMonto(Double.parseDouble(((MostrarExpedientesTecnicos) event.getObject()).getMonto()));
+        exp.setIdhistorial(((MostrarExpedientesTecnicos) event.getObject()).getIdhistorial());
+        try {
+            bid.ActualizarExpedienteTecnico(exp);
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "CORRECTO", "SE HA ACTUALIZADO EL: " + documento);
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
+        } catch (Exception e) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE PUDO ACTUALIZAR");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
+        }
+    }
+
+    public void onRowEdit2(RowEditEvent event) {
+        System.out.println(((DetalleExpTecnico) event.getObject()).getDocumento() + " " + ((DetalleExpTecnico) event.getObject()).getFecha() + " " + ((DetalleExpTecnico) event.getObject()).getMonto() + " " + ((DetalleExpTecnico) event.getObject()).getResolucion() + " " + ((DetalleExpTecnico) event.getObject()).getIdhistorial() + " " + ((DetalleExpTecnico) event.getObject()).getIdnuevodoc());
+        DocumentosNuevos d = new DocumentosNuevos();
+        d.setFecha(getFecha(((DetalleExpTecnico) event.getObject()).getFecha()));
+        d.setMonto(Double.parseDouble(((DetalleExpTecnico) event.getObject()).getMonto()));
+        d.setResolucion(((DetalleExpTecnico) event.getObject()).getResolucion());
+        d.setIdhistorial(((DetalleExpTecnico) event.getObject()).getIdhistorial());
+        d.setDocumento(((DetalleExpTecnico) event.getObject()).getDocumento());
+        d.setIdnuevodocu(((DetalleExpTecnico) event.getObject()).getIdnuevodoc());
+        try {
+            if (d.getDocumento().indexOf("CONTRATO") != -1) {
+                String nuevoDocu = d.getDocumento().substring(12, 18);
+                d.setDocumento(nuevoDocu);
+                bid.ActualizarContrato(d);
+            } else {
+                bid.ActualizarDocumentos(d);
+            }
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    public void onRowEdit3(RowEditEvent event) {
+        FacesMessage message = null;
+        System.out.println(((MostrarEjecucion) event.getObject()).getDocumento() + " " + ((MostrarEjecucion) event.getObject()).getMontoPre() + " " + ((MostrarEjecucion) event.getObject()).getMontoEje() + " " + ((MostrarEjecucion) event.getObject()).getRdrror() + " " + ((MostrarEjecucion) event.getObject()).getIdejecucion());
+        try {
+            ActualizarEjecucion save = new ActualizarEjecucion();
+            save.setMontoP(Double.parseDouble(((MostrarEjecucion) event.getObject()).getMontoPre()));
+            save.setMontoE(Double.parseDouble(((MostrarEjecucion) event.getObject()).getMontoEje()));
+            save.setTiporor((ri.getIDRoRdR(((MostrarEjecucion) event.getObject()).getRdrror())));
+            save.setIdejecu(Integer.valueOf(((MostrarEjecucion) event.getObject()).getIdejecucion()));
+            bid.actualizarMontoEjecucion(save);
+            mej.clear();
+            mej = bid.getEjecucionMontos(codigo, mes, anio);
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "AVISO", "SE HA ACTUALIZADO EL MONTO");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA PODIDO ACTUALIZADO EL MONTO");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
+        }
+
     }
 
     public void onRowCancel(RowEditEvent event) {
         System.out.println("NO SE HIZO NADA");
+        FacesMessage message = null;
+        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "AVISO", "NO SE HA ACTUALIZADO NINGUN DOCUMENTO");
+        RequestContext.getCurrentInstance().showMessageInDialog(message);
+    }
+
+    public void onRowCancel2(RowEditEvent event) {
+        System.out.println("NO SE HIZO NADA");
+        FacesMessage message = null;
+        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "AVISO", "NO SE HA ACTUALIZADO NINGUN DOCUMENTO");
+        RequestContext.getCurrentInstance().showMessageInDialog(message);
+    }
+
+    public void onRowCancel3(RowEditEvent event) {
+
     }
 
     public void onRowToggle(ToggleEvent event) {
@@ -263,6 +368,22 @@ public class BusquedaInversion {
 
     public void setResoluciones(List<String> resoluciones) {
         this.resoluciones = resoluciones;
+    }
+
+    public List<String> getMeses() {
+        return meses;
+    }
+
+    public void setMeses(List<String> meses) {
+        this.meses = meses;
+    }
+
+    public List<String> getAnios() {
+        return anios;
+    }
+
+    public void setAnios(List<String> anios) {
+        this.anios = anios;
     }
 
 }

@@ -7,6 +7,7 @@
 package gp.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -16,39 +17,39 @@ import javax.faces.bean.RequestScoped;
  */
 @ManagedBean
 @RequestScoped
-public class DetalleExpTecnico implements Serializable {
+public class DocumentosNuevos implements Serializable{
 
-    private String documento;
-    private String fecha;
-    private String monto;
+    private Date fecha;
+    private Double monto;
     private String resolucion;
     private Integer idhistorial;
-    private Integer idnuevodoc;
+    private String documento;
+    private Integer idnuevodocu;
     
-    public DetalleExpTecnico() {
+    public DocumentosNuevos() {
     }
 
-    public String getDocumento() {
-        return documento;
-    }
-
-    public void setDocumento(String documento) {
+    public DocumentosNuevos(Date fecha, Double monto, String resolucion, Integer idhistorial, String documento) {
+        this.fecha = fecha;
+        this.monto = monto;
+        this.resolucion = resolucion;
+        this.idhistorial = idhistorial;
         this.documento = documento;
     }
 
-    public String getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
-    public String getMonto() {
+    public Double getMonto() {
         return monto;
     }
 
-    public void setMonto(String monto) {
+    public void setMonto(Double monto) {
         this.monto = monto;
     }
 
@@ -68,12 +69,20 @@ public class DetalleExpTecnico implements Serializable {
         this.idhistorial = idhistorial;
     }
 
-    public Integer getIdnuevodoc() {
-        return idnuevodoc;
+    public String getDocumento() {
+        return documento;
     }
 
-    public void setIdnuevodoc(Integer idnuevodoc) {
-        this.idnuevodoc = idnuevodoc;
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
+
+    public Integer getIdnuevodocu() {
+        return idnuevodocu;
+    }
+
+    public void setIdnuevodocu(Integer idnuevodocu) {
+        this.idnuevodocu = idnuevodocu;
     }
     
 }
