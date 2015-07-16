@@ -19,11 +19,13 @@ import java.util.List;
  */
 public interface BusqPreInversionDAO {
     public List<BusqPreInversion> listaBusqPI(String codigo);
-    public List<BusqPreInversion> listaBusqPI_2(String codigo);
+    public List<BusqPreInversion> listaBusqPI_2(String codigo, String etapa);
+    public List<BusqPreInversion> listaBusqPI_3(String codigo);
     public void guardarNuevosComponentes(GuardarNuevComp gnc);
     public void actualizarAspectosGenerales(AspectosGenerales ag);
     public void actualizarComponentes(Componentes c);
     public List<busquedaPreInversionMontos> getMontoHistorial(String codigo);
     public List<busquedaPreInversionMontos> getComponentesDeMonto(String monoFecha, String codigoproy);
     public String validarProyecto(String codigo);
+    public List<Integer> etapas(String proy);
 }

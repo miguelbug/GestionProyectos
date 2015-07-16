@@ -28,27 +28,59 @@
                         <p:tab title="REGISTRO DE EXPEDIENTE TÉCNICO" id="tab1">
                             <center>
                                 <br></br>
-                                <h2>REGISTRO DE EXPEDIENTE TÉCNICO</h2>
-                                <h3 id="nombreExpediente">EXPEDIENTE TÉCNICO N° #{registroInversion.nombreExp}</h3>
-                                <br></br>
-                                <h:panelGrid columns="2" cellpadding="6">
-                                    <p:outputLabel value="Monto S/"/>
-                                    <pe:inputNumber value="#{registroInversion.montoD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
-                                        <f:validateDoubleRange minimum="50"/>
-                                    </pe:inputNumber>
-                                    <p:outputLabel value="R.R."/>
-                                    <p:selectOneMenu value="#{registroInversion.resolucion}" editable="true" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
-                                        <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
-                                        <f:selectItems value="#{registroInversion.resoluciones}"/>
-                                    </p:selectOneMenu>
-                                    <p:outputLabel value="Fecha"/>
-                                    <p:inputMask mask="99/99/9999" value="#{registroInversion.fechaaux}"/>
+                                <h:panelGrid columns="2">
+                                    <p:commandButton value="Registrar" actionListener="#{registroInversion.se_Registrara()}" update="tab"/>
+                                    <p:commandButton value="Agregar" actionListener="#{registroInversion.se_Agregara()}" update="tab"/>
                                 </h:panelGrid>
                                 <br></br>
-                                <h:panelGrid>
+                                <p:outputPanel rendered="#{registroInversion.aparece2}" id="panel1">
+                                    <h:panelGrid columns="2" cellspacing="6">
+                                        <p:outputLabel value="Expediente:   "/>
+                                        <p:selectOneMenu value="#{registroInversion.contrato2}" filter="true" effect="fade" filterMatchMode="contains" styleClass="dedSO">
+                                            <f:selectItem itemLabel="Seleccione Expediente" itemValue=" "/> 
+                                            <f:selectItems value="#{registroInversion.listaExpedientes}"/>
+                                            <p:ajax event="change" listener="#{registroInversion.obtenerIdProyExpt()}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Monto S/    "/>
+                                        <pe:inputNumber value="#{registroInversion.montoD2}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                            <f:validateDoubleRange minimum="50"/>
+                                        </pe:inputNumber>
+                                        <p:outputLabel value="R.R."/>
+                                        <p:selectOneMenu value="#{registroInversion.resolucion2}" editable="true" filter="true" filterMatchMode="contains" styleClass="adicSO">
+                                            <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                            <f:selectItems value="#{registroInversion.resoluciones}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Fecha    "/>
+                                        <p:inputMask mask="99/99/9999" value="#{registroInversion.fechaaux2}"/>
+                                    </h:panelGrid>
+                                    <br></br>
+                                    <p:commandButton value="Agregar" actionListener="#{registroInversion.agregarMontoAExpTecn()}" icon="ui-icon-check" update="tab">
+                                    </p:commandButton>
+                                </p:outputPanel>
+
+                                <p:outputPanel rendered="#{registroInversion.aparece}" id="panel2">
+                                    <h2>REGISTRO DE EXPEDIENTE TÉCNICO</h2>
+                                    <h3 id="nombreExpediente">EXPEDIENTE TÉCNICO N° #{registroInversion.nombreExp}</h3>
+                                    <br></br>
+                                    <h:panelGrid columns="2" cellpadding="6">
+                                        <p:outputLabel value="Monto S/   "/>
+                                        <pe:inputNumber value="#{registroInversion.montoD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                            <f:validateDoubleRange minimum="50"/>
+                                        </pe:inputNumber>
+                                        <p:outputLabel value="R.R."/>
+                                        <p:selectOneMenu value="#{registroInversion.resolucion}" editable="true" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
+                                            <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                            <f:selectItems value="#{registroInversion.resoluciones}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Fecha   "/>
+                                        <p:inputMask mask="99/99/9999" value="#{registroInversion.fechaaux}"/>
+                                    </h:panelGrid>
+                                    <br></br>
                                     <p:commandButton value="Aceptar" actionListener="#{registroInversion.guardarNuevoExpTecn()}" icon="ui-icon-check" update="tab">
                                     </p:commandButton>
-                                </h:panelGrid>
+                                </p:outputPanel>
+
+
                             </center>
                         </p:tab>
                         <p:tab title="REGISTRO DE CONTRATO(S)" id="tab4">

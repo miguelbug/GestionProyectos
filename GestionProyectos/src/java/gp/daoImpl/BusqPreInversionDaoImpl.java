@@ -36,6 +36,21 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
     }
 
     @Override
+    public List<Integer> etapas(String proy) {
+        List<Integer> etapas = null;
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            etapas = session.selectList("BusqPreInversion.listaEtapas", proy);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("ERROR EN EL IMPL getnumonto");
+        } finally {
+            session.close();
+        }
+        return etapas;
+    }
+
+    @Override
     public String validarProyecto(String codigo) {
         String nombreexp = null;
         SqlSession session = sqlSessionFactory.openSession();
@@ -139,11 +154,30 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
     }
 
     @Override
-    public List<BusqPreInversion> listaBusqPI_2(String codigo) {
+    public List<BusqPreInversion> listaBusqPI_2(String codigo, String etapa) {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<BusqPreInversion> list = null;
+        Map<String,String> map= new HashMap<String,String>();
+        map.put("codigo", codigo);
+        map.put("etapa", etapa);
+        try {
+            list = session.selectList("BusqPreInversion.getBPI_2", map);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
+    public List<BusqPreInversion> listaBusqPI_3(String codigo) {
         SqlSession session = sqlSessionFactory.openSession();
         List<BusqPreInversion> list = null;
         try {
-            list = session.selectList("BusqPreInversion.getBPI_2", codigo);
+            list = session.selectList("BusqPreInversion.getBPI_3", codigo);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

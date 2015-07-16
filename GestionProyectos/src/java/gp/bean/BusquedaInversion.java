@@ -58,10 +58,17 @@ public class BusquedaInversion {
     private List<String> meses;
     private List<String> anios;
     private RegistroInversionDAO ri;
+    private String idproy;
+    private String nuevoAnio;
+    private String nuevaFecha;
+    private List<String> nuevosanios;
+    private List<String> nuevosmeses;
 
     public BusquedaInversion() {
         meses = new ArrayList<String>();
         anios = new ArrayList<String>();
+        nuevosanios = new ArrayList<String>();
+        nuevosmeses = new ArrayList<String>();
         met = new ArrayList<MostrarExpedientesTecnicos>();
         bid = new BusquedaInversionDaoImpl();
         lgd = new ListasGeneralesDaoImpl();
@@ -85,23 +92,25 @@ public class BusquedaInversion {
             nombreProy = bid.getNombreProy(codigo);
             System.out.println("Dimension: " + met.size() + " " + nombreProy);
             meses = bid.getEjecucionMeses(codigo);
-            System.out.println(meses.size());
             anios = bid.getEjecucionAnios(codigo);
-            System.out.println(anios.size());
-            //mej = bid.getEjecucion(codigo);
-            estado = true;
+            if (met.size() == 0 && !nombreProy.equals("")) {
+                System.out.println("SIN HISTORIAL");
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "PROYECTO SIN HISTORIAL DE EJECUCION");
+                RequestContext.getCurrentInstance().showMessageInDialog(message);
+                estado = false;
+            }
+            if (met.size() > 0) {
+                estado = true;
+            }
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("mal");
-            if (nombreProy == null) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "PROYECTO NO REGISTRADO");
-                RequestContext.getCurrentInstance().showMessageInDialog(message);
-            } else {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "PROYECTO SIN HISTORIAL DE EJECUCION");
-                RequestContext.getCurrentInstance().showMessageInDialog(message);
-            }
-
+            System.out.println("NO REGISTRADO");
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "PROYECTO NO REGISTRADO");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
             estado = false;
+
         }
 
     }
@@ -113,6 +122,7 @@ public class BusquedaInversion {
             if (!mej.isEmpty()) {
                 System.out.println("ENTRA A FECHA");
                 fecha = mej.get(0).getFecha();
+                idproy = String.valueOf(mej.get(0).getIdproy());
             } else {
                 fecha = "";
             }
@@ -240,6 +250,30 @@ public class BusquedaInversion {
         }
 
         return cadena;
+    }
+
+    public void llenarnuevosmeses() {
+        nuevosmeses.add("Enero");
+        nuevosmeses.add("Febrero");
+        nuevosmeses.add("Marzo");
+        nuevosmeses.add("Abril");
+        nuevosmeses.add("Mayo");
+        nuevosmeses.add("Junio");
+        nuevosmeses.add("Julio");
+        nuevosmeses.add("Agosto");
+        nuevosmeses.add("Septiembre");
+        nuevosmeses.add("Octubre");
+        nuevosmeses.add("Noviembre");
+        nuevosmeses.add("Diciembre");
+    }
+
+    public void llenarnuevosanios() {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+        int j = Integer.parseInt(sdf.format(d));
+        for (int i = 0; i < (int) (j % 100); i++) {
+            nuevosanios.add(String.valueOf(i));
+        }
     }
 
     public String getCodigo() {
@@ -384,6 +418,54 @@ public class BusquedaInversion {
 
     public void setAnios(List<String> anios) {
         this.anios = anios;
+    }
+
+    public RegistroInversionDAO getRi() {
+        return ri;
+    }
+
+    public void setRi(RegistroInversionDAO ri) {
+        this.ri = ri;
+    }
+
+    public String getIdproy() {
+        return idproy;
+    }
+
+    public void setIdproy(String idproy) {
+        this.idproy = idproy;
+    }
+
+    public String getNuevoAnio() {
+        return nuevoAnio;
+    }
+
+    public void setNuevoAnio(String nuevoAnio) {
+        this.nuevoAnio = nuevoAnio;
+    }
+
+    public String getNuevaFecha() {
+        return nuevaFecha;
+    }
+
+    public void setNuevaFecha(String nuevaFecha) {
+        this.nuevaFecha = nuevaFecha;
+    }
+
+    public List<String> getNuevosanios() {
+        return nuevosanios;
+    }
+
+    public void setNuevosanios(List<String> nuevosanios) {
+        this.nuevosanios = nuevosanios;
+    }
+
+    public List<String> getNuevosmeses() {
+        return nuevosmeses;
+    }
+
+    public void setNuevosmeses(List<String> nuevosmeses) {
+        this.nuevosmeses = nuevosmeses;
     }
 
 }

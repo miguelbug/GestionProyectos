@@ -26,6 +26,7 @@ public class busquedaPreInversionMontos implements Serializable{
     private String otros;
     private String fecha_reg;
     private Integer idcomp;
+    private Integer num_monto;
     
     public busquedaPreInversionMontos() {
     }
@@ -92,6 +93,14 @@ public class busquedaPreInversionMontos implements Serializable{
 
     public void setIdcomp(Integer idcomp) {
         this.idcomp = idcomp;
+    }
+
+    public Integer getNum_monto() {
+        return num_monto;
+    }
+
+    public void setNum_monto(Integer num_monto) {
+        this.num_monto = num_monto;
     }
     
       

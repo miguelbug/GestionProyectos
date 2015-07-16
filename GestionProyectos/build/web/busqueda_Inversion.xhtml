@@ -145,6 +145,8 @@
                                     </p:commandButton>
                                     <p:outputLabel value="Fecha Registro:"/>
                                     <p:inputMask mask="99/99/9999" value="#{busquedaInversion.fecha}" id="fecharegistro"/>
+                                    <p:outputLabel value="" rendered="false"/>
+                                    <p:outputLabel value="#{busquedaInversion.idproy}" rendered="false"/>
                                 </h:panelGrid>
                                 <br></br>
                                 <p:dataTable  value="#{busquedaInversion.mej}" var="ejecu" style="width: 1100px" id="montosEjecucion" emptyMessage="SIN DATOS PARA MOSTRAR" editable="true">

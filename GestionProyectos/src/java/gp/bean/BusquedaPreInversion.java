@@ -86,7 +86,7 @@ public class BusquedaPreInversion {
     private boolean estado9;
     private boolean estado11;
     private boolean estado12;
-    private boolean estado14=true;
+    private boolean estado14 = true;
     private int estado10;
     private List<BusqPreInversion> listaBPI_1;
     private List<BusqPreInversion> listaBPI_2;
@@ -117,16 +117,25 @@ public class BusquedaPreInversion {
     private List<String> montosModif;
     private String color;
     private String nuevaFecha;
-    private BigDecimal aux1 = new BigDecimal("0.0");
+    private BigDecimal aux1;
     private String aux2;
     private Integer idcomp;
     private String fmm;
     private String fmmaux;
     private BigDecimal montoViable = new BigDecimal("0.0");
     private List<HistorialMontos> historialMontos;
+    private int index;
+    private List<Integer> listaEtapas;
+    private String etapaSelect;
+    private boolean adelante;
+    private boolean atras;
+    private int i;
+    private String id_comp;
+    private boolean estadof;
 
     public BusquedaPreInversion() {
         cantidad = "2";
+        listaEtapas = new ArrayList<Integer>();
         listaBPI_1 = new ArrayList<BusqPreInversion>();
         listaBPI_2 = new ArrayList<BusqPreInversion>();
         bpi = new BusqPreInversionDaoImpl();
@@ -163,7 +172,10 @@ public class BusquedaPreInversion {
         resoluciones = new ArrayList<String>();
         montosModif = new ArrayList<String>();
         lgd = new ListasGeneralesDaoImpl();
-
+        index = 0;
+        adelante = true;
+        atras = true;
+        estadof = true;
         llenar_OPI();
         llenar_NE();
     }
@@ -194,7 +206,7 @@ public class BusquedaPreInversion {
     }
 
     public void getComponentesDeMonto() {
-        estado14=false;
+        estado14 = false;
         List<busquedaPreInversionMontos> lista = new ArrayList<busquedaPreInversionMontos>();
         lista = bpi.getComponentesDeMonto(b25, b20);
         for (int i = 0; i < lista.size(); i++) {
@@ -218,12 +230,13 @@ public class BusquedaPreInversion {
         b25aux = partirMonto(0);
         b26D = Double.parseDouble(partirMonto(0));
         nuevaFecha = partirMonto(2);
+
     }
 
     public void guardarMontoSeleccionado() {
-        //aux1 = String.valueOf(b26D);
+        aux1 = new BigDecimal("0.0");
         aux1 = aux1.add(BigDecimal.valueOf(b26D));
-        System.out.println("AUX1: "+aux1);
+
     }
 
     public void guardarFechaSeleccionada() {
@@ -331,6 +344,7 @@ public class BusquedaPreInversion {
     }
 
     public void modificarAspectosGenerales() {
+        FacesMessage message = null;
         try {
             AspectosGenerales ag = new AspectosGenerales();
             ag.setCodigo(Integer.parseInt(b20));
@@ -349,9 +363,13 @@ public class BusquedaPreInversion {
             ag.setOpiResp(rpd.getId_Opi(b11));
             bpi.actualizarAspectosGenerales(ag);
             estado8 = true;
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO EL PROYECTO");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "NO SE HAN MODIFICADO EL PROYECTO");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
         }
 
     }
@@ -360,8 +378,8 @@ public class BusquedaPreInversion {
         FacesMessage message = null;
         try {
             Componentes c = new Componentes();
-            if (b26D == null || idcomp==null) {
-                Date date= new Date();
+            if (b26D == null || idcomp == null) {
+                Date date = new Date();
                 c.setNumMonto(0);
                 c.setMontoExpTec(b13D);
                 c.setMontoInfra(b14D);
@@ -371,11 +389,10 @@ public class BusquedaPreInversion {
                 c.setMontoOtros(b18D);
                 c.setCodigoProy(Integer.parseInt(b20));
                 c.setFecharegistro(date);
-                if(b26D==null){
+                if (b26D == null) {
                     c.setMontoModif(0.0);
-                }
-                else{
-                    if(idcomp==null){
+                } else {
+                    if (idcomp == null) {
                         c.setMontoModif(b26D);
                     }
                 }
@@ -384,7 +401,7 @@ public class BusquedaPreInversion {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS COMPONENTES");
                 RequestContext.getCurrentInstance().showMessageInDialog(message);
             } else {
-                c.setNumMonto((Integer) (mont.getNumMonto(b20)==null?0:mont.getNumMonto(b20)));
+                c.setNumMonto((mont.getNumMonto(b20) == null ? 0 : mont.getNumMonto(b20)));
                 c.setMontoExpTec(b13D);
                 c.setMontoInfra(b14D);
                 c.setMontoEquipMov(b15D);
@@ -401,9 +418,9 @@ public class BusquedaPreInversion {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO LOS COMPONENTES");
                 RequestContext.getCurrentInstance().showMessageInDialog(message);
             }
-
             mdf.clear();
             mdf = montd.getMontosModificados(b20);
+            this.montosModificados();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -446,10 +463,7 @@ public class BusquedaPreInversion {
             estado = false;
             estado8 = true;
             estado11 = true;
-
             listaBPI_1 = bpi.listaBusqPI(b20);
-            System.out.println("LISTA1: " + listaBPI_1.size());
-            listaBPI_2 = bpi.listaBusqPI_2(b20);
             for (int i = 0; i < listaBPI_1.size(); i++) {
                 b1 = listaBPI_1.get(i).getC1();
                 b2 = listaBPI_1.get(i).getC2();
@@ -462,26 +476,69 @@ public class BusquedaPreInversion {
                 b11 = listaBPI_1.get(i).getC9();
                 b12 = listaBPI_1.get(i).getC10();
             }
-            for (int i = 0; i < listaBPI_2.size(); i++) {
-                b13D = Double.parseDouble(listaBPI_2.get(i).getC11() == null ? "0.0" : listaBPI_2.get(i).getC11());
-                b14D = Double.parseDouble(listaBPI_2.get(i).getC12() == null ? "0.0" : listaBPI_2.get(i).getC12());
-                b15D = Double.parseDouble(listaBPI_2.get(i).getC13() == null ? "0.0" : listaBPI_2.get(i).getC13());
-                b16D = Double.parseDouble(listaBPI_2.get(i).getC14() == null ? "0.0" : listaBPI_2.get(i).getC14());
-                b17D = Double.parseDouble(listaBPI_2.get(i).getC15() == null ? "0.0" : listaBPI_2.get(i).getC15());
-                b18D = Double.parseDouble(listaBPI_2.get(i).getC16() == null ? "0.0" : listaBPI_2.get(i).getC16());
-                b7 = listaBPI_2.get(i).getC17();
-                b6D = Double.parseDouble(listaBPI_2.get(i).getC18() == null ? "0.0" : listaBPI_2.get(i).getC18());
-            }
-            BigDecimal suma1 = new BigDecimal(b13D == null ? 0.0 : b13D);
-            BigDecimal suma2 = new BigDecimal(b14D == null ? 0.0 : b14D);
-            BigDecimal suma3 = new BigDecimal(b15D == null ? 0.0 : b15D);
-            BigDecimal suma4 = new BigDecimal(b16D == null ? 0.0 : b16D);
-            BigDecimal suma5 = new BigDecimal(b17D == null ? 0.0 : b17D);
-            BigDecimal suma6 = new BigDecimal(b18D == null ? 0.0 : b18D);
-            BigDecimal suma = suma1.add(suma2).add(suma3).add(suma4).add(suma5).add(suma6);
-            b19 = String.valueOf(suma);
+            listaEtapas.clear();
+            listaEtapas.add(0);
+            this.listaEtapas = bpi.etapas(b20);
+        }
+    }
+
+    public void llenando_montos_suma() {
+        b13D = Double.parseDouble(listaBPI_2.get(i).getC11() == null ? "0.0" : listaBPI_2.get(i).getC11());
+        b14D = Double.parseDouble(listaBPI_2.get(i).getC12() == null ? "0.0" : listaBPI_2.get(i).getC12());
+        b15D = Double.parseDouble(listaBPI_2.get(i).getC13() == null ? "0.0" : listaBPI_2.get(i).getC13());
+        b16D = Double.parseDouble(listaBPI_2.get(i).getC14() == null ? "0.0" : listaBPI_2.get(i).getC14());
+        b17D = Double.parseDouble(listaBPI_2.get(i).getC15() == null ? "0.0" : listaBPI_2.get(i).getC15());
+        b18D = Double.parseDouble(listaBPI_2.get(i).getC16() == null ? "0.0" : listaBPI_2.get(i).getC16());
+        b7 = listaBPI_2.get(i).getC17();
+        b6D = Double.parseDouble(listaBPI_2.get(i).getC18() == null ? "0.0" : listaBPI_2.get(i).getC18());
+        this.id_comp = String.valueOf(this.listaBPI_2.get(i).getIdcomp());
+        BigDecimal suma1 = new BigDecimal(b13D == null ? 0.0 : b13D);
+        BigDecimal suma2 = new BigDecimal(b14D == null ? 0.0 : b14D);
+        BigDecimal suma3 = new BigDecimal(b15D == null ? 0.0 : b15D);
+        BigDecimal suma4 = new BigDecimal(b16D == null ? 0.0 : b16D);
+        BigDecimal suma5 = new BigDecimal(b17D == null ? 0.0 : b17D);
+        BigDecimal suma6 = new BigDecimal(b18D == null ? 0.0 : b18D);
+        BigDecimal suma = suma1.add(suma2).add(suma3).add(suma4).add(suma5).add(suma6);
+        b19 = String.valueOf(suma);
+    }
+
+    public void llenarMontos() {
+        if (etapaSelect.equals("0")) {
+            listaBPI_2 = bpi.listaBusqPI_3(b20);
+        } else {
+            listaBPI_2 = bpi.listaBusqPI_2(b20, etapaSelect);
+        }
+        i = 0;
+        this.atras = true;
+        this.adelante = false;
+        llenando_montos_suma();
+    }
+
+    public void hacia_adelante() {
+        if ((i + 1) < this.listaBPI_2.size() && i >= 0) {
+            i++;
+            atras = false;
+            adelante = false;
+        }
+        if (i == this.listaBPI_2.size() - 1) {
+            atras = false;
+            adelante = true;
         }
 
+        llenando_montos_suma();
+    }
+
+    public void hacia_atras() {
+        if (i < this.listaBPI_2.size() && i - 1 >= 0) {
+            i--;
+            atras = false;
+            adelante = false;
+        }
+        if (i == 0) {
+            atras = true;
+            adelante = false;
+        }
+        llenando_montos_suma();
     }
 
     public void cambiarCanelar() {
@@ -519,19 +576,19 @@ public class BusquedaPreInversion {
         if (estado10 == 0) {
             if (b26D == null) {
                 if (Double.parseDouble(b19) == Double.parseDouble(String.valueOf(BigDecimal.valueOf((b4D))))) {
-                    System.out.println(Double.parseDouble(b19) + " MONTO VIABLE" + Double.parseDouble(String.valueOf(BigDecimal.valueOf((b4D)))));
+                    System.out.println(b19 + " MONTO VIABLE" + b4D);
                     System.out.println("iguales 0");
                     color = "clase1";
                     estado11 = false;
                 } else {
-                    System.out.println(Double.parseDouble(b19) + " MONTO VIABLE" + Double.parseDouble(String.valueOf(BigDecimal.valueOf((b4D)))));
+                    System.out.println(b19 + " MONTO VIABLE" + b4D);
                     System.out.println("diferentes 0");
                     color = "clase2";
                     estado11 = true;
                 }
             } else {
                 if (Double.parseDouble(b19) == Double.parseDouble(String.valueOf(aux1))) {
-                    System.out.println(Double.parseDouble(b19) + " " + Double.parseDouble(String.valueOf(aux1)));
+                    System.out.println(b19 + " " + aux1);
                     System.out.println("iguales 0");
                     color = "clase1";
                     estado11 = false;
@@ -546,7 +603,7 @@ public class BusquedaPreInversion {
         } else {
             if (estado10 == 1) {
                 if (Double.parseDouble(b19) == Double.parseDouble(b24Daux)) {
-                    System.out.println(Double.parseDouble(b19) + " " + Double.parseDouble(b24Daux));
+                    System.out.println(b19 + " " + b24Daux);
                     System.out.println("iguales 1");
                     color = "clase1";
                     estado11 = false;
@@ -577,11 +634,11 @@ public class BusquedaPreInversion {
         GuardarNuevComp gnc = new GuardarNuevComp();
         FacesMessage message = null;
         try {
-            String numero = montd.getNumMonto(b20);
-            if (numero == null || numero == "") {
-                numero = "0";
+            Integer numero = montd.getNumMonto(b20);
+            if (numero == null) {
+                numero = 0;
             }
-            int numero_parse = Integer.parseInt(numero) + 1;
+            int numero_parse = numero + 1;
             gnc.setNum_monto(Double.parseDouble(String.valueOf(numero_parse)));
             gnc.setExp_tecn(b13D == null ? 0.0 : b13D);
             gnc.setInfraestructura(b14D == null ? 0.0 : b14D);
@@ -622,11 +679,12 @@ public class BusquedaPreInversion {
         estado8 = true;
         estado11 = false;
         estado9 = true;
+        estadof = false;
         estado10 = 1;
-        limpiarComponentes();
         System.out.println("AGREGAR");
         mdf.clear();
         mdf = montd.getMontosModificados(b20);
+        limpiarComponentes();
 
     }
 
@@ -641,17 +699,22 @@ public class BusquedaPreInversion {
         estado8 = false;
         estado10 = 0;
         estado11 = false;
+        estadof = false;
         limpiarComponentes();
         getExpedientesLista();
         getInformesLista();
         getResolucionesLista();
         System.out.println("MODIFICAR");
+        montosModificados();
+
+    }
+
+    public void montosModificados() {
         montosModif.clear();
         List<Montos> listaaux = montd.getMontosModificados(b20);
         for (int i = 0; i < listaaux.size(); i++) {
             this.montosModif.add(listaaux.get(i).getMonto() + " - " + listaaux.get(i).getFecha());
         }
-
     }
 
     public void limpiarComponentes() {
@@ -1314,6 +1377,70 @@ public class BusquedaPreInversion {
 
     public void setEstado14(boolean estado14) {
         this.estado14 = estado14;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public List<Integer> getListaEtapas() {
+        return listaEtapas;
+    }
+
+    public void setListaEtapas(List<Integer> listaEtapas) {
+        this.listaEtapas = listaEtapas;
+    }
+
+    public String getEtapaSelect() {
+        return etapaSelect;
+    }
+
+    public void setEtapaSelect(String etapaSelect) {
+        this.etapaSelect = etapaSelect;
+    }
+
+    public boolean isAdelante() {
+        return adelante;
+    }
+
+    public void setAdelante(boolean adelante) {
+        this.adelante = adelante;
+    }
+
+    public boolean isAtras() {
+        return atras;
+    }
+
+    public void setAtras(boolean atras) {
+        this.atras = atras;
+    }
+
+    public int getI() {
+        return i;
+    }
+
+    public void setI(int i) {
+        this.i = i;
+    }
+
+    public String getId_comp() {
+        return id_comp;
+    }
+
+    public void setId_comp(String id_comp) {
+        this.id_comp = id_comp;
+    }
+
+    public boolean isEstadof() {
+        return estadof;
+    }
+
+    public void setEstadof(boolean estadof) {
+        this.estadof = estadof;
     }
 
 }

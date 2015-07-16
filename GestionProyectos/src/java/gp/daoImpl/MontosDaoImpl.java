@@ -32,12 +32,13 @@ public class MontosDaoImpl implements MontosDAO {
     }
 
     @Override
-    public String getNumMonto(String codigo) {
-        String nummonto = "";
+    public Integer getNumMonto(String codigo) {
+        Integer nummonto = null;
         SqlSession session = sqlSessionFactory.openSession();
         try {
             nummonto = session.selectOne("MontosData.numMonto_select", codigo);
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println(e.getMessage());
             System.out.println("ERROR EN EL IMPL getnumonto");
         } finally {

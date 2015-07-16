@@ -162,6 +162,11 @@ public class BusquedaInversionDaoImpl implements BusquedaInversionDAO {
     }
 
     @Override
+    public void validarEjecucion(String codigo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public void actualizaSoloContrato(String codigo, Integer d) {
         SqlSession session = sqlSessionFactory.openSession();
         Map m = new HashMap();

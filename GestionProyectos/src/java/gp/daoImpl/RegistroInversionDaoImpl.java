@@ -6,7 +6,9 @@
 package gp.daoImpl;
 
 import gp.connectionFactory.MyBatisConnectionFactory;
+import gp.dao.MontosDAO;
 import gp.dao.RegistroInversionDAO;
+import gp.model.Componentes;
 import gp.model.Ejecucion;
 import gp.model.EjecucionMostrado;
 import gp.model.Historial;
@@ -26,13 +28,31 @@ import org.apache.ibatis.session.SqlSessionFactory;
 public class RegistroInversionDaoImpl implements RegistroInversionDAO {
 
     private SqlSessionFactory sqlSessionFactory;
+    private MontosDAO montd;
 
     public RegistroInversionDaoImpl(SqlSessionFactory sqlSessionFactory) {
         this.sqlSessionFactory = sqlSessionFactory;
+        montd = new MontosDaoImpl();
     }
 
     public RegistroInversionDaoImpl() {
         sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
+        montd = new MontosDaoImpl();
+    }
+
+    @Override
+    public void agregarMontoET(Historial h) {
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            session.insert("RegistroInversion.agregar_monto_et", h);
+            session.commit();
+        } catch (Exception e) {
+            System.out.println("RegistroInversion.insert_nuevoExp");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
     @Override
@@ -271,6 +291,45 @@ public class RegistroInversionDaoImpl implements RegistroInversionDAO {
         this.guardarExpTecn(dato);
         h.setIdproy(getIdProyExpt2(Integer.parseInt(numero), Integer.parseInt(id), Integer.parseInt(etapa)));
         this.guardarHistorial(h);
+        Componentes c = new Componentes();
+        c.setCodigoProy(Integer.parseInt(id));
+        c.setMontoExpTec(0.0);
+        c.setMontoInfra(h.getMonto());
+        c.setMontoEquipMov(0.0);
+        c.setMontoSuperv(0.0);
+        c.setMontoCapac(0.0);
+        c.setMontoOtros(0.0);
+        c.setFecharegistro(h.getFecha());
+        c.setMontoModif(0.0);
+        c.setTipoRegistro("1");
+        c.setNumMonto(getNumeroMonto(id));
+        c.setIdExpTecn(h.getIdproy());
+        nuevaInfraestructura(c);
+    }
+
+    @Override
+    public Integer getNumeroMonto(String codigo) {
+        Integer numero = montd.getNumMonto(codigo);
+        if (numero == null) {
+            numero = 0;
+        }
+        int numero_parse = (numero) + 1;
+        return numero_parse;
+    }
+
+    @Override
+    public void nuevaInfraestructura(Componentes c) {
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            session.insert("RegistroInversion.ingresar_infraestructura", c);
+            session.commit();
+        } catch (Exception e) {
+            System.out.println("RegistroInversion.insert_nuevoExp");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
     public void guardarExpTecn(NuevosDocumentos dato) {
@@ -339,13 +398,14 @@ public class RegistroInversionDaoImpl implements RegistroInversionDAO {
     }
 
     @Override
-    public void guardarNuevoDocumento(NuevosDocumentos dato, Historial h, Integer numerodocu, String exptecn,Integer tipodocu) {
+    public void guardarNuevoDocumento(NuevosDocumentos dato, Historial h, Integer numerodocu, String exptecn, Integer tipodocu) {
         guardarDocumentoAdicional(dato);
         h.setIdnuevodoc(getIdNuevoDocu(numerodocu, exptecn, tipodocu));
         guardarHistorialAdicional(h);
 
     }
-    public void guardarHistorialAdicional(Historial h){
+
+    public void guardarHistorialAdicional(Historial h) {
         SqlSession session = sqlSessionFactory.openSession();
         try {
             session.insert("RegistroInversion.guardar_historialAdicDeduc", h);
@@ -358,13 +418,14 @@ public class RegistroInversionDaoImpl implements RegistroInversionDAO {
             session.close();
         }
     }
+
     public Integer getIdNuevoDocu(Integer numerodocu, String exptecn, Integer tipodocu) {
         Map<String, String> map = new HashMap<String, String>();
         map.put("numerodocu", String.valueOf(numerodocu));
-        map.put("exptecn",exptecn);
-        map.put("tipodocu",String.valueOf(tipodocu));
+        map.put("exptecn", exptecn);
+        map.put("tipodocu", String.valueOf(tipodocu));
         SqlSession session = sqlSessionFactory.openSession();
-        Integer idproyextp=null;
+        Integer idproyextp = null;
         try {
             idproyextp = session.selectOne("RegistroInversion.getIdNuevosDocus2", map);
         } catch (Exception e) {
@@ -410,6 +471,25 @@ public class RegistroInversionDaoImpl implements RegistroInversionDAO {
         guardarContrato(dato);
         h.setIdproy(getIdNuevosDocus(nombre, idproy, c));
         guardarHistorialContrato(h);
+    }
+
+    @Override
+    public Componentes getMontosPorEtapa(String codigo, String etapa) {
+        Componentes busq = null;
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("codigo", codigo);
+        map.put("etapa", etapa);
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            busq = session.selectOne("RegistroInversion.getMontosPorEtapa", map);
+        } catch (Exception e) {
+            System.out.println("ERROR EN EL IMPL getMontosPorEtapa");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return busq;
     }
 
     public Integer getIdNuevosDocus(String nombre, String idproy, String c) {

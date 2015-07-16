@@ -26,6 +26,7 @@ public class MostrarEjecucion implements Serializable{
     private String rdrror;
     private String fecha;
     private Integer idejecucion;
+    private Integer idproy;
     
     public MostrarEjecucion() {
     }
@@ -92,6 +93,14 @@ public class MostrarEjecucion implements Serializable{
 
     public void setIdejecucion(Integer idejecucion) {
         this.idejecucion = idejecucion;
+    }
+
+    public Integer getIdproy() {
+        return idproy;
+    }
+
+    public void setIdproy(Integer idproy) {
+        this.idproy = idproy;
     }
     
 }

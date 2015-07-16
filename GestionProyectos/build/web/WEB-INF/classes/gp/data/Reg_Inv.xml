@@ -42,6 +42,21 @@
         <result property="monto2" column="MONTOPRELIMINAR"/>
     </resultMap>
     
+    <resultMap id="resultado8" type="gp.model.Componentes">
+        <result property="montoExpTec" column="EXP_TECN"/>
+        <result property="montoInfra" column="INFRAESTRUCTURA"/>
+        <result property="montoEquipMov" column="EQUIP_MOBIL"/>
+        <result property="montoSuperv" column="SUPERVISION"/>
+        <result property="montoCapac" column="CAPACITACION"/>
+        <result property="montoOtros" column="OTROS"/>
+        <result property="fecharegistro" column="FECHA_REG"/>
+        <result property="montoModif" column="MONTO_MODIF"/>
+        <result property="tipoRegistro" column="TIPO_REG"/>
+        <result property="codigoProy" column="ID_PROYECTO"/>
+        <result property="numMonto" column="NUM_MONTO"/>
+        <result property="idExpTecn" column="PEXPTECN"/>
+    </resultMap>
+    
     
     <select id="getNumeroExp" resultMap="resultado" parameterType="java.util.HashMap">
         SELECT MAX(PE.NUMERO_EXP)+1 AS NUMERODOCU FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
@@ -193,6 +208,42 @@
         AND E.ID_RORDR=RD.ID_RORDR
         AND PE.ID_PROYECTO=#{codigo}
         AND PE.ID_PROYEXPT=#{id}
+    </select>
+    
+    <insert id="ingresar_infraestructura" parameterType="gp.model.Componentes">
+        INSERT INTO COMPONENTES (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,TIPO_REG,ID_PROYECTO,NUM_MONTO,ID_PROYEXPT)
+        VALUES (#{montoExpTec},#{montoInfra},#{montoEquipMov},#{montoSuperv},#{montoCapac},#{montoOtros},#{fecharegistro},#{montoModif},#{tipoRegistro},#{codigoProy},#{numMonto},#{idExpTecn})
+    </insert>
+    
+    <insert id="agregar_monto_et" parameterType="gp.model.Historial">
+        INSERT INTO HISTORIALEXPCONT (MONTO,FECHA,NUMERO_RR,ID_PROYEXPT)
+        VALUES (#{monto},#{fecha},#{resolucion},#{idproy})
+    </insert>
+    
+    <select id="getMontosPorEtapa" resultMap="resultado8" parameterType="java.util.Map">
+        SELECT CO.EXP_TECN AS EXP_TECN,
+        CO.INFRAESTRUCTURA AS INFRAESTRUCTURA,
+        CO.EQUIP_MOBIL AS EQUIP_MOBIL,
+        CO.SUPERVISION AS SUPERVISION,
+        CO.CAPACITACION AS CAPACITACION,
+        CO.OTROS AS OTROS,
+        CO.FECHA_REG AS FECHA_REG,
+        CO.MONTO_MODIF AS MONTO_MODIF,
+        CO.TIPO_REG AS TIPO_REG,
+        CO.ID_PROYECTO AS ID_PROYECTO,
+        CO.NUM_MONTO AS NUM_MONTO,
+        CO.ID_PROYEXPT AS PEXPTECN
+        FROM COMPONENTES CO, PROY_EXPT PE
+        WHERE CO.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND CO.ID_PROYECTO=#{codigo}
+        AND PE.ETAPA=#{etapa}
+        AND CO.NUM_MONTO IN ( SELECT MAX(COMP.NUM_MONTO) 
+                              FROM COMPONENTES COMP, 
+                              PROY_EXPT PROYEXPT
+                              WHERE COMP.ID_PROYECTO=#{codigo}
+                              AND COMP.ID_PROYEXPT=PROYEXPT.ID_PROYEXPT 
+                              AND PROYEXPT.ETAPA=#{etapa})
+        ORDER BY CO.NUM_MONTO ASC
     </select>
     
 </mapper>

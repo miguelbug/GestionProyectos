@@ -33,6 +33,7 @@ public class Componentes implements Serializable{
     private Double montoaux;
     private Date fechaaux;
     private Integer idcomp;
+    private Integer idExpTecn;
     
     public Componentes() {
     }
@@ -152,6 +153,14 @@ public class Componentes implements Serializable{
     @Override
     public String toString() {
         return "Componentes{" + "montoExpTec=" + montoExpTec + ", montoInfra=" + montoInfra + ", montoEquipMov=" + montoEquipMov + ", montoSuperv=" + montoSuperv + ", montoCapac=" + montoCapac + ", montoOtros=" + montoOtros + ", fecharegistro=" + fecharegistro + ", tipoRegistro=" + tipoRegistro + ", codigoProy=" + codigoProy + ", montoModif=" + montoModif + ", numMonto=" + numMonto + ", montoaux=" + montoaux + ", fechaaux=" + fechaaux + '}';
+    }
+
+    public Integer getIdExpTecn() {
+        return idExpTecn;
+    }
+
+    public void setIdExpTecn(Integer idExpTecn) {
+        this.idExpTecn = idExpTecn;
     }
 
    

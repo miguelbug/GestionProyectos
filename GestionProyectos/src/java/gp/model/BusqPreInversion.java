@@ -18,6 +18,7 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class BusqPreInversion implements Serializable{
 
+    private Integer idcomp;
     private String c1;
     private String c2;
     private String c3;
@@ -191,6 +192,14 @@ public class BusqPreInversion implements Serializable{
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public Integer getIdcomp() {
+        return idcomp;
+    }
+
+    public void setIdcomp(Integer idcomp) {
+        this.idcomp = idcomp;
     }
 
 }

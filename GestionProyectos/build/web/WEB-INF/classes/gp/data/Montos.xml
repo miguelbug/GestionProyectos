@@ -10,7 +10,7 @@
         <result property="fecha" column="FECHA"/>
     </resultMap>
     
-    <resultMap id="numMonto" type="String">
+    <resultMap id="numMonto" type="Integer">
         <result property="monto" column="NUMEROMONTO"/>
     </resultMap>
     

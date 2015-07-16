@@ -6,6 +6,7 @@
 
 package gp.dao;
 
+import gp.model.Componentes;
 import gp.model.Ejecucion;
 import gp.model.EjecucionMostrado;
 import gp.model.Historial;
@@ -36,4 +37,8 @@ public interface RegistroInversionDAO {
     public List<EjecucionMostrado> getMontosEjecutados(String codigo, String id);
     public void ActualizarMontosEjecutados(List<Ejecucion> ejecu , String idproy);
     public Integer getIdProyExpt2(Integer numero, Integer idproy, Integer etapa);
+    public void nuevaInfraestructura(Componentes c);
+    public void agregarMontoET(Historial h);
+    public Integer getNumeroMonto(String codigo);
+    public Componentes getMontosPorEtapa(String codigo, String etapa);
 }

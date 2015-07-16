@@ -24,6 +24,7 @@
     
     
     <resultMap id="Ejecucion" type="gp.model.MostrarEjecucion">
+        <result property="idproy" column="IDPROY"/>
         <result property="idejecucion" column="IDEJECU"/>
         <result property="mes" column="MES"/>
         <result property="anio" column="ANIO"/>
@@ -139,7 +140,8 @@
     </select>
     
     <select id="getEjecucion" resultMap="Ejecucion" parameterType="String">
-        SELECT E.ID_EJECUCION AS IDEJECU, 
+        SELECT E.ID_PROYEXPT AS IDPROY,
+        E.ID_EJECUCION AS IDEJECU, 
         E.MES AS MES,
         E.ANIO AS ANIO,
         E.MONTO2 as MONTO_PRELIMINAR,

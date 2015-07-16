@@ -9,6 +9,7 @@ import gp.dao.ListasGeneralesDAO;
 import gp.dao.RegistroInversionDAO;
 import gp.daoImpl.ListasGeneralesDaoImpl;
 import gp.daoImpl.RegistroInversionDaoImpl;
+import gp.model.Componentes;
 import gp.model.Ejecucion;
 import gp.model.EjecucionMostrado;
 import gp.model.Historial;
@@ -36,9 +37,12 @@ public class RegistroInversion {
 
     private String monto;
     private Double montoD = null;
+    private Double montoD2 = null;
     private String resolucion;
+    private String resolucion2;
     private Date fecha;
     private String fechaaux;
+    private String fechaaux2;
     private String horaaux;
     private List listaExpedientes;
 
@@ -85,6 +89,7 @@ public class RegistroInversion {
     private Double totalD = null;
     private Double totalPre = null;
     private String contrato;
+    private String contrato2;
 
     private List lista_T;
     private String t1;
@@ -104,8 +109,13 @@ public class RegistroInversion {
     private String etapa;
     private List<String> resoluciones;
     private boolean esta;
+    private boolean aparece;
+    private boolean aparece2;
+    private String idproyExpt;
 
     public RegistroInversion() {
+        aparece = false;
+        aparece2 = false;
         etapas = new ArrayList<String>();
         fecha = new Date();
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -129,6 +139,7 @@ public class RegistroInversion {
     }
 
     public void onTabChange(TabChangeEvent event) {
+
         if (event.getTab().getTitle().equals("REGISTRO DE ADICIONAL(ES)")) {
             iniciarListaExpediente();
         } else {
@@ -144,7 +155,9 @@ public class RegistroInversion {
                     }
                 }
             }
+
         }
+
     }
 
     public void llenarMontos() {
@@ -355,6 +368,38 @@ public class RegistroInversion {
         }
     }
 
+    public void agregarMontoAExpTecn() {
+        FacesMessage message = null;
+        try {
+            Historial h = new Historial();
+            Componentes c = new Componentes();
+            h.setResolucion(this.resolucion2);
+            h.setMonto(this.montoD2);
+            h.setFecha(getDate(this.fechaaux2));
+            h.setIdproy(Integer.parseInt(idproyExpt));
+            c.setCodigoProy(Integer.parseInt(cod_proy));
+            c.setMontoExpTec(0.0);
+            c.setMontoInfra(h.getMonto());
+            c.setMontoEquipMov(0.0);
+            c.setMontoSuperv(0.0);
+            c.setMontoCapac(0.0);
+            c.setMontoOtros(0.0);
+            c.setFecharegistro(h.getFecha());
+            c.setMontoModif(0.0);
+            c.setTipoRegistro("1");
+            c.setNumMonto(rid.getNumeroMonto(cod_proy));
+            c.setIdExpTecn(h.getIdproy());
+            rid.nuevaInfraestructura(c);
+            rid.agregarMontoET(h);
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA AGREGADO EL MONTO AL : " + contrato2);
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
+        } catch (Exception e) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA AGREGADO CORRECTAMENTE");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
+            System.out.println(e.getMessage());
+        }
+    }
+
     public void guardarNuevoExpTecn() {
         FacesMessage message = null;
         String nombreExpaux = "";
@@ -415,18 +460,20 @@ public class RegistroInversion {
         String nombredocu1aux = "";
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
-            Historial h= new Historial();
+            Historial h = new Historial();
+            Componentes c= rid.getMontosPorEtapa(cod_proy, partirCadena(adicional));
+            c.setMontoInfra(c.getMontoInfra()+monto_adicD);
+            c.setMontoModif(c.getMontoModif()+monto_adicD);
+            c.setNumMonto(c.getNumMonto()+1);
             nd.setNumeroDocu(Integer.parseInt(nombredocu1));
             nombredocu1aux = nombredocu1;
             nd.setExptecn(rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(adicional)));
-            //nd.setMonto(monto_adicD);
-            //nd.setResolucion(resolucion_adic);
-            //nd.setFecha(getDate(fechaaux_adic));
             nd.setTipodocu(2);
             h.setMonto(monto_adicD);
             h.setResolucion(resolucion_adic);
             h.setFecha(getDate(fechaaux_adic));
-            rid.guardarNuevoDocumento(nd,h,nd.getNumeroDocu(),nd.getExptecn(),nd.getTipodocu());
+            rid.guardarNuevoDocumento(nd, h, nd.getNumeroDocu(), nd.getExptecn(), nd.getTipodocu());
+            rid.nuevaInfraestructura(c);
             getAdicionales();
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL ADICIONAL N°: " + nombredocu1aux);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -444,18 +491,20 @@ public class RegistroInversion {
         String nombredocu2aux = "";
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
-            Historial h= new Historial();
+            Historial h = new Historial();
             nd.setNumeroDocu(Integer.parseInt(nombredocu2));
+            Componentes c= rid.getMontosPorEtapa(cod_proy, partirCadena(deductivo));
+            c.setMontoInfra(c.getMontoInfra()-monto_deducD);
+            c.setMontoModif(c.getMontoModif()-monto_deducD);
+            c.setNumMonto(c.getNumMonto()+1);
             nombredocu2aux = nombredocu2;
-            //nd.setMonto(monto_deducD);
-            //nd.setResolucion(resolucion_deduc);
-            //nd.setFecha(getDate(fechaaux_deduc));
             nd.setExptecn(rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(deductivo)));
             nd.setTipodocu(3);
             h.setMonto(monto_deducD);
             h.setResolucion(resolucion_deduc);
             h.setFecha(getDate(fechaaux_deduc));
-            rid.guardarNuevoDocumento(nd,h,nd.getNumeroDocu(),nd.getExptecn(),nd.getTipodocu());
+            rid.guardarNuevoDocumento(nd, h, nd.getNumeroDocu(), nd.getExptecn(), nd.getTipodocu());
+            rid.nuevaInfraestructura(c);
             getDeductivos();
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL DEDUCTIVO N°: " + nombredocu2aux);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -516,15 +565,15 @@ public class RegistroInversion {
     }
 
     public void getAdicionales() {
-        String numeroAdicional="";
+        String numeroAdicional = "";
         try {
             System.out.println("CODIGO PROY ADICIONALES: " + cod_proy + " ADICIONAL: " + adicional + "-");
-            if(!adicional.equals(" ")){
+            if (!adicional.equals(" ")) {
                 numeroAdicional = rid.getNombreDocumentos(cod_proy, "2", partirCadena(adicional));
             }
-            
+
             System.out.println("numeroAdicional: " + numeroAdicional);
-            if (adicional.equals(" ") || adicional.equals("") || numeroAdicional == null ) {
+            if (adicional.equals(" ") || adicional.equals("") || numeroAdicional == null) {
                 System.out.println("por defecto Ad");
                 nombredocu1 = "1";
             } else {
@@ -539,11 +588,11 @@ public class RegistroInversion {
     }
 
     public void getDeductivos() {
-        String numeroDeductivo="";
+        String numeroDeductivo = "";
         try {
             System.out.println("CODIGO PROY DEDUCTIVOS: " + cod_proy + " DEDUCTIVO: " + deductivo);
-            if(!deductivo.equals(" ")){
-                numeroDeductivo= rid.getNombreDocumentos(cod_proy, "3", partirCadena(deductivo));
+            if (!deductivo.equals(" ")) {
+                numeroDeductivo = rid.getNombreDocumentos(cod_proy, "3", partirCadena(deductivo));
             }
             if (deductivo.equals(" ") || deductivo.equals("") || numeroDeductivo == null) {
                 System.out.println("por defecto ded");
@@ -593,6 +642,30 @@ public class RegistroInversion {
         for (int i = 0; i < listaaux.size(); i++) {
             listaExpedientes.add(listaaux.get(i).toString());
         }
+        System.out.println(listaExpedientes.size());
+    }
+
+    public void se_Registrara() {
+        this.aparece = true;
+        this.aparece2 = false;
+        montoD = null;
+        resolucion = " ";
+        fechaaux = "";
+    }
+
+    public void se_Agregara() {
+        this.aparece = false;
+        this.aparece2 = true;
+        contrato2 = " ";
+        montoD2 = null;
+        resolucion2 = " ";
+        fechaaux2 = "";
+        iniciarListaExpediente();
+    }
+
+    public void obtenerIdProyExpt() {
+        this.idproyExpt = rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(contrato2));
+        System.out.println("idexpediente: " + idproyExpt);
     }
 
     public String getMonto() {
@@ -1089,6 +1162,62 @@ public class RegistroInversion {
 
     public void setEsta(boolean esta) {
         this.esta = esta;
+    }
+
+    public Double getMontoD2() {
+        return montoD2;
+    }
+
+    public void setMontoD2(Double montoD2) {
+        this.montoD2 = montoD2;
+    }
+
+    public String getResolucion2() {
+        return resolucion2;
+    }
+
+    public void setResolucion2(String resolucion2) {
+        this.resolucion2 = resolucion2;
+    }
+
+    public String getFechaaux2() {
+        return fechaaux2;
+    }
+
+    public void setFechaaux2(String fechaaux2) {
+        this.fechaaux2 = fechaaux2;
+    }
+
+    public String getContrato2() {
+        return contrato2;
+    }
+
+    public void setContrato2(String contrato2) {
+        this.contrato2 = contrato2;
+    }
+
+    public boolean isAparece() {
+        return aparece;
+    }
+
+    public void setAparece(boolean aparece) {
+        this.aparece = aparece;
+    }
+
+    public boolean isAparece2() {
+        return aparece2;
+    }
+
+    public void setAparece2(boolean aparece2) {
+        this.aparece2 = aparece2;
+    }
+
+    public String getIdproyExpt() {
+        return idproyExpt;
+    }
+
+    public void setIdproyExpt(String idproyExpt) {
+        this.idproyExpt = idproyExpt;
     }
 
 }

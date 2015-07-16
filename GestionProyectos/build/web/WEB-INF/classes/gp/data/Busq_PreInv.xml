@@ -19,6 +19,7 @@
     </resultMap>
     
     <resultMap id="lista_busqPreInv2" type="gp.model.BusqPreInversion">
+        <result property="idcomp" column="IDCOMP"/>
         <result property="c11" column="EXPTECN"/>
         <result property="c12" column="INFRA"/>
         <result property="c13" column="EQUIPMOB"/>
@@ -53,6 +54,10 @@
         <result property="codigo" column="IDPROY"/>
     </resultMap>
     
+    <resultMap id="Etapa_Lista" type="Integer">
+        <result property="etapa" column="ETAPA"/>
+    </resultMap>
+    
     <select id="getBPI" resultMap="lista_busqPreInv" parameterType="String">
         SELECT P.ID_PROYECTO AS CODIGO,
         P.NOMBRE_PROY AS NOMBRE,
@@ -73,8 +78,27 @@
         AND P.ID_PROYECTO=#{codigo}
     </select>
     
-    <select id="getBPI_2" resultMap="lista_busqPreInv2" parameterType="String">
-        SELECT CO.EXP_TECN AS EXPTECN,
+    <select id="getBPI_2" resultMap="lista_busqPreInv2" parameterType="java.util.Map">
+        SELECT  ID_COMP AS IDCOMP,
+        CO.EXP_TECN AS EXPTECN,
+        CO.INFRAESTRUCTURA AS INFRA,
+        CO.EQUIP_MOBIL AS EQUIPMOB,
+        CO.SUPERVISION AS SUPERVISION,
+        CO.CAPACITACION AS CAPACITACION,
+        CO.OTROS AS OTROS,
+        TO_CHAR(CO.FECHA_REG,'DD/MM/YYYY') AS FECHAMODIF,
+        CO.MONTO_MODIF AS MONTOMODIF
+        
+        FROM PROYECTO P, COMPONENTES CO, PROY_EXPT PE
+        WHERE P.ID_PROYECTO=CO.ID_PROYECTO
+        AND CO.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND P.ID_PROYECTO=#{codigo}
+        AND PE.ETAPA=#{etapa}
+    </select>
+    
+    <select id="getBPI_3" resultMap="lista_busqPreInv2" parameterType="String">
+        SELECT  ID_COMP AS IDCOMP,
+        CO.EXP_TECN AS EXPTECN,
         CO.INFRAESTRUCTURA AS INFRA,
         CO.EQUIP_MOBIL AS EQUIPMOB,
         CO.SUPERVISION AS SUPERVISION,
@@ -86,6 +110,7 @@
         FROM PROYECTO P, COMPONENTES CO
         WHERE P.ID_PROYECTO=CO.ID_PROYECTO
         AND P.ID_PROYECTO=#{codigo}
+        AND CO.ID_PROYEXPT IS NULL
     </select>
     
     <insert id="insert_gnc" parameterType="gp.model.GuardarNuevComp">
@@ -126,28 +151,37 @@
     
     <select id="getMontosHistorial" resultMap="lista_componentesHistorial" parameterType="String">
         SELECT EXP_TECN AS EXP_TECN,
-               INFRAESTRUCTURA AS INFRA,
-               EQUIP_MOBIL AS EQUIP_MOBIL,
-               SUPERVISION AS SUPERV,
-               CAPACITACION AS CAPACIT,
-               OTROS AS OTROS,
-               TO_CHAR(FECHA_REG,'DD/MM/YYYY') AS FECHA_REG
+        INFRAESTRUCTURA AS INFRA,
+        EQUIP_MOBIL AS EQUIP_MOBIL,
+        SUPERVISION AS SUPERV,
+        CAPACITACION AS CAPACIT,
+        OTROS AS OTROS,
+        TO_CHAR(FECHA_REG,'DD/MM/YYYY') AS FECHA_REG
         FROM COMPONENTES WHERE ID_PROYECTO=#{codigo}
     </select>
     
     <select id="getComponenteDeMonto" resultMap="listaComponentesDeMonto" parameterType="java.util.Map">
         SELECT EXP_TECN AS EXP_TECN,
-               INFRAESTRUCTURA AS INFRA,
-               EQUIP_MOBIL AS EQUIP_MOBIL,
-               SUPERVISION AS SUPERV,
-               CAPACITACION AS CAPACIT,
-               OTROS AS OTROS,
-               ID_COMP AS IDCOMP
+        INFRAESTRUCTURA AS INFRA,
+        EQUIP_MOBIL AS EQUIP_MOBIL,
+        SUPERVISION AS SUPERV,
+        CAPACITACION AS CAPACIT,
+        OTROS AS OTROS,
+        ID_COMP AS IDCOMP
         FROM COMPONENTES WHERE ID_PROYECTO=#{codigo}
         AND MONTO_MODIF||' - '||TO_CHAR(FECHA_REG,'DD/MM/YYYY') = #{montoFecha}
     </select>
     
     <select id="validarProy" resultMap="validarProyecto" parameterType="String">
         SELECT ID_PROYECTO as IDPROY FROM PROYECTO WHERE ID_PROYECTO=#{codigo}
+    </select>
+    
+    <select id="listaEtapas" resultMap="Etapa_Lista" parameterType="String">
+        SELECT PE.ETAPA AS ETAPA
+        FROM COMPONENTES COM, PROY_EXPT PE
+        WHERE COM.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND COM.ID_PROYECTO=#{proy}
+        GROUP BY COM.ID_PROYECTO,PE.ETAPA
+        ORDER BY PE.ETAPA ASC
     </select>
 </mapper>
