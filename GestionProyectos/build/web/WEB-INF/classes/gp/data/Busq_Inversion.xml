@@ -11,6 +11,7 @@
         <result property="monto" column="MONTO"/>
         <result property="rr" column="RR"/>
         <result property="fecha" column="FECHA"/>
+        <result property="montoModificado" column="MONTOMODIF"/>
     </resultMap>
     
     <resultMap id="DetalleExpTecn" type="gp.model.DetalleExpTecnico">
@@ -65,7 +66,8 @@
         TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP AS DOCUMENTO,
         PE.INFRAESTRUCTURA AS MONTO,
         PE.NUMERO_RR AS RR,
-        TO_CHAR(PE.FECHA_REG,'DD/MM/YYYY') AS FECHA
+        TO_CHAR(PE.FECHA_REG,'DD/MM/YYYY') AS FECHA,
+        PE.MONTO_MODIF AS MONTOMODIF
         FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
         WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
         AND PE.ID_PROYECTO=#{codigo}
@@ -110,8 +112,13 @@
     </select>
 
     <update id="actualizarExpTecn" parameterType="gp.model.ExpedienteTecnico">
-        update HISTORIALEXPCONT set MONTO=#{monto}, fecha=#{fecha},NUMERO_RR=#{resolucion}
-        WHERE ID_HISTORIAL=#{idhistorial}
+        update PROY_EXPT set INFRAESTRUCTURA=#{monto}, FECHA_REG=#{fecha},NUMERO_RR=#{resolucion}
+        WHERE ID_PROYEXPT=#{idhistorial}
+    </update>
+    
+    <update id="actualizarMontoModif" parameterType="gp.model.ExpedienteTecnico">
+        update PROY_EXPT set MONTO_MODIF=EXP_TECN+INFRAESTRUCTURA+EQUIP_MOBIL+SUPERVISION+CAPACITACION+OTROS
+        WHERE ID_PROYEXPT=#{idhistorial}
     </update>
     
     <update id="actualizarContrato1" parameterType="java.util.Map">

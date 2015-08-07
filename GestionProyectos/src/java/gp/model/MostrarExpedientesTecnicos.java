@@ -23,6 +23,7 @@ public class MostrarExpedientesTecnicos implements Serializable{
     private String monto;
     private String rr;
     private String fecha;
+    private String montoModificado;
     
     public MostrarExpedientesTecnicos() {
     }
@@ -34,15 +35,7 @@ public class MostrarExpedientesTecnicos implements Serializable{
     public void setDocumento(String documento) {
         this.documento = documento;
     }
-
-    public String getMonto() {
-        return monto;
-    }
-
-    public void setMonto(String monto) {
-        this.monto = monto;
-    }
-
+    
     public String getRr() {
         return rr;
     }
@@ -65,6 +58,22 @@ public class MostrarExpedientesTecnicos implements Serializable{
 
     public void setIdhistorial(Integer idhistorial) {
         this.idhistorial = idhistorial;
+    }
+
+    public String getMonto() {
+        return monto;
+    }
+
+    public void setMonto(String monto) {
+        this.monto = monto;
+    }
+
+    public String getMontoModificado() {
+        return montoModificado;
+    }
+
+    public void setMontoModificado(String montoModificado) {
+        this.montoModificado = montoModificado;
     }
     
 }

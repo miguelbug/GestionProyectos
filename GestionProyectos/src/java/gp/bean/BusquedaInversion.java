@@ -147,26 +147,37 @@ public class BusquedaInversion {
         }
         return d;
     }
-
+    public Double obtenerMonto(Integer idexp){
+        Double montaux=0.0;
+        for(int i=0;i<met.size();i++){
+            if(met.get(i).getIdhistorial()==idexp){
+                montaux=Double.parseDouble(met.get(i).getMonto());
+                break;
+            }
+        }
+        return montaux;
+    }
     public void onRowEdit(RowEditEvent event) {
         FacesMessage message = null;
         String documento = "";
-        System.out.println(((MostrarExpedientesTecnicos) event.getObject()).getDocumento() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getFecha() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getMonto() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getRr() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getIdhistorial());
-        /*documento = ((MostrarExpedientesTecnicos) event.getObject()).getDocumento();
+        Double montoaux=0.0,montoaux2=0.0;
+        System.out.println(((MostrarExpedientesTecnicos) event.getObject()).getDocumento() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getFecha() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getMonto() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getRr() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getIdhistorial()+ " "+((MostrarExpedientesTecnicos) event.getObject()).getMontoModificado());
+        documento = ((MostrarExpedientesTecnicos) event.getObject()).getDocumento();
         ExpedienteTecnico exp = new ExpedienteTecnico();
-        exp.setDocumento(((MostrarExpedientesTecnicos) event.getObject()).getDocumento());
         exp.setFecha(getFecha(((MostrarExpedientesTecnicos) event.getObject()).getFecha()));
         exp.setResolucion(((MostrarExpedientesTecnicos) event.getObject()).getRr());
         exp.setMonto(Double.parseDouble(((MostrarExpedientesTecnicos) event.getObject()).getMonto()));
         exp.setIdhistorial(((MostrarExpedientesTecnicos) event.getObject()).getIdhistorial());
+        System.out.println("Resultado modificado: "+exp.getMontoModif());
         try {
             bid.ActualizarExpedienteTecnico(exp);
+            bid.actualizarMontoModif(exp);
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "CORRECTO", "SE HA ACTUALIZADO EL: " + documento);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         } catch (Exception e) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE PUDO ACTUALIZAR");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
-        }*/
+        }
     }
 
     public void onRowEdit2(RowEditEvent event) {

@@ -68,6 +68,20 @@ public class BusquedaInversionDaoImpl implements BusquedaInversionDAO {
     }
 
     @Override
+    public void actualizarMontoModif(ExpedienteTecnico e) {
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            int a = session.update("BusquedaInversion.actualizarMontoModif", e);
+            session.commit();
+            System.out.println("se han actualizado: " + a);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
     public void ActualizarExpedienteTecnico(ExpedienteTecnico e) {
         SqlSession session = sqlSessionFactory.openSession();
         try {

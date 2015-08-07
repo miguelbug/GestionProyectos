@@ -26,11 +26,23 @@ public class ExpedienteTecnico implements Serializable{
     private Integer idpExptecn;
     private Integer idhistorial;
     private Integer cantidad;
+    private Double montoModif;
     
     
     public ExpedienteTecnico() {
     }
 
+    public ExpedienteTecnico(String documento, Date fecha, Double monto, String resolucion, Integer idpExptecn, Integer idhistorial, Integer cantidad, Double montoModif) {
+        this.documento = documento;
+        this.fecha = fecha;
+        this.monto = monto;
+        this.resolucion = resolucion;
+        this.idpExptecn = idpExptecn;
+        this.idhistorial = idhistorial;
+        this.cantidad = cantidad;
+        this.montoModif = montoModif;
+    }
+    
     public ExpedienteTecnico(String documento, Date fecha, Double monto, String resolucion) {
         this.documento = documento;
         this.fecha = fecha;
@@ -109,6 +121,14 @@ public class ExpedienteTecnico implements Serializable{
 
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public Double getMontoModif() {
+        return montoModif;
+    }
+
+    public void setMontoModif(Double montoModif) {
+        this.montoModif = montoModif;
     }
     
 }
