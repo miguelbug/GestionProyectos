@@ -13,7 +13,6 @@ import gp.daoImpl.ListasGeneralesDaoImpl;
 import gp.daoImpl.RegistroInversionDaoImpl;
 import gp.model.ActualizarEjecucion;
 import gp.model.DetalleExpTecnico;
-import gp.model.DocumentosNuevos;
 import gp.model.ExpedienteTecnico;
 import gp.model.MostrarEjecucion;
 import gp.model.MostrarExpedientesTecnicos;

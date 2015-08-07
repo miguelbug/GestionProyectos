@@ -709,6 +709,9 @@ public class BusquedaPreInversion {
         estado10 = 0;
         estado11 = false;
         estadof = false;
+        b25 = " ";
+        b26D = null;
+        nuevaFecha= "";
         limpiarComponentes();
         getExpedientesLista();
         getInformesLista();

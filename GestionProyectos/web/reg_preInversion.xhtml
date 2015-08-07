@@ -23,9 +23,12 @@
                                 <br></br>
                                 <h:panelGrid columns="2" id="regPreInvAG" cellspacing="10">
                                     <p:outputLabel value="Código"/>
-                                    <pe:inputNumber value="#{registroPreInversion.codigo_int}" decimalPlaces="0" thousandSeparator="" decimalSeparator="" style="text-transform:uppercase;text-align: right">  
-                                    
-                                    </pe:inputNumber>
+                                    <h:panelGrid columns="2">  
+                                        <pe:inputNumber value="#{registroPreInversion.codigo_int}" decimalPlaces="0" thousandSeparator="" decimalSeparator="" style="text-transform:uppercase;text-align: right">  
+                                            <p:ajax event="change" listener="#{registroPreInversion.validarProyecto()}" update="tab"/>
+                                        </pe:inputNumber>
+                                        <p:outputLabel value="Proyecto ya Registrado" style="color: crimson" rendered="#{registroPreInversion.error}"/>
+                                    </h:panelGrid>
                                     
                                     <p:outputLabel value="Nombre:"/>
                                     <p:inputTextarea rows="2" cols="45" value="#{registroPreInversion.nombre_proy}" style="text-transform:uppercase;" disabled="#{registroPreInversion.estado2}"/>
@@ -45,7 +48,7 @@
                                     </p:selectOneMenu>
 
                                     <p:outputLabel value="Monto de Viabilidad: S/."/>
-                                    <pe:inputNumber value="#{registroPreInversion.montoD}" thousandSeparator="," decimalSeparator="." style="text-transform:uppercase;text-align: right">  
+                                    <pe:inputNumber value="#{registroPreInversion.montoD}" thousandSeparator="," decimalSeparator="." style="text-transform:uppercase;text-align: right" disabled="#{registroPreInversion.estado2}">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{registroPreInversion.almacenarMonto()}"/>
                                     </pe:inputNumber>

@@ -5,8 +5,10 @@
  */
 package gp.bean;
 
+import gp.dao.BusqPreInversionDAO;
 import gp.dao.ListasGeneralesDAO;
 import gp.dao.RegistroPreInversionDAO;
+import gp.daoImpl.BusqPreInversionDaoImpl;
 import gp.daoImpl.ListasGeneralesDaoImpl;
 import gp.daoImpl.RegistroPreInversionDaoImpl;
 import gp.model.AspectosGenerales;
@@ -36,7 +38,7 @@ import org.primefaces.event.TabChangeEvent;
 @ViewScoped
 public class RegistroPreInversion {
 
-    private Integer codigo_int=null;
+    private Integer codigo_int = null;
     private String nombre_proy;
     private String origen;
     private String monto;
@@ -87,6 +89,8 @@ public class RegistroPreInversion {
     private List<String> expedientes;
     private List<String> informes;
     private List<String> resoluciones;
+    private BusqPreInversionDAO bpi;
+    public boolean error;
 
     public RegistroPreInversion() {
         faceContext = FacesContext.getCurrentInstance();
@@ -102,6 +106,7 @@ public class RegistroPreInversion {
         expedientes = new ArrayList<String>();
         informes = new ArrayList<String>();
         resoluciones = new ArrayList<String>();
+        bpi = new BusqPreInversionDaoImpl();
         llenar_OPI();
         llenar_NE();
         estado = true;
@@ -225,7 +230,7 @@ public class RegistroPreInversion {
     }
 
     public void limpiarAG() {
-        codigo_int= null;
+        codigo_int = null;
         nombre_proy = "";
         montoD = 0.0;
         fecha_viab_aux = "";
@@ -351,6 +356,21 @@ public class RegistroPreInversion {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public void validarProyecto() {
+        System.out.println("Validacion: " + bpi.validarProyecto(String.valueOf(codigo_int)));
+        if (bpi.validarProyecto(String.valueOf(codigo_int)) != null) {
+            estado2 = true;
+            estado4 = true;
+            error = true;
+        } else {
+            if (bpi.validarProyecto(String.valueOf(codigo_int)) == null) {
+                estado2 = false;
+                estado4 = false;
+                error = false;
+            }
+        }
     }
 
     public String getOrigen() {
@@ -735,6 +755,22 @@ public class RegistroPreInversion {
 
     public void setCodigo_int(Integer codigo_int) {
         this.codigo_int = codigo_int;
+    }
+
+    public BusqPreInversionDAO getBpi() {
+        return bpi;
+    }
+
+    public void setBpi(BusqPreInversionDAO bpi) {
+        this.bpi = bpi;
+    }
+
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
     }
 
 }
