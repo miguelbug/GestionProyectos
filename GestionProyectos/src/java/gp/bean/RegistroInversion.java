@@ -428,9 +428,10 @@ public class RegistroInversion {
             c.setEstado(2);
             System.out.println(nombreExp + " " + cod_proy + " " + nombreExp);
             rid.guardarExpTecn(c);
-            getNombreExpediente();
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL EXPEDIENTE TÉCNICO N°: " + nombreExp);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
+            getNombreExpediente();
+            
         } catch (Exception e) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA GUARDADO EL EXPEDIENTE");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
