@@ -38,6 +38,21 @@ public class BusquedaInversionDaoImpl implements BusquedaInversionDAO {
     }
 
     @Override
+    public List<MostrarExpedientesTecnicos> getListaExpedientes(String codigo) {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<MostrarExpedientesTecnicos> list = null;
+        try {
+            list = session.selectList("BusquedaInversion.getListaExpTecn", codigo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
     public List<MostrarExpedientesTecnicos> getListaExpedientesTecnicos(String codigo) {
         SqlSession session = sqlSessionFactory.openSession();
         List<MostrarExpedientesTecnicos> list = null;

@@ -18,26 +18,17 @@ import javax.faces.bean.RequestScoped;
 @RequestScoped
 public class Montos implements Serializable{
 
-    private String monto;
-    private String fecha;
+    private String expediente;
     
     public Montos() {
     }
 
-    public String getMonto() {
-        return monto;
+    public String getExpediente() {
+        return expediente;
     }
 
-    public void setMonto(String monto) {
-        this.monto = monto;
-    }
-
-    public String getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
+    public void setExpediente(String expediente) {
+        this.expediente = expediente;
     }
     
 }

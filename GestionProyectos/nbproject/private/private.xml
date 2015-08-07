@@ -3,32 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/bean/BusquedaPreInversion.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/daoImpl/MontosDaoImpl.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/data/Busq_PreInv.xml</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/data/Busq_Inversion.xml</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/daoImpl/BusquedaInversionDaoImpl.java</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/web/busqueda_Inversion.xhtml</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/model/MostrarExpedientesTecnicos.java</file>
             <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/bean/BusquedaInversion.java</file>
             <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/web/busq_preInversion.xhtml</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/bean/RegistroInversion.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/daoImpl/BusqPreInversionDaoImpl.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/daoImpl/RegistroInversionDaoImpl.java</file>
-=======
-<<<<<<< HEAD
-            <file>file:/C:/Users/Administrador/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/bean/RegistroPreInversion.java</file>
-            <file>file:/C:/Users/Administrador/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/web/busq_preInversion.xhtml</file>
-            <file>file:/C:/Users/Administrador/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/bean/BusquedaPreInversion.java</file>
-            <file>file:/C:/Users/Administrador/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/data/Busq_PreInv.xml</file>
-            <file>file:/C:/Users/Administrador/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/web/reg_preInversion.xhtml</file>
-=======
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/dao/RegistroInversionDAO.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/daoImpl/BusquedaInversionDaoImpl.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/data/Busq_Inversion.xml</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/dao/BusquedaInversionDAO.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/web/busqueda_Inversion.xhtml</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/bean/BusquedaInversion.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/model/ActualizarEjecucion.java</file>
->>>>>>> origin/master
->>>>>>> origin/master
         </group>
     </open-files>
 </project-private>

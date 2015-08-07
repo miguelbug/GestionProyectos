@@ -17,11 +17,9 @@ import gp.model.DocumentosNuevos;
 import gp.model.ExpedienteTecnico;
 import gp.model.MostrarEjecucion;
 import gp.model.MostrarExpedientesTecnicos;
-import gp.model.NuevosDocumentos;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -42,6 +40,7 @@ public class BusquedaInversion {
     private boolean estado;
     private String nombreProy;
     private List<MostrarExpedientesTecnicos> met;
+    private List<MostrarExpedientesTecnicos> met2;
     private List<MostrarEjecucion> mej;
     private List<DetalleExpTecnico> det;
     private BusquedaInversionDAO bid;
@@ -63,6 +62,8 @@ public class BusquedaInversion {
     private String nuevaFecha;
     private List<String> nuevosanios;
     private List<String> nuevosmeses;
+    private boolean mostrar;
+    private MostrarExpedientesTecnicos selectedMET;
 
     public BusquedaInversion() {
         meses = new ArrayList<String>();
@@ -70,6 +71,7 @@ public class BusquedaInversion {
         nuevosanios = new ArrayList<String>();
         nuevosmeses = new ArrayList<String>();
         met = new ArrayList<MostrarExpedientesTecnicos>();
+        met2 = new ArrayList<MostrarExpedientesTecnicos>();
         bid = new BusquedaInversionDaoImpl();
         lgd = new ListasGeneralesDaoImpl();
         resoluciones = new ArrayList<String>();
@@ -93,6 +95,7 @@ public class BusquedaInversion {
             System.out.println("Dimension: " + met.size() + " " + nombreProy);
             meses = bid.getEjecucionMeses(codigo);
             anios = bid.getEjecucionAnios(codigo);
+            if(meses.size()==0 && anios.size()==0){meses.add("Sin Meses");anios.add("Sin Años"); mostrar=true;}else{mostrar=false;}
             if (met.size() == 0 && !nombreProy.equals("")) {
                 System.out.println("SIN HISTORIAL");
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "PROYECTO SIN HISTORIAL DE EJECUCION");
@@ -149,7 +152,7 @@ public class BusquedaInversion {
         FacesMessage message = null;
         String documento = "";
         System.out.println(((MostrarExpedientesTecnicos) event.getObject()).getDocumento() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getFecha() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getMonto() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getRr() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getIdhistorial());
-        documento = ((MostrarExpedientesTecnicos) event.getObject()).getDocumento();
+        /*documento = ((MostrarExpedientesTecnicos) event.getObject()).getDocumento();
         ExpedienteTecnico exp = new ExpedienteTecnico();
         exp.setDocumento(((MostrarExpedientesTecnicos) event.getObject()).getDocumento());
         exp.setFecha(getFecha(((MostrarExpedientesTecnicos) event.getObject()).getFecha()));
@@ -163,12 +166,12 @@ public class BusquedaInversion {
         } catch (Exception e) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE PUDO ACTUALIZAR");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
-        }
+        }*/
     }
 
     public void onRowEdit2(RowEditEvent event) {
         System.out.println(((DetalleExpTecnico) event.getObject()).getDocumento() + " " + ((DetalleExpTecnico) event.getObject()).getFecha() + " " + ((DetalleExpTecnico) event.getObject()).getMonto() + " " + ((DetalleExpTecnico) event.getObject()).getResolucion() + " " + ((DetalleExpTecnico) event.getObject()).getIdhistorial() + " " + ((DetalleExpTecnico) event.getObject()).getIdnuevodoc());
-        DocumentosNuevos d = new DocumentosNuevos();
+        /*DocumentosNuevos d = new DocumentosNuevos();
         d.setFecha(getFecha(((DetalleExpTecnico) event.getObject()).getFecha()));
         d.setMonto(Double.parseDouble(((DetalleExpTecnico) event.getObject()).getMonto()));
         d.setResolucion(((DetalleExpTecnico) event.getObject()).getResolucion());
@@ -185,7 +188,7 @@ public class BusquedaInversion {
             }
         } catch (Exception e) {
 
-        }
+        }*/
 
     }
 
@@ -275,7 +278,15 @@ public class BusquedaInversion {
             nuevosanios.add(String.valueOf(i));
         }
     }
-
+    
+    public List<MostrarExpedientesTecnicos> historialExpTecn(){
+        System.out.println("EL CODIGO: "+codigo);
+        if(codigo!=null){
+            met2=bid.getListaExpedientes(codigo);
+        }
+        return met2;
+    }
+    
     public String getCodigo() {
         return codigo;
     }
@@ -466,6 +477,30 @@ public class BusquedaInversion {
 
     public void setNuevosmeses(List<String> nuevosmeses) {
         this.nuevosmeses = nuevosmeses;
+    }
+
+    public boolean isMostrar() {
+        return mostrar;
+    }
+
+    public void setMostrar(boolean mostrar) {
+        this.mostrar = mostrar;
+    }
+
+    public MostrarExpedientesTecnicos getSelectedMET() {
+        return selectedMET;
+    }
+
+    public void setSelectedMET(MostrarExpedientesTecnicos selectedMET) {
+        this.selectedMET = selectedMET;
+    }
+
+    public List<MostrarExpedientesTecnicos> getMet2() {
+        return met2;
+    }
+
+    public void setMet2(List<MostrarExpedientesTecnicos> met2) {
+        this.met2 = met2;
     }
 
 }

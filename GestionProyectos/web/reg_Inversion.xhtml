@@ -17,7 +17,7 @@
                 <h:form id="form">
                     <center>
                         <h:panelGrid cellpadding="3" columns="3">
-                            <p:outputLabel value="SNIP : " style="color: #036fab"/>
+                            <p:outputLabel value="SNIP : " styleClass="snip"/>
                             <p:autoComplete id="autoCompleteLabel" value="#{registroInversion.cod_proy}" completeMethod="#{registroInversion.coincidencias}"/>
                             <p:commandButton value="Buscar" icon="ui-icon-search" actionListener="#{registroInversion.mostrar()}"  update=":form:"/>
                         </h:panelGrid>
@@ -34,23 +34,24 @@
                                 </h:panelGrid>
                                 <br></br>
                                 <p:outputPanel rendered="#{registroInversion.aparece2}" id="panel1">
+                                    <h2 style="color: #036fab">AGREGAR MONTO A EXPEDIENTE TÉCNICO</h2>
                                     <h:panelGrid columns="2" cellspacing="6">
-                                        <p:outputLabel value="Expediente:   "/>
-                                        <p:selectOneMenu value="#{registroInversion.contrato2}" filter="true" effect="fade" filterMatchMode="contains" styleClass="dedSO">
+                                        <p:outputLabel value="Expediente:   " styleClass="snip"/>
+                                        <p:selectOneMenu value="#{registroInversion.expAgreg}" filter="true" effect="fade" filterMatchMode="contains" styleClass="dedSO">
                                             <f:selectItem itemLabel="Seleccione Expediente" itemValue=" "/> 
                                             <f:selectItems value="#{registroInversion.listaExpedientes}"/>
                                             <p:ajax event="change" listener="#{registroInversion.obtenerIdProyExpt()}"/>
                                         </p:selectOneMenu>
-                                        <p:outputLabel value="Monto S/    "/>
+                                        <p:outputLabel value="Monto S/    " styleClass="snip"/>
                                         <pe:inputNumber value="#{registroInversion.montoD2}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
                                             <f:validateDoubleRange minimum="50"/>
                                         </pe:inputNumber>
-                                        <p:outputLabel value="R.R."/>
+                                        <p:outputLabel value="R.R." styleClass="snip"/>
                                         <p:selectOneMenu value="#{registroInversion.resolucion2}" editable="true" filter="true" filterMatchMode="contains" styleClass="adicSO">
                                             <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
                                             <f:selectItems value="#{registroInversion.resoluciones}"/>
                                         </p:selectOneMenu>
-                                        <p:outputLabel value="Fecha    "/>
+                                        <p:outputLabel value="Fecha    " styleClass="snip"/>
                                         <p:inputMask mask="99/99/9999" value="#{registroInversion.fechaaux2}"/>
                                     </h:panelGrid>
                                     <br></br>
@@ -59,34 +60,32 @@
                                 </p:outputPanel>
 
                                 <p:outputPanel rendered="#{registroInversion.aparece}" id="panel2">
-                                    <h2>REGISTRO DE EXPEDIENTE TÉCNICO</h2>
-                                    <h3 id="nombreExpediente">EXPEDIENTE TÉCNICO N° #{registroInversion.nombreExp}</h3>
+                                    <h2 style="color: #036fab">REGISTRO DE EXPEDIENTE TÉCNICO</h2>
+                                    <h3 id="nombreExpediente" style="color: #036fab">EXPEDIENTE TÉCNICO N° #{registroInversion.nombreExp}</h3>
                                     <br></br>
                                     <h:panelGrid columns="2" cellpadding="6">
-                                        <p:outputLabel value="Monto S/   "/>
+                                        <p:outputLabel value="Monto S/   " styleClass="snip"/>
                                         <pe:inputNumber value="#{registroInversion.montoD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
                                             <f:validateDoubleRange minimum="50"/>
                                         </pe:inputNumber>
-                                        <p:outputLabel value="R.R."/>
+                                        <p:outputLabel value="R.R." styleClass="snip"/>
                                         <p:selectOneMenu value="#{registroInversion.resolucion}" editable="true" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
                                             <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
                                             <f:selectItems value="#{registroInversion.resoluciones}"/>
                                         </p:selectOneMenu>
-                                        <p:outputLabel value="Fecha   "/>
+                                        <p:outputLabel value="Fecha   " styleClass="snip"/>
                                         <p:inputMask mask="99/99/9999" value="#{registroInversion.fechaaux}"/>
                                     </h:panelGrid>
                                     <br></br>
                                     <p:commandButton value="Aceptar" actionListener="#{registroInversion.guardarNuevoExpTecn()}" icon="ui-icon-check" update="tab">
                                     </p:commandButton>
                                 </p:outputPanel>
-
-
                             </center>
                         </p:tab>
                         <p:tab title="REGISTRO DE CONTRATO(S)" id="tab4">
                             <center>
                                 <br></br>
-                                <h2>REGISTRO DE CONTRATO</h2>
+                                <h2 style="color: #036fab">REGISTRO DE CONTRATO</h2>
                                 <p:selectOneMenu value="#{registroInversion.contrato}" filter="true" effect="fade" filterMatchMode="contains" id="deductivoSo2" styleClass="dedSO">
                                     <f:selectItem itemLabel="Seleccione Expediente" itemValue=" "/> 
                                     <f:selectItems value="#{registroInversion.listaExpedientes}"/>
@@ -94,13 +93,13 @@
                                 <br></br>
                                 <br></br>
                                 <h:panelGrid columns="2" cellspacing="4">
-                                    <p:outputLabel value="CONTRATO N° "/>
+                                    <p:outputLabel value="CONTRATO N° " styleClass="snip"/>
                                     <p:inputText value="#{registroInversion.nombredocu3}"/>
-                                    <p:outputLabel value="Monto"/>
+                                    <p:outputLabel value="Monto" styleClass="snip"/>
                                     <pe:inputNumber value="#{registroInversion.monto_contratoD}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
-                                    <p:outputLabel value="Fecha"/>
+                                    <p:outputLabel value="Fecha" styleClass="snip"/>
                                     <p:inputMask mask="99/99/9999" value="#{registroInversion.fecha_contrato}"/>
                                 </h:panelGrid>
                                 <br></br>
@@ -112,20 +111,20 @@
                         <p:tab title="REGISTRO DE EJECUCIÓN" id="tab5">
                             <center>
                                 <br></br>
-                                <h2>REGISTRO DE EJECUCIÓN</h2>
+                                <h2 style="color: #036fab">REGISTRO DE EJECUCIÓN</h2>
                                 <h:panelGrid columns="6" cellspacing="8">
-                                    <p:outputLabel value="N° de Etapa: "/>
+                                    <p:outputLabel value="N° de Etapa: " styleClass="snip"/>
                                     <p:selectOneMenu value="#{registroInversion.etapa}">
                                         <f:selectItem itemLabel="Seleccione" itemValue=" "/>
                                         <f:selectItems value="#{registroInversion.etapas}"/>
                                         <p:ajax event="change" listener="#{registroInversion.llenarMontos()}" update="regPreInComp,mes,anio"/>
                                     </p:selectOneMenu>
-                                    <p:outputLabel value="Mes"/>
+                                    <p:outputLabel value="Mes" styleClass="snip"/>
                                     <p:selectOneMenu value="#{registroInversion.mes}" filter="true" filterMatchMode="contains" id="mes">
                                         <f:selectItem itemLabel="Seleccione" itemValue=" "/>
                                         <f:selectItems value="#{registroInversion.lista_mes}"/>
                                     </p:selectOneMenu>
-                                    <p:outputLabel value="Año"/>
+                                    <p:outputLabel value="Año" styleClass="snip"/>
                                     <p:selectOneMenu value="#{registroInversion.anio}" filter="true" filterMatchMode="contains" id="anio">
                                         <f:selectItem itemLabel="Seleccione" itemValue=" "/>
                                         <f:selectItems value="#{registroInversion.lista_anio}"/>
@@ -134,11 +133,11 @@
                                 <br></br>
                                 <h:panelGrid columns="4" id="regPreInComp" cellpadding="6">
                                     <p:outputLabel value=""/>
-                                    <p:outputLabel value="Monto Preliminar"/>
-                                    <p:outputLabel value="Monto Ejecutado"/>
+                                    <p:outputLabel value="Monto Preliminar" styleClass="snip"/>
+                                    <p:outputLabel value="Monto Ejecutado" styleClass="snip"/>
                                     <p:outputLabel value=""/>
 
-                                    <p:outputLabel value="Exp. Técnico: S/."/>
+                                    <p:outputLabel value="Exp. Técnico: S/." styleClass="snip"/>
                                     <pe:inputNumber value="#{registroInversion.exp_tecnicoPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
@@ -151,7 +150,7 @@
                                         <f:selectItems value="#{registroInversion.lista_T}"/>
                                     </p:selectOneMenu>
 
-                                    <p:outputLabel value="Infraestructura: S/."/>
+                                    <p:outputLabel value="Infraestructura: S/." styleClass="snip"/>
                                     <pe:inputNumber value="#{registroInversion.infraestructuraPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
@@ -164,7 +163,7 @@
                                         <f:selectItems value="#{registroInversion.lista_T}"/>
                                     </p:selectOneMenu>
 
-                                    <p:outputLabel value="Equipamiento y Mobiliario: S/."/>
+                                    <p:outputLabel value="Equipamiento y Mobiliario: S/." styleClass="snip"/>
                                     <pe:inputNumber value="#{registroInversion.equip_mobiliPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
@@ -177,7 +176,7 @@
                                         <f:selectItems value="#{registroInversion.lista_T}"/>
                                     </p:selectOneMenu>
 
-                                    <p:outputLabel value="Supervisión: S/."/>
+                                    <p:outputLabel value="Supervisión: S/." styleClass="snip"/>
                                     <pe:inputNumber value="#{registroInversion.supervisionPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
@@ -190,7 +189,7 @@
                                         <f:selectItems value="#{registroInversion.lista_T}"/>
                                     </p:selectOneMenu>
 
-                                    <p:outputLabel value="Capacitación: S/."/>
+                                    <p:outputLabel value="Capacitación: S/." styleClass="snip"/>
                                     <pe:inputNumber value="#{registroInversion.capacitacionPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
@@ -203,7 +202,7 @@
                                         <f:selectItems value="#{registroInversion.lista_T}"/>
                                     </p:selectOneMenu>
 
-                                    <p:outputLabel value="Otros: S/."/>
+                                    <p:outputLabel value="Otros: S/." styleClass="snip"/>
                                     <pe:inputNumber value="#{registroInversion.otrosPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
@@ -227,26 +226,26 @@
                         <p:tab title="REGISTRO DE ADICIONAL(ES)" id="tab2">
                             <center>
                                 <br></br>
-                                <h2>REGISTRO DE ADICIONAL</h2>
+                                <h2 style="color: #036fab">REGISTRO DE ADICIONAL</h2>
                                 <p:selectOneMenu value="#{registroInversion.adicional}" filter="true" effect="fade" id="adicionalSO" styleClass="adicSO" filterMatchMode="contains">
                                     <f:selectItem itemLabel="Seleccione Expediente" itemValue=" "/> 
                                     <f:selectItems value="#{registroInversion.listaExpedientes}"/>
                                     <p:ajax event="change" listener="#{registroInversion.getAdicionales()}" update="tab"/>
                                 </p:selectOneMenu>
                                 <br></br>
-                                <h3 id="nombreAdicional">ADICIONAL N° #{registroInversion.nombredocu1}</h3>
+                                <h3 id="nombreAdicional" style="color: #036fab">ADICIONAL N° #{registroInversion.nombredocu1}</h3>
                                 <br></br>
                                 <h:panelGrid columns="2" cellpadding="6">
-                                    <p:outputLabel value="Monto"/>
+                                    <p:outputLabel value="Monto" styleClass="snip"/>
                                     <pe:inputNumber value="#{registroInversion.monto_adicD}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
-                                    <p:outputLabel value="R.R."/>
+                                    <p:outputLabel value="R.R." styleClass="snip"/>
                                     <p:selectOneMenu value="#{registroInversion.resolucion_adic}" editable="true" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
                                         <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
                                         <f:selectItems value="#{registroInversion.resoluciones}"/>
                                     </p:selectOneMenu>
-                                    <p:outputLabel value="Fecha"/>
+                                    <p:outputLabel value="Fecha" styleClass="snip"/>
                                     <p:inputMask mask="99/99/9999" value="#{registroInversion.fechaaux_adic}"/>
                                 </h:panelGrid>
                                 <br></br>
@@ -258,26 +257,26 @@
                         <p:tab title="REGISTRO DE DEDUCTIVO(S)" id="tab3">
                             <center>
                                 <br></br>
-                                <h2>REGISTRO DE DEDUCTIVO</h2>
+                                <h2 style="color: #036fab">REGISTRO DE DEDUCTIVO</h2>
                                 <p:selectOneMenu value="#{registroInversion.deductivo}" filter="true" effect="fade" filterMatchMode="contains" id="deductivoSo" styleClass="dedSO">
                                     <f:selectItem itemLabel="Seleccione Expediente" itemValue=" "/> 
                                     <f:selectItems value="#{registroInversion.listaExpedientes}"/>
                                     <p:ajax event="change" listener="#{registroInversion.getDeductivos()}" update="tab"/>
                                 </p:selectOneMenu>
                                 <br></br>
-                                <h3 id="nombreDeductivo">DEDUCTIVO N° #{registroInversion.nombredocu2}</h3>
+                                <h3 id="nombreDeductivo" style="color: #036fab">DEDUCTIVO N° #{registroInversion.nombredocu2}</h3>
                                 <br></br>
                                 <h:panelGrid columns="2" cellpadding="6">
-                                    <p:outputLabel value="Monto"/>
+                                    <p:outputLabel value="Monto" styleClass="snip"/>
                                     <pe:inputNumber value="#{registroInversion.monto_deducD}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
-                                    <p:outputLabel value="R.R."/>
+                                    <p:outputLabel value="R.R." styleClass="snip"/>
                                     <p:selectOneMenu value="#{registroInversion.resolucion_deduc}" editable="true" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
                                         <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
                                         <f:selectItems value="#{registroInversion.resoluciones}"/>
                                     </p:selectOneMenu>
-                                    <p:outputLabel value="Fecha"/>
+                                    <p:outputLabel value="Fecha" styleClass="snip"/>
                                     <p:inputMask mask="99/99/9999" value="#{registroInversion.fechaaux_deduc}"/>
                                 </h:panelGrid>
                                 <br></br>

@@ -20,6 +20,7 @@
         <result property="resolucion" column="RR"/>
         <result property="idhistorial" column="IDHISTO"/>
         <result property="idnuevodoc" column="IDNUEDOCU"/>
+        <result property="montoDocu" column="MONTODOCUMENTOS"/>
     </resultMap>
     
     
@@ -47,17 +48,28 @@
         <result property="anio" column="ANIO"/>
     </resultMap>
     
-    
-    <select id="getExpTecn" resultMap="ExpTecn" parameterType="String">
-        SELECT H.ID_HISTORIAL AS IDHISTO, 
+    <select id="getListaExpTecn" resultMap="ExpTecn" parameterType="String">
+        SELECT PE.ID_PROYEXPT AS IDHISTO, 
         TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP AS DOCUMENTO,
-        H.MONTO AS MONTO,
-        H.NUMERO_RR AS RR,
-        TO_CHAR(H.FECHA,'DD/MM/YYYY') AS FECHA
-        FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD, HISTORIALEXPCONT H
+        PE.INFRAESTRUCTURA AS MONTO,
+        PE.NUMERO_RR AS RR,
+        TO_CHAR(PE.FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
         WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
-        AND PE.ID_PROYEXPT=H.ID_PROYEXPT
         AND PE.ID_PROYECTO=#{codigo}
+        AND ESTADO IN ('1','2')
+        ORDER BY PE.FECHA_REG DESC
+    </select>
+    <select id="getExpTecn" resultMap="ExpTecn" parameterType="String">
+        SELECT PE.ID_PROYEXPT AS IDHISTO, 
+        TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP AS DOCUMENTO,
+        PE.INFRAESTRUCTURA AS MONTO,
+        PE.NUMERO_RR AS RR,
+        TO_CHAR(PE.FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
+        WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND PE.ID_PROYECTO=#{codigo}
+        AND ESTADO NOT IN ('1','0')
         ORDER BY TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP
     </select>
     
@@ -78,15 +90,15 @@
     
     <select id="getDetalleExpTecn" resultMap="DetalleExpTecn" parameterType="java.util.Map">
         SELECT ND.ID_NUEVDOC AS IDNUEDOCU,
-        H.ID_HISTORIAL AS IDHISTO,
+        PE.ID_PROYEXPT AS IDHISTO,
         TD.NOMBRE_TIPODOCU||' N° '||DECODE(TD.NOMBRE_TIPODOCU,'CONTRATO',ND.CODIGO_DOCU,ND.NUMERO_DOCU) AS DOCUMENTO,
-        TO_CHAR(H.FECHA,'DD/MM/YYYY') AS FECHA,
-        H.MONTO AS MONTO,
-        DECODE(H.NUMERO_RR,NULL,'SIN RR',H.NUMERO_RR) AS RR
-        FROM NUEVOS_DOCUMENTOS ND, TIPOS_DOCUMENTOS TD, PROY_EXPT PE, TIPOS_DOCUMENTOS TD2, HISTORIALEXPCONT H
+        TO_CHAR(PE.FECHA_REG,'DD/MM/YYYY') AS FECHA,
+        ND.MONTO AS MONTODOCUMENTOS,
+        PE.INFRAESTRUCTURA AS MONTO,
+        DECODE(PE.NUMERO_RR,NULL,'SIN RR',PE.NUMERO_RR) AS RR
+        FROM NUEVOS_DOCUMENTOS ND, TIPOS_DOCUMENTOS TD, PROY_EXPT PE, TIPOS_DOCUMENTOS TD2
         WHERE ND.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
         AND ND.ID_PROYEXPT=PE.ID_PROYEXPT
-        AND ND.ID_NUEVDOC=H.ID_NUEVDOC
         AND PE.ID_TIPOSDOCUS=TD2.ID_TIPOSDOCUS
         AND PE.ID_PROYECTO=#{codigo}
         AND TD2.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP=#{expediente}

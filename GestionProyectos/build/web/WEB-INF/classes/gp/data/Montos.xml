@@ -6,8 +6,7 @@
 <mapper namespace="MontosData">
  
     <resultMap id="result" type="gp.model.Montos">
-        <result property="monto" column="MONTO"/>
-        <result property="fecha" column="FECHA"/>
+        <result property="expediente" column="EXPMONTFECH"/>
     </resultMap>
     
     <resultMap id="numMonto" type="Integer">
@@ -15,18 +14,21 @@
     </resultMap>
     
     <select id="numMonto_select" resultMap="numMonto" parameterType="String">
-        SELECT MAX(NUM_MONTO) AS NUMEROMONTO FROM COMPONENTES WHERE ID_PROYECTO=#{codigo}
+        SELECT MAX(NUMERO_MONTO) AS NUMEROMONTO FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo}
     </select>
     
     <select id="get_MontModif" resultMap="result" parameterType="String">
-        SELECT R1.MONTO AS MONTO, TO_CHAR(R1.FECHA_REG,'DD/MM/YYYY') AS FECHA
-        FROM (SELECT MONTO_MODIF AS MONTO,
-        FECHA_REG AS FECHA_REG
-        FROM COMPONENTES
-        WHERE ID_PROYECTO=#{codigo}
-        AND TIPO_REG ='1'
-        ORDER BY FECHA_REG DESC)R1
-
+        SELECT R1.DOCUMENTO||' : '||R1.MONTO||' - '||TO_CHAR(R1.FECHA_REG,'DD/MM/YYYY') AS EXPMONTFECH
+        FROM (SELECT TD.NOMBRE_TIPODOCU||' '||PE.NUMERO_EXP AS DOCUMENTO,
+        PE.MONTO_MODIF AS MONTO,
+        PE.FECHA_REG AS FECHA_REG
+        FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
+        WHERE PE.ID_PROYECTO=#{codigo}
+        AND PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND PE.ESTADO NOT IN ('0')
+        AND PE.ESTADO IN (SELECT MAX(ESTADO) FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo})
+        AND PE.ETAPA IN (SELECT ETAPA FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo} GROUP BY ETAPA)
+        ORDER BY PE.FECHA_REG DESC)R1
     </select>
     
     <select id="get_Monto1" resultMap="result" parameterType="String">

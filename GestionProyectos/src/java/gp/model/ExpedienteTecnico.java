@@ -25,6 +25,8 @@ public class ExpedienteTecnico implements Serializable{
     private String resolucion;
     private Integer idpExptecn;
     private Integer idhistorial;
+    private Integer cantidad;
+    
     
     public ExpedienteTecnico() {
     }
@@ -99,6 +101,14 @@ public class ExpedienteTecnico implements Serializable{
 
     public void setIdhistorial(Integer idhistorial) {
         this.idhistorial = idhistorial;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
     
 }

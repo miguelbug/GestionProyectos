@@ -16,7 +16,7 @@
                 <h:form id="form">
                     <center>
                         <h:panelGrid columns="3" cellpadding="4">
-                            <p:outputLabel value="SNIP:"/>
+                            <p:outputLabel value="SNIP:" style="color: #036fab"/>
                             <p:autoComplete id="autoComplet" value="#{busquedaInversion.codigo}" completeMethod="#{busquedaInversion.coincidencias}"/>
                             <p:commandButton value="Buscar" actionListener="#{busquedaInversion.buscar()}" update=":form:" icon="ui-icon ui-icon-search"/>
                         </h:panelGrid>
@@ -28,12 +28,12 @@
                                 <p:outputLabel value="EXPEDIENTES TÉCNICOS"/>
                                 <br></br>
                                 <br></br>
-                                <p:dataTable value="#{busquedaInversion.met}" var="busq" editable="true" style="width: 1100px">
+                                <p:dataTable id="DatosExpedientesTecn" value="#{busquedaInversion.met}" var="busq" editable="true" style="width:85%" emptyMessage="SIN DATOS PARA MOSTRAR">
                                     <p:ajax event="rowToggle" listener="#{busquedaInversion.onRowToggle}"/>
                                     <p:ajax event="rowEdit" listener="#{busquedaInversion.onRowEdit}" />
                                     <p:ajax event="rowEditCancel" listener="#{busquedaInversion.onRowCancel}"/>
 
-                                    <p:column width="1">
+                                    <p:column style="width: 3%" headerText="DETALLE">
                                         <p:rowToggler />
                                     </p:column>
 
@@ -68,21 +68,19 @@
                                             </f:facet>
                                         </p:cellEditor>
                                     </p:column>
-                                    <p:column headerText="IDHISTORIAL" width="1" style="display: none">
-                                        <h:outputText value="#{busq.idhistorial}"/>
-                                    </p:column>
-                                    <p:column style="width:32px" >
+
+                                    <p:column style="width:32px" headerText="Edicion">
                                         <p:rowEditor  rendered="true"/>
                                     </p:column>
                                     <p:rowExpansion>
                                         <br></br>
-                                        <p:dataTable value="#{busquedaInversion.det}" var="detalle" editable="true">
+                                        <p:dataTable value="#{busquedaInversion.det}" var="detalle" editable="true" emptyMessage="SIN DATOS PARA MOSTRAR">
 
                                             <p:ajax event="rowEdit" listener="#{busquedaInversion.onRowEdit2}" />
                                             <p:ajax event="rowEditCancel" listener="#{busquedaInversion.onRowCancel2}"/>
 
                                             <p:column headerText="DOCUMENTO" style="width: 9%; text-align: center">
-                                                <h:outputText value="#{detalle.documento}" />                                            
+                                                <h:outputText value="#{detalle.documento}" style="text-transform: uppercase"/>                                            
                                             </p:column>
                                             <p:column headerText="FECHA" style="width: 9%; text-align: center" >
                                                 <p:cellEditor>
@@ -94,6 +92,16 @@
                                             </p:column>
                                             <p:column headerText="MONTO" style="width: 10%; text-align: center">
                                                 <p:cellEditor>
+                                                    <f:facet name="output"><h:outputText value="#{detalle.montoDocu}" /></f:facet>
+                                                    <f:facet name="input">
+                                                        <pe:inputNumber value="#{detalle.montoDocu}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
+                                                            <f:validateDoubleRange minimum="50"/>
+                                                        </pe:inputNumber>
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                            </p:column>
+                                            <p:column headerText="MONTO EXPEDIENTE" style="width: 10%; text-align: center">
+                                                <p:cellEditor>
                                                     <f:facet name="output"><h:outputText value="#{detalle.monto}" /></f:facet>
                                                     <f:facet name="input">
                                                         <pe:inputNumber value="#{detalle.monto}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
@@ -102,6 +110,7 @@
                                                     </f:facet>
                                                 </p:cellEditor>
                                             </p:column>
+
                                             <p:column headerText="RESOLUCION" style="width: 10%; text-align: center">
                                                 <p:cellEditor>
                                                     <f:facet name="output"><h:outputText value="#{detalle.resolucion}" /></f:facet>
@@ -113,18 +122,18 @@
                                                     </f:facet>
                                                 </p:cellEditor>
                                             </p:column>
-                                            <p:column headerText="IDHISTO" style="display: none">
-                                                <h:outputText value="#{detalle.idhistorial}" />
-                                            </p:column>
-                                            <p:column headerText="IDNuevDocu" style="display: none">
-                                                <h:outputText value="#{detalle.idnuevodoc}" />
-                                            </p:column>
-                                            <p:column width="1">
-                                                <p:rowEditor  rendered="true"/>
+
+                                            <p:column headerText="DOCUMENTOS" width="1">
+                                                <p:rowEditor />
                                             </p:column>
                                         </p:dataTable>
                                         <br></br>
                                     </p:rowExpansion>
+                                    <p:column style="width:32px;text-align: center" headerText="HISTORIAL">
+                                        <p:commandButton immediate="true" process="DatosExpedientesTecn" update=":form:detalleDial" oncomplete="PF('detalleDialog').show()" icon="ui-icon-search" title="Detalle">
+                                            <f:setPropertyActionListener value="#{busq}" target="#{busquedaInversion.selectedMET}" />
+                                        </p:commandButton>
+                                    </p:column>
                                 </p:dataTable>
                                 <br></br>
                                 <br></br>
@@ -141,7 +150,7 @@
                                         <f:selectItems value="#{busquedaInversion.anios}"/>
                                     </p:selectOneMenu>
                                     <p:outputLabel value="Mostrar Montos: "/>
-                                    <p:commandButton value="Mostrar" actionListener="#{busquedaInversion.llenarMontosEjecucion()}" update="fecharegistro,montosEjecucion">
+                                    <p:commandButton value="Mostrar" actionListener="#{busquedaInversion.llenarMontosEjecucion()}" disabled="#{busquedaInversion.mostrar}" update="fecharegistro,montosEjecucion">
                                     </p:commandButton>
                                     <p:outputLabel value="Fecha Registro:"/>
                                     <p:inputMask mask="99/99/9999" value="#{busquedaInversion.fecha}" id="fecharegistro"/>
@@ -149,14 +158,14 @@
                                     <p:outputLabel value="#{busquedaInversion.idproy}" rendered="false"/>
                                 </h:panelGrid>
                                 <br></br>
-                                <p:dataTable  value="#{busquedaInversion.mej}" var="ejecu" style="width: 1100px" id="montosEjecucion" emptyMessage="SIN DATOS PARA MOSTRAR" editable="true">
+                                <p:dataTable  style="width:70%" value="#{busquedaInversion.mej}" var="ejecu" id="montosEjecucion" emptyMessage="SIN DATOS PARA MOSTRAR" editable="true">
                                     <p:ajax event="rowEdit" listener="#{busquedaInversion.onRowEdit3}" />
                                     <p:ajax event="rowEditCancel" listener="#{busquedaInversion.onRowCancel3}"/>
 
-                                    <p:column headerText="DOCUMENTO" style="width: 10%; text-align: center">
+                                    <p:column headerText="DOCUMENTO" style="text-align: center">
                                         <h:outputText value="#{ejecu.documento}" />
                                     </p:column>
-                                    <p:column headerText="MONTO PRELIMINAR" style="width: 9%; text-align: center" >
+                                    <p:column headerText="MONTO PRELIMINAR" style="text-align: center" >
                                         <p:cellEditor>
                                             <f:facet name="output"><h:outputText value="#{ejecu.montoPre}" /></f:facet>
                                             <f:facet name="input">
@@ -166,7 +175,7 @@
                                             </f:facet>
                                         </p:cellEditor>
                                     </p:column>
-                                    <p:column headerText="MONTO EJECUTADO" style="width: 10%; text-align: center">
+                                    <p:column headerText="MONTO EJECUTADO" style="text-align: center">
                                         <p:cellEditor>
                                             <f:facet name="output"><h:outputText value="#{ejecu.montoEje}" /></f:facet>
                                             <f:facet name="input">
@@ -176,7 +185,7 @@
                                             </f:facet>
                                         </p:cellEditor>
                                     </p:column>
-                                    <p:column headerText="TIPO" style="width: 7%; text-align: center">
+                                    <p:column headerText="TIPO" style="text-align: center">
                                         <p:cellEditor>
                                             <f:facet name="output"><h:outputText value="#{ejecu.rdrror}" /></f:facet>
                                             <f:facet name="input">
@@ -187,16 +196,33 @@
                                             </f:facet>
                                         </p:cellEditor>
                                     </p:column>
-                                    <p:column headerText="IDEJECU" style="display: none">
-                                        <h:outputText value="#{ejecu.idejecucion}"/>
-                                    </p:column>
-                                    <p:column width="1" >
+
+                                    <p:column headerText="EDICION">
                                         <p:rowEditor/>
                                     </p:column>
                                 </p:dataTable>
                             </center>
                         </p:tab>
                     </p:tabView>
+                    <p:dialog header="Detalle Expediente" widgetVar="detalleDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="detalleDial" closeOnEscape="true">
+                        <p:outputPanel id="ExpDetail" style="text-align:center;">
+                            <p:dataTable value="#{busquedaInversion.historialExpTecn()}" var="ejecu" id="detalleExp" emptyMessage="SIN DATOS PARA MOSTRAR">
+                                <p:column headerText="NÚMERO EXPEDIENTE" style="text-align: center">
+                                    <h:outputText value="#{ejecu.documento}"/>
+                                </p:column>
+                                <p:column headerText="FECHA" style="text-align: center">
+                                    <h:outputText value="#{ejecu.fecha}"/>
+                                </p:column>
+                                <p:column headerText="MONTO" style="text-align: center">
+                                    <h:outputText value="#{ejecu.monto}"/>
+                                </p:column>
+                                <p:column headerText="RESOLUCIÓN" style="text-align: center">
+                                    <h:outputText value="#{ejecu.rr}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:outputPanel>
+
+                    </p:dialog>
                 </h:form>
             </ui:define>
         </ui:composition>

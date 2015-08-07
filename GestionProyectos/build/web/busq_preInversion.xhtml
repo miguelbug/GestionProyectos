@@ -17,7 +17,7 @@
                     <center>
                         <h:panelGrid cellpadding="4" columns="3">
                             <h:panelGrid columns="3" >
-                                <p:outputLabel value="SNIP : " style="color: white"/>
+                                <p:outputLabel value="SNIP : " style="color: #036fab"/>
                                 <p:autoComplete id="autoCompleteLabel" value="#{busquedaPreInversion.b20}" completeMethod="#{busquedaPreInversion.coincidencias}"/>
                                 <p:commandButton value="Buscar" actionListener="#{busquedaPreInversion.cambiarAlBuscar()}" update=":form:" icon="ui-icon-search"/>
                             </h:panelGrid>
@@ -235,7 +235,7 @@
                             </center>
                         </p:tab>
                     </p:tabView>
-                    <p:dialog header="HISTORIAL" modal="true" showEffect="fade" widgetVar="historialComp" hideEffect="fade" id="historialComponentes" closeOnEscape="true" styleClass="DialogMontos">
+                    <p:dialog style="width: 90%" header="HISTORIAL" modal="true" showEffect="fade" widgetVar="historialComp" hideEffect="fade" id="historialComponentes" closeOnEscape="true" styleClass="DialogMontos">
                         <p:outputLabel value="Historial de Montos"/>
                         <br></br>
                         <p:dataTable var="variab" value="#{busquedaPreInversion.historialMontos}" id="historialMontos">
@@ -261,25 +261,25 @@
                         <p:outputLabel value="Historial de los Componentes"/>
                         <br></br>
                         <p:dataTable var="historial" value="#{busquedaPreInversion.bqpim}" id="historialComponentesTable">
-                            <p:column headerText="FECHA" style="width: 9%; text-align: center" >
+                            <p:column headerText="FECHA" style="text-align: center" >
                                 <h:outputText value="#{historial.fecha_reg}" />
                             </p:column>
-                            <p:column headerText="EXPEDIENTE TECNICO" style="width: 10%; text-align: center">
+                            <p:column headerText="EXPEDIENTE TECNICO" style="text-align: center">
                                 <h:outputText value="#{historial.exp_tecn}" />
                             </p:column>
-                            <p:column headerText="INFRAESTRUCTURA" style="width: 10%; text-align: center">
+                            <p:column headerText="INFRAESTRUCTURA" style="text-align: center">
                                 <h:outputText value="#{historial.infraestructura}" />
                             </p:column>
-                            <p:column headerText="EQUIPAMIENTO Y MOBILIDAD" style="width: 15%; text-align: center">
+                            <p:column headerText="EQUIPAMIENTO Y MOBILIDAD" style="text-align: center">
                                 <h:outputText value="#{historial.equip_mobil}" />
                             </p:column>
-                            <p:column headerText="SUPERVISION" style="width: 10%; text-align: center">
+                            <p:column headerText="SUPERVISION" style="text-align: center">
                                 <h:outputText value="#{historial.supervision}" />
                             </p:column>
-                            <p:column headerText="CAPACITACION" style="width: 10%;text-align: center">
+                            <p:column headerText="CAPACITACION" style="text-align: center">
                                 <h:outputText value="#{historial.capacitacion}" />
                             </p:column>
-                            <p:column headerText="OTROS" style="width: 10%;text-align: center">
+                            <p:column headerText="OTROS" style="text-align: center">
                                 <h:outputText value="#{historial.otros}" />
                             </p:column>
                         </p:dataTable>
