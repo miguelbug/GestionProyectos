@@ -6,9 +6,7 @@
 
 package gp.dao;
 
-import gp.model.Expedientes;
 import gp.model.HistorialMontos;
-import gp.model.Resoluciones;
 import java.util.List;
 
 /**

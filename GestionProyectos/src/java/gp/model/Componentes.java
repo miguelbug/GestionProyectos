@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package gp.model;
 
 import java.io.Serializable;
@@ -17,7 +16,7 @@ import javax.faces.bean.RequestScoped;
  */
 @ManagedBean
 @RequestScoped
-public class Componentes implements Serializable{
+public class Componentes implements Serializable {
 
     private Double montoExpTec;
     private Double montoInfra;
@@ -33,8 +32,14 @@ public class Componentes implements Serializable{
     private Double montoaux;
     private Date fechaaux;
     private Integer idcomp;
+    private Integer idHistorial;
+    private Integer numeroExp;
+    private Integer etapa;
+    private String numeroRR;
+    private Integer tipoDocu;
     private Integer idExpTecn;
-    
+    private Integer estado;
+
     public Componentes() {
     }
 
@@ -155,6 +160,46 @@ public class Componentes implements Serializable{
         return "Componentes{" + "montoExpTec=" + montoExpTec + ", montoInfra=" + montoInfra + ", montoEquipMov=" + montoEquipMov + ", montoSuperv=" + montoSuperv + ", montoCapac=" + montoCapac + ", montoOtros=" + montoOtros + ", fecharegistro=" + fecharegistro + ", tipoRegistro=" + tipoRegistro + ", codigoProy=" + codigoProy + ", montoModif=" + montoModif + ", numMonto=" + numMonto + ", montoaux=" + montoaux + ", fechaaux=" + fechaaux + '}';
     }
 
+    public Integer getIdHistorial() {
+        return idHistorial;
+    }
+
+    public void setIdHistorial(Integer idHistorial) {
+        this.idHistorial = idHistorial;
+    }
+
+    public Integer getNumeroExp() {
+        return numeroExp;
+    }
+
+    public void setNumeroExp(Integer numeroExp) {
+        this.numeroExp = numeroExp;
+    }
+
+    public Integer getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(Integer etapa) {
+        this.etapa = etapa;
+    }
+
+    public String getNumeroRR() {
+        return numeroRR;
+    }
+
+    public void setNumeroRR(String numeroRR) {
+        this.numeroRR = numeroRR;
+    }
+
+    public Integer getTipoDocu() {
+        return tipoDocu;
+    }
+
+    public void setTipoDocu(Integer tipoDocu) {
+        this.tipoDocu = tipoDocu;
+    }
+
     public Integer getIdExpTecn() {
         return idExpTecn;
     }
@@ -163,5 +208,12 @@ public class Componentes implements Serializable{
         this.idExpTecn = idExpTecn;
     }
 
-   
+    public Integer getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Integer estado) {
+        this.estado = estado;
+    }
+
 }

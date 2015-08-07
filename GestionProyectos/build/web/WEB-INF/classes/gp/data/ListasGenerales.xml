@@ -45,11 +45,11 @@
     </select>
     
     <select id="getHistorialMontos" resultMap="lista_montosHistorial" parameterType="String">
-        SELECT CO.MONTO_MODIF AS MONTOMODIF,'MODIFICADO'||' '||CO.NUM_MONTO as NOMBREMONTO,TO_CHAR(CO.FECHA_REG,'DD/MM/YYYY') AS FECHA
-        FROM COMPONENTES CO
-        WHERE CO.ID_PROYECTO=#{codigo}
-        AND CO.NUM_MONTO NOT IN('0')
-        ORDER BY CO.NUM_MONTO ASC
+        SELECT PE.MONTO_MODIF AS MONTOMODIF,'MODIFICADO'||' '||PE.NUMERO_MONTO as NOMBREMONTO,TO_CHAR(PE.FECHA_REG,'DD/MM/YYYY') AS FECHA
+        FROM PROY_EXPT PE
+        WHERE PE.ID_PROYECTO=#{codigo}
+        AND PE.NUMERO_MONTO NOT IN('0')
+        ORDER BY PE.NUMERO_MONTO ASC
     </select>
     
     <select id="getMontoViable" resultMap="montoViable" parameterType="String">

@@ -25,6 +25,7 @@ public class Historial implements Serializable {
     private String urlRR;
     private Integer idproy;
     private Integer idnuevodoc;
+    private String estado;
     
     public Historial() {
     }
@@ -84,6 +85,14 @@ public class Historial implements Serializable {
 
     public void setIdnuevodoc(Integer idnuevodoc) {
         this.idnuevodoc = idnuevodoc;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
     
     

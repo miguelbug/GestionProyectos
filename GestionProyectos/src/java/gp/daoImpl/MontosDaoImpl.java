@@ -9,8 +9,6 @@ package gp.daoImpl;
 import gp.connectionFactory.MyBatisConnectionFactory;
 import gp.dao.MontosDAO;
 import gp.model.Montos;
-import gp.model.Origen;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

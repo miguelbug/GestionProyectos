@@ -12,7 +12,6 @@ import gp.model.EjecucionMostrado;
 import gp.model.Historial;
 import gp.model.NuevosDocumentos;
 import gp.model.Registro_Inversion;
-import gp.model.busquedaPreInversionMontos;
 import java.util.List;
 
 /**
@@ -41,4 +40,11 @@ public interface RegistroInversionDAO {
     public void agregarMontoET(Historial h);
     public Integer getNumeroMonto(String codigo);
     public Componentes getMontosPorEtapa(String codigo, String etapa);
+    public Integer getMaxNumMontoHistorial(String codproy, String codigoExpTecn);
+    public void guardarExpTecn(Componentes dato);
+    public void guardarContrato(NuevosDocumentos dato);
+    public void guardarDocumento(NuevosDocumentos dato);
+    public void actualizarEstadoExpTecn(String etapa, String proyecto);
+    public Integer getCantidadExpTecn(String proyecto);
+    public Componentes getExpediente0(String proyecto);
 }

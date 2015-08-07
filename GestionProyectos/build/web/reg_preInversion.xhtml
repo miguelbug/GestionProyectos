@@ -19,14 +19,14 @@
                         <p:ajax event="tabChange" listener="#{registroPreInversion.onTabChange}" update="tab"/>
                         <p:tab title="ASPECTOS GENERALES" id="tab1" >
                             <center>
-                                <h3>ASPECTOS GENERALES</h3>
+                                <h3 style="color: #036fab">ASPECTOS GENERALES</h3>
                                 <br></br>
                                 <h:panelGrid columns="2" id="regPreInvAG" cellspacing="10">
                                     <p:outputLabel value="Código"/>
-                                    <p:inputText value="#{registroPreInversion.codigo}" style="text-transform:uppercase;" disabled="#{registroPreInversion.estado2}">
-                                        <p:ajax event="change" listener="#{registroPreInversion.almacenarCodigo()}" update="guardarAPG"/>
-                                    </p:inputText>
-
+                                    <pe:inputNumber value="#{registroPreInversion.codigo_int}" decimalPlaces="0" thousandSeparator="" decimalSeparator="" style="text-transform:uppercase;text-align: right">  
+                                    
+                                    </pe:inputNumber>
+                                    
                                     <p:outputLabel value="Nombre:"/>
                                     <p:inputTextarea rows="2" cols="45" value="#{registroPreInversion.nombre_proy}" style="text-transform:uppercase;" disabled="#{registroPreInversion.estado2}"/>
 
@@ -53,7 +53,7 @@
                                     <p:outputLabel value="Fecha de Viabilidad:"/>
                                     <h:panelGrid columns="2">
                                         <p:inputMask value="#{registroPreInversion.fecha_viab_aux}" mask="99/99/9999" disabled="#{registroPreInversion.estado2}" style="text-transform:uppercase;"/>
-                                        <p:outputLabel value="#{registroPreInversion.hora}"/>
+                                        <p:outputLabel value="#{registroPreInversion.hora}" style="color: #036fab"/>
                                     </h:panelGrid>
 
                                     <p:outputLabel value="Informe Técnico:"/>

@@ -90,6 +90,7 @@ public class RegistroInversion {
     private Double totalPre = null;
     private String contrato;
     private String contrato2;
+    private String expAgreg;
 
     private List lista_T;
     private String t1;
@@ -291,6 +292,7 @@ public class RegistroInversion {
                     RequestContext.getCurrentInstance().showMessageInDialog(message);
                 }
             }
+            limpiarEjecucion();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NUEVOS COMPONENTES NO GUARDADOS");
@@ -371,27 +373,31 @@ public class RegistroInversion {
     public void agregarMontoAExpTecn() {
         FacesMessage message = null;
         try {
-            Historial h = new Historial();
             Componentes c = new Componentes();
-            h.setResolucion(this.resolucion2);
-            h.setMonto(this.montoD2);
-            h.setFecha(getDate(this.fechaaux2));
-            h.setIdproy(Integer.parseInt(idproyExpt));
-            c.setCodigoProy(Integer.parseInt(cod_proy));
-            c.setMontoExpTec(0.0);
-            c.setMontoInfra(h.getMonto());
-            c.setMontoEquipMov(0.0);
-            c.setMontoSuperv(0.0);
-            c.setMontoCapac(0.0);
-            c.setMontoOtros(0.0);
-            c.setFecharegistro(h.getFecha());
-            c.setMontoModif(0.0);
-            c.setTipoRegistro("1");
+            if(rid.getCantidadExpTecn(cod_proy)==1){
+                c=rid.getExpediente0(cod_proy);
+            }else{
+                c=rid.getMontosPorEtapa(cod_proy, partirCadena(expAgreg));
+            }
+            //c.setCodigoProy(Integer.parseInt(cod_proy));
+            //c.setMontoExpTec(0.0);
+            c.setMontoInfra(montoD2);
+            //c.setMontoEquipMov(0.0);
+            //c.setMontoSuperv(0.0);
+            //c.setMontoCapac(0.0);
+            //c.setMontoOtros(0.0);
+            c.setFecharegistro(getDate(this.fechaaux2));
+            c.setMontoModif(montoD2+c.getMontoExpTec()+c.getMontoEquipMov()+c.getMontoCapac()+c.getMontoOtros()+c.getMontoSuperv());
+            //c.setTipoDocu(1);
             c.setNumMonto(rid.getNumeroMonto(cod_proy));
-            c.setIdExpTecn(h.getIdproy());
+            c.setNumeroRR(resolucion2);
+            //c.setNumeroExp(Integer.parseInt(partirCadena(expAgreg)));
+            //c.setEtapa(Integer.parseInt(partirCadena(expAgreg)));
+            //c.setEstado(2);
             rid.nuevaInfraestructura(c);
-            rid.agregarMontoET(h);
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA AGREGADO EL MONTO AL : " + contrato2);
+            rid.actualizarEstadoExpTecn(partirCadena(expAgreg), cod_proy);
+            limpiarAgregar();
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA AGREGADO EL MONTO AL : " + expAgreg);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         } catch (Exception e) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA AGREGADO CORRECTAMENTE");
@@ -404,20 +410,26 @@ public class RegistroInversion {
         FacesMessage message = null;
         String nombreExpaux = "";
         try {
-            NuevosDocumentos nd = new NuevosDocumentos();
-            Historial h = new Historial();
-            nd.setNumeroDocu(Integer.parseInt(nombreExp));
-            nd.setEtapa(Integer.parseInt(nombreExp));
-            nd.setTipodocu(1);
-            nd.setIdProy(cod_proy);
-            nombreExpaux = nombreExp;
-            h.setResolucion(resolucion);
-            h.setMonto(montoD);
-            h.setFecha(getDate(fechaaux));
+            Componentes c= new Componentes();
+            c.setNumMonto(rid.getNumeroMonto(cod_proy));
+            c.setNumeroExp(Integer.parseInt(nombreExp));
+            c.setEtapa(Integer.parseInt(nombreExp));
+            c.setTipoDocu(1);
+            c.setCodigoProy(Integer.parseInt(cod_proy));
+            c.setNumeroRR(resolucion);
+            c.setFecharegistro(getDate(fechaaux));
+            c.setMontoExpTec(0.0);
+            c.setMontoInfra(montoD);
+            c.setMontoEquipMov(0.0);
+            c.setMontoSuperv(0.0);
+            c.setMontoCapac(0.0);
+            c.setMontoOtros(0.0);
+            c.setMontoModif(montoD);
+            c.setEstado(2);
             System.out.println(nombreExp + " " + cod_proy + " " + nombreExp);
-            rid.guardarNuevoExpTecn(nd, h, nombreExp, cod_proy, nombreExp);
+            rid.guardarExpTecn(c);
             getNombreExpediente();
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL EXPEDIENTE TÉCNICO N°: " + nombreExpaux);
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL EXPEDIENTE TÉCNICO N°: " + nombreExp);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         } catch (Exception e) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA GUARDADO EL EXPEDIENTE");
@@ -425,7 +437,7 @@ public class RegistroInversion {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-        montoD = 0.00;
+        montoD = null;
         resolucion = " ";
         fechaaux = "";
 
@@ -460,20 +472,21 @@ public class RegistroInversion {
         String nombredocu1aux = "";
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
-            Historial h = new Historial();
             Componentes c= rid.getMontosPorEtapa(cod_proy, partirCadena(adicional));
             c.setMontoInfra(c.getMontoInfra()+monto_adicD);
             c.setMontoModif(c.getMontoModif()+monto_adicD);
             c.setNumMonto(c.getNumMonto()+1);
+            System.out.println("nuevo numero monto:"+c.getNumMonto());
             nd.setNumeroDocu(Integer.parseInt(nombredocu1));
             nombredocu1aux = nombredocu1;
             nd.setExptecn(rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(adicional)));
             nd.setTipodocu(2);
-            h.setMonto(monto_adicD);
-            h.setResolucion(resolucion_adic);
-            h.setFecha(getDate(fechaaux_adic));
-            rid.guardarNuevoDocumento(nd, h, nd.getNumeroDocu(), nd.getExptecn(), nd.getTipodocu());
+            nd.setMonto(monto_adicD);
+            nd.setResolucion(resolucion_adic);
+            nd.setFecha(getDate(fechaaux_adic));
+            rid.guardarDocumento(nd);
             rid.nuevaInfraestructura(c);
+            rid.actualizarEstadoExpTecn(partirCadena(adicional), cod_proy);
             getAdicionales();
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL ADICIONAL N°: " + nombredocu1aux);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -491,7 +504,6 @@ public class RegistroInversion {
         String nombredocu2aux = "";
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
-            Historial h = new Historial();
             nd.setNumeroDocu(Integer.parseInt(nombredocu2));
             Componentes c= rid.getMontosPorEtapa(cod_proy, partirCadena(deductivo));
             c.setMontoInfra(c.getMontoInfra()-monto_deducD);
@@ -500,11 +512,12 @@ public class RegistroInversion {
             nombredocu2aux = nombredocu2;
             nd.setExptecn(rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(deductivo)));
             nd.setTipodocu(3);
-            h.setMonto(monto_deducD);
-            h.setResolucion(resolucion_deduc);
-            h.setFecha(getDate(fechaaux_deduc));
-            rid.guardarNuevoDocumento(nd, h, nd.getNumeroDocu(), nd.getExptecn(), nd.getTipodocu());
+            nd.setMonto(monto_deducD);
+            nd.setResolucion(resolucion_deduc);
+            nd.setFecha(getDate(fechaaux_deduc));
+            rid.guardarDocumento(nd);
             rid.nuevaInfraestructura(c);
+            rid.actualizarEstadoExpTecn(partirCadena(deductivo), cod_proy);
             getDeductivos();
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL DEDUCTIVO N°: " + nombredocu2aux);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -513,7 +526,7 @@ public class RegistroInversion {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA GUARDADO EL DEDUCTIVO");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         }
-        monto_deducD = 0.00;
+        monto_deducD = null;
         resolucion_deduc = " ";
         fechaaux_deduc = "";
     }
@@ -522,13 +535,12 @@ public class RegistroInversion {
         FacesMessage message = null;
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
-            Historial h = new Historial();
             nd.setExptecn(rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(contrato)));
             nd.setCodigoContrato(nombredocu3);
-            h.setMonto(monto_contratoD);
-            h.setFecha(getDate(fecha_contrato));
+            nd.setMonto(monto_contratoD);
+            nd.setFecha(getDate(fecha_contrato));
             nd.setTipodocu(4);
-            rid.guardarNuevoDocumentoContrato(nd, h, nombredocu3, cod_proy, nd.getExptecn());
+            rid.guardarContrato(nd);
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL CONTRATO: " + nombredocu3);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         } catch (Exception e) {
@@ -536,7 +548,7 @@ public class RegistroInversion {
             e.printStackTrace();
         }
         nombredocu3 = "";
-        monto_contratoD = 0.00;
+        monto_contratoD = null;
         fecha_contrato = "";
     }
 
@@ -664,10 +676,17 @@ public class RegistroInversion {
     }
 
     public void obtenerIdProyExpt() {
-        this.idproyExpt = rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(contrato2));
+        this.idproyExpt = rid.getIdExpedienteTecn(cod_proy, "1", partirCadena(expAgreg));
         System.out.println("idexpediente: " + idproyExpt);
     }
-
+    
+    public void limpiarAgregar(){
+        expAgreg=" ";
+        montoD2=null;
+        resolucion2=" ";
+        fechaaux2="";
+    }
+    
     public String getMonto() {
         return monto;
     }
@@ -1218,6 +1237,14 @@ public class RegistroInversion {
 
     public void setIdproyExpt(String idproyExpt) {
         this.idproyExpt = idproyExpt;
+    }
+
+    public String getExpAgreg() {
+        return expAgreg;
+    }
+
+    public void setExpAgreg(String expAgreg) {
+        this.expAgreg = expAgreg;
     }
 
 }

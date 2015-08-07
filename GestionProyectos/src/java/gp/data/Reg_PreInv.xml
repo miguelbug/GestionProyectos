@@ -62,8 +62,9 @@
     </insert>
      
     <insert id="insert_comp" parameterType="gp.model.Componentes">
-        INSERT INTO COMPONENTES (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,TIPO_REG,ID_PROYECTO,NUM_MONTO)
-        VALUES (#{montoExpTec},#{montoInfra},#{montoEquipMov},#{montoSuperv},#{montoCapac},#{montoOtros},#{fecharegistro},#{montoModif},#{tipoRegistro},#{codigoProy},#{numMonto})
+        INSERT INTO PROY_EXPT (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,ID_PROYECTO,NUMERO_MONTO,NUMERO_EXP,ETAPA,NUMERO_RR,ID_TIPOSDOCUS)
+        VALUES (#{montoExpTec},#{montoInfra},#{montoEquipMov},#{montoSuperv},#{montoCapac},#{montoOtros},#{fecharegistro},#{montoModif},#{codigoProy},#{numMonto},#{numeroExp},
+        #{etapa},#{numeroRR},#{tipoDocu})
     </insert>
      
     <select id="getIdOrigen" resultMap="get_IdOr" parameterType="String">

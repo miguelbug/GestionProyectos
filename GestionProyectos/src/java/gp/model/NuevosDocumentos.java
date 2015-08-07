@@ -29,6 +29,7 @@ public class NuevosDocumentos implements Serializable{
     private String codigoContrato;
     private Integer etapa;
     
+    
     public NuevosDocumentos() {
     }
 

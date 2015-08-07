@@ -28,5 +28,5 @@ public interface RegistroPreInversionDAO {
     public Integer getId_Nivel(String nombre);
     public Integer getId_Usuario(String nombre);
     public String getMontoViab(String codigo);
-    public boolean validarProyecto(String codigo);
+    public boolean validarProyecto(Integer codigo);
 }

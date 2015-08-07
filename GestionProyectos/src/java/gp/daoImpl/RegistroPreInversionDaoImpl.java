@@ -9,7 +9,6 @@ import gp.connectionFactory.MyBatisConnectionFactory;
 import gp.dao.RegistroPreInversionDAO;
 import gp.model.AspectosGenerales;
 import gp.model.Componentes;
-import gp.model.Expedientes;
 import gp.model.Nivel_Estudio;
 import gp.model.Opi_responsable;
 import gp.model.Origen;
@@ -34,7 +33,7 @@ public class RegistroPreInversionDaoImpl implements RegistroPreInversionDAO {
     }
 
     @Override
-    public boolean validarProyecto(String codigo) {
+    public boolean validarProyecto(Integer codigo) {
         boolean esta = false;
         String var = "";
         SqlSession session = sqlSessionFactory.openSession();

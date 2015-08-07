@@ -8,10 +8,8 @@ package gp.daoImpl;
 
 import gp.connectionFactory.MyBatisConnectionFactory;
 import gp.dao.LoginDao;
-import gp.model.Expedientes;
 import gp.model.Usuario;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

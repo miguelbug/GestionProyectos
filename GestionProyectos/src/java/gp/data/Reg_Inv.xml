@@ -51,47 +51,77 @@
         <result property="montoOtros" column="OTROS"/>
         <result property="fecharegistro" column="FECHA_REG"/>
         <result property="montoModif" column="MONTO_MODIF"/>
-        <result property="tipoRegistro" column="TIPO_REG"/>
+        <result property="tipoDocu" column="TIPOSDOCUS"/>
         <result property="codigoProy" column="ID_PROYECTO"/>
         <result property="numMonto" column="NUM_MONTO"/>
         <result property="idExpTecn" column="PEXPTECN"/>
+        <result property="numeroRR" column="NUMRR"/>
+        <result property="numeroExp" column="NUMEXP"/>
+        <result property="etapa" column="ETAPA"/>
+        <result property="estado" column="ESTADO"/>
     </resultMap>
     
+    <resultMap id="resultado9" type="Integer">
+        <result property="id" column="IDHISTORIAL"/>
+    </resultMap>
+    
+    <resultMap id="resultado10" type="Integer">
+        <result property="cantidad" column="CANTIDAD"/>
+    </resultMap>
     
     <select id="getNumeroExp" resultMap="resultado" parameterType="java.util.HashMap">
-        SELECT MAX(PE.NUMERO_EXP)+1 AS NUMERODOCU FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
+        SELECT MAX(PE.NUMERO_EXP)+1 AS NUMERODOCU 
+        FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
         WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
         AND PE.ID_PROYECTO=#{codigo}
         AND TD.ID_TIPOSDOCUS=#{tipo}
+        AND PE.NUMERO_EXP NOT IN ('0')
     </select>
     
     <select id="getNumeroDocumento" resultMap="resultado" parameterType="java.util.HashMap">
-        SELECT MAX(ND.NUMERO_DOCU)+1 AS NUMERODOCU FROM NUEVOS_DOCUMENTOS ND, PROY_EXPT PE, TIPOS_DOCUMENTOS TD
+        SELECT MAX(ND.NUMERO_DOCU)+1 AS NUMERODOCU 
+        FROM NUEVOS_DOCUMENTOS ND, TIPOS_DOCUMENTOS TD, PROY_EXPT PE
         WHERE ND.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND ND.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
         AND PE.ID_PROYECTO=#{codigo}
         AND ND.ID_TIPOSDOCUS=#{tipo}
         AND PE.NUMERO_EXP=#{numeroExp}
-        AND ND.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
     </select>
     
     <select id="getListaExp" resultMap="resultado" parameterType="java.util.HashMap">
-        SELECT TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP AS NUMERODOCU FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
+        SELECT TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP AS NUMERODOCU 
+        FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
         WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
         AND PE.ID_PROYECTO=#{codigo}
         AND TD.ID_TIPOSDOCUS=#{tipo}
+        AND PE.NUMERO_EXP NOT IN ('0')
         GROUP BY TD.NOMBRE_TIPODOCU,PE.NUMERO_EXP
         ORDER BY PE.NUMERO_EXP
     </select>
     
-    <insert id="insert_nuevoExp" parameterType="gp.model.NuevosDocumentos">
-        INSERT INTO PROY_EXPT (NUMERO_EXP,ID_PROYECTO,ID_TIPOSDOCUS,ETAPA)
-        VALUES (#{numeroDocu},#{idProy},#{tipodocu},#{etapa})
+    <insert id="insert_nuevoExp" parameterType="gp.model.Componentes">
+        INSERT INTO PROY_EXPT (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,ID_TIPOSDOCUS,ID_PROYECTO,NUMERO_MONTO,NUMERO_RR,NUMERO_EXP,ETAPA,ESTADO)
+        VALUES (#{montoExpTec},
+                #{montoInfra},
+                #{montoEquipMov},
+                #{montoSuperv},
+                #{montoCapac},
+                #{montoOtros},
+                #{fecharegistro},
+                #{montoModif},
+                #{tipoDocu},
+                #{codigoProy},
+                #{numMonto},
+                #{numeroRR},
+                #{numeroExp},
+                #{etapa},
+                #{estado})
     </insert>
     <insert id="guardar_historial" parameterType="gp.model.Historial">
         INSERT INTO HISTORIALEXPCONT (MONTO,FECHA,NUMERO_RR,ID_PROYEXPT)
         VALUES (#{monto},#{fecha},#{resolucion},#{idproy})
     </insert>
-    
+    <!-- ESTAN DEMAS -->
     <insert id="guardar_historialAdicDeduc" parameterType="gp.model.Historial">
         INSERT INTO HISTORIALEXPCONT (MONTO,FECHA,NUMERO_RR,ID_NUEVDOC)
         VALUES (#{monto},#{fecha},#{resolucion},#{idnuevodoc})
@@ -101,22 +131,24 @@
         INSERT INTO HISTORIALEXPCONT (MONTO,FECHA,ID_NUEVDOC)
         VALUES (#{monto},#{fecha},#{idproy})
     </insert>
-    
+    <!-- -->
     <insert id="insert_nuevoDoc" parameterType="gp.model.NuevosDocumentos">
-        INSERT INTO NUEVOS_DOCUMENTOS (NUMERO_DOCU,ID_TIPOSDOCUS,ID_PROYEXPT)
-        VALUES (#{numeroDocu},#{tipodocu},#{exptecn})
+        INSERT INTO NUEVOS_DOCUMENTOS (NUMERO_DOCU,ID_TIPOSDOCUS,ID_PROYEXPT,MONTO,NUMERO_RR,FECHA)
+        VALUES (#{numeroDocu},#{tipodocu},#{exptecn},#{monto},#{resolucion},#{fecha})
     </insert>
     
     <insert id="insert_nuevoDocContrato" parameterType="gp.model.NuevosDocumentos">
-        INSERT INTO NUEVOS_DOCUMENTOS (CODIGO_DOCU,ID_TIPOSDOCUS,ID_PROYEXPT)
-        VALUES (#{codigoContrato},#{tipodocu},#{exptecn})
+        INSERT INTO NUEVOS_DOCUMENTOS (CODIGO_DOCU,ID_TIPOSDOCUS,ID_PROYEXPT,MONTO,FECHA)
+        VALUES (#{codigoContrato},#{tipodocu},#{exptecn},#{monto},#{fecha})
     </insert>
     
     <select id="getIdExpTecn" resultMap="resultado2" parameterType="java.util.HashMap">
-        SELECT ID_PROYEXPT AS IDEXP FROM PROY_EXPT
+        SELECT ID_PROYEXPT AS IDEXP 
+        FROM PROY_EXPT
         WHERE ID_PROYECTO=#{codigo}
         AND ID_TIPOSDOCUS=#{tipo}
         AND NUMERO_EXP=#{numero}
+        AND NUMERO_MONTO IN (SELECT MAX(PE.NUMERO_MONTO) FROM PROY_EXPT PE)
     </select>
     
     <select id="getIdProyectoExpt" resultMap="resultado21" parameterType="java.util.HashMap">
@@ -176,16 +208,29 @@
     </select>
     
     <select id="getListaEtapas" resultMap="resultado4" parameterType="String">
-        SELECT ETAPA AS ETAPA FROM PROY_EXPT
-        WHERE ID_PROYECTO=#{idproy}
-        ORDER BY ETAPA ASC
+        SELECT PE.ETAPA AS ETAPA 
+        FROM PROY_EXPT PE
+        WHERE PE.ID_PROYECTO=#{idproy}
+        AND PE.ETAPA NOT IN ('0')
+        GROUP BY PE.ETAPA
+        ORDER BY PE.ETAPA ASC
     </select>
     
     <select id="getIdProyExpt" resultMap="resultado5" parameterType="String">
         SELECT ID_PROYEXPT AS IDPROYEXPT FROM PROY_EXPT
         WHERE ID_PROYECTO=#{codigo}
         AND ETAPA=#{etapa}
+        AND ESTADO='2'
     </select>
+    
+     <select id="getIdHistorial" resultMap="resultado9" parameterType="String">
+        SELECT ID_HISTORIAL AS IDHISTORIAL FROM HISTORIALEXPCONT HI, PROY_EXPT PE
+        WHERE PE.ID_PROYECTO=#{codProy}
+        AND PE.ID_PROYEXPT=HI.ID_PROYEXPT
+        AND HI.ID_PROYEXPT=#{expTecn}
+        AND HI.NUMERO_MONTO IS IN (SELECT MAX(HI2.NUMERO_MONTO FROM HISTORIALEXPCONT HI2 WHERE HI2.ID_PROYEXPT=#{expTecn})
+    </select>
+    
     
     <select id="validarProy2" resultMap="resultado6" parameterType="java.util.HashMap">        
         SELECT COUNT(*) AS CANTIDAD
@@ -211,8 +256,22 @@
     </select>
     
     <insert id="ingresar_infraestructura" parameterType="gp.model.Componentes">
-        INSERT INTO COMPONENTES (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,TIPO_REG,ID_PROYECTO,NUM_MONTO,ID_PROYEXPT)
-        VALUES (#{montoExpTec},#{montoInfra},#{montoEquipMov},#{montoSuperv},#{montoCapac},#{montoOtros},#{fecharegistro},#{montoModif},#{tipoRegistro},#{codigoProy},#{numMonto},#{idExpTecn})
+        INSERT INTO PROY_EXPT (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,ID_TIPOSDOCUS,ID_PROYECTO,NUMERO_MONTO,NUMERO_EXP,ETAPA,NUMERO_RR,ESTADO)
+        VALUES (#{montoExpTec},
+                #{montoInfra},
+                #{montoEquipMov},
+                #{montoSuperv},
+                #{montoCapac},
+                #{montoOtros},
+                #{fecharegistro},
+                #{montoModif},
+                #{tipoDocu},
+                #{codigoProy},
+                #{numMonto},
+                #{numeroExp},
+                #{etapa},
+                #{numeroRR},
+                #{estado})
     </insert>
     
     <insert id="agregar_monto_et" parameterType="gp.model.Historial">
@@ -221,29 +280,67 @@
     </insert>
     
     <select id="getMontosPorEtapa" resultMap="resultado8" parameterType="java.util.Map">
-        SELECT CO.EXP_TECN AS EXP_TECN,
-        CO.INFRAESTRUCTURA AS INFRAESTRUCTURA,
-        CO.EQUIP_MOBIL AS EQUIP_MOBIL,
-        CO.SUPERVISION AS SUPERVISION,
-        CO.CAPACITACION AS CAPACITACION,
-        CO.OTROS AS OTROS,
-        CO.FECHA_REG AS FECHA_REG,
-        CO.MONTO_MODIF AS MONTO_MODIF,
-        CO.TIPO_REG AS TIPO_REG,
-        CO.ID_PROYECTO AS ID_PROYECTO,
-        CO.NUM_MONTO AS NUM_MONTO,
-        CO.ID_PROYEXPT AS PEXPTECN
-        FROM COMPONENTES CO, PROY_EXPT PE
-        WHERE CO.ID_PROYEXPT=PE.ID_PROYEXPT
-        AND CO.ID_PROYECTO=#{codigo}
+        SELECT PE.EXP_TECN AS EXP_TECN,
+        PE.INFRAESTRUCTURA AS INFRAESTRUCTURA,
+        PE.EQUIP_MOBIL AS EQUIP_MOBIL,
+        PE.SUPERVISION AS SUPERVISION,
+        PE.CAPACITACION AS CAPACITACION,
+        PE.OTROS AS OTROS,
+        PE.FECHA_REG AS FECHA_REG,
+        PE.MONTO_MODIF AS MONTO_MODIF,
+        PE.ID_TIPOSDOCUS AS TIPOSDOCUS,
+        PE.ID_PROYECTO AS ID_PROYECTO,
+        PE.NUMERO_MONTO AS NUM_MONTO,
+        PE.ID_PROYEXPT AS PEXPTECN,
+        PE.NUMERO_RR AS NUMRR,
+        PE.NUMERO_EXP AS NUMEXP,
+        PE.ETAPA AS ETAPA,
+        PE.ESTADO AS ESTADO
+        FROM PROY_EXPT PE
+        WHERE PE.ID_PROYECTO=#{codigo}
         AND PE.ETAPA=#{etapa}
-        AND CO.NUM_MONTO IN ( SELECT MAX(COMP.NUM_MONTO) 
-                              FROM COMPONENTES COMP, 
-                              PROY_EXPT PROYEXPT
-                              WHERE COMP.ID_PROYECTO=#{codigo}
-                              AND COMP.ID_PROYEXPT=PROYEXPT.ID_PROYEXPT 
-                              AND PROYEXPT.ETAPA=#{etapa})
-        ORDER BY CO.NUM_MONTO ASC
+        AND PE.NUMERO_MONTO IN (SELECT MAX(PE2.NUMERO_MONTO) FROM PROY_EXPT PE2 WHERE PE2.ID_PROYECTO=#{codigo} AND PE2.ETAPA=#{etapa})
+        ORDER BY PE.NUMERO_MONTO ASC
     </select>
     
+    <update id="update_ExpTecn" parameterType="java.util.Map">
+        UPDATE PROY_EXPT
+        SET
+        ESTADO='1'
+        WHERE NUMERO_MONTO NOT IN(
+                                    SELECT MAX(NUMERO_MONTO) 
+                                    FROM PROY_EXPT 
+                                    WHERE ETAPA=#{etapa} 
+                                    AND ID_PROYECTO=#{proyecto})
+        AND ESTADO NOT IN ('0','1')
+        AND ETAPA=#{etapa}
+        AND ID_PROYECTO=#{proyecto}
+    </update>
+    
+    <select id="getMontosExp0" resultMap="resultado8" parameterType="java.util.Map">
+        SELECT PE.EXP_TECN AS EXP_TECN,
+        PE.INFRAESTRUCTURA AS INFRAESTRUCTURA,
+        PE.EQUIP_MOBIL AS EQUIP_MOBIL,
+        PE.SUPERVISION AS SUPERVISION,
+        PE.CAPACITACION AS CAPACITACION,
+        PE.OTROS AS OTROS,
+        PE.FECHA_REG AS FECHA_REG,
+        PE.MONTO_MODIF AS MONTO_MODIF,
+        PE.ID_TIPOSDOCUS AS TIPOSDOCUS,
+        PE.ID_PROYECTO AS ID_PROYECTO,
+        PE.NUMERO_MONTO AS NUM_MONTO,
+        PE.ID_PROYEXPT AS PEXPTECN,
+        PE.NUMERO_RR AS NUMRR,
+        PE.NUMERO_EXP AS NUMEXP,
+        PE.ETAPA AS ETAPA,
+        PE.ESTADO AS ESTADO
+        FROM PROY_EXPT PE
+        WHERE PE.ID_PROYECTO=#{proyecto}
+        AND PE.ETAPA='0'
+        AND PE.NUMERO_MONTO='0'
+    </select>
+    
+    <select id="cantiExpTecn" resultMap="resultado10" parameterType="string">
+        select COUNT(ID_PROYEXPT) AS CANTIDAD FROM PROY_EXPT WHERE ID_PROYECTO=#{proyecto}
+    </select>
 </mapper>

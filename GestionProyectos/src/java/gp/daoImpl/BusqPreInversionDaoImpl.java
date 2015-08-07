@@ -10,7 +10,6 @@ import gp.dao.BusqPreInversionDAO;
 import gp.model.AspectosGenerales;
 import gp.model.BusqPreInversion;
 import gp.model.Componentes;
-import gp.model.Expedientes;
 import gp.model.GuardarNuevComp;
 import gp.model.busquedaPreInversionMontos;
 import java.util.HashMap;
@@ -66,10 +65,21 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
     }
 
     @Override
+    public void actualizarComponentes(Componentes c) {
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            session.update("BusqPreInversion.update_Co", c);
+            session.commit();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
     public List<busquedaPreInversionMontos> getComponentesDeMonto(String montoFecha, String codigoproy) {
         List<busquedaPreInversionMontos> list = null;
-        System.out.println(montoFecha+" "+codigoproy);
-        Map m= new HashMap();
+        System.out.println(montoFecha + " " + codigoproy);
+        Map m = new HashMap();
         m.put("montoFecha", montoFecha);
         m.put("codigo", codigoproy);
         SqlSession session = sqlSessionFactory.openSession();
@@ -112,17 +122,6 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
     }
 
     @Override
-    public void actualizarComponentes(Componentes c) {
-        SqlSession session = sqlSessionFactory.openSession();
-        try {
-            session.update("BusqPreInversion.update_Co", c);
-            session.commit();
-        } finally {
-            session.close();
-        }
-    }
-
-    @Override
     public void guardarNuevosComponentes(GuardarNuevComp gnc) {
         SqlSession session = sqlSessionFactory.openSession();
         try {
@@ -157,7 +156,7 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
     public List<BusqPreInversion> listaBusqPI_2(String codigo, String etapa) {
         SqlSession session = sqlSessionFactory.openSession();
         List<BusqPreInversion> list = null;
-        Map<String,String> map= new HashMap<String,String>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("codigo", codigo);
         map.put("etapa", etapa);
         try {

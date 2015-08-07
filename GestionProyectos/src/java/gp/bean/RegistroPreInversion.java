@@ -36,7 +36,7 @@ import org.primefaces.event.TabChangeEvent;
 @ViewScoped
 public class RegistroPreInversion {
 
-    private String codigo;
+    private Integer codigo_int=null;
     private String nombre_proy;
     private String origen;
     private String monto;
@@ -82,7 +82,6 @@ public class RegistroPreInversion {
     private boolean estado4;
     private String color;
     private Double montoauxiliar = new Double(0);
-    private String codigoaux;
     private int numerotab;
     private ListasGeneralesDAO lgd;
     private List<String> expedientes;
@@ -160,16 +159,15 @@ public class RegistroPreInversion {
         montoauxiliar = montoD;
     }
 
-    public void almacenarCodigo() {
+    public void validarCodigo() {
         FacesMessage message = null;
-        boolean esta = rpd.validarProyecto(codigo);
+        boolean esta = rpd.validarProyecto(codigo_int);
         if (esta == true) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "EL PROYECTO YA SE ENCUENTRA REGISTRADO");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
             estado4 = true;
         } else if (esta == false) {
             estado4 = false;
-            codigoaux = codigo;
         }
 
     }
@@ -227,7 +225,7 @@ public class RegistroPreInversion {
     }
 
     public void limpiarAG() {
-        codigo = "";
+        codigo_int= null;
         nombre_proy = "";
         montoD = 0.0;
         fecha_viab_aux = "";
@@ -252,7 +250,7 @@ public class RegistroPreInversion {
         FacesMessage message = null;
         try {
             AspectosGenerales ag = new AspectosGenerales();
-            ag.setCodigo(Integer.valueOf(codigo));
+            ag.setCodigo(codigo_int);
             ag.setNombre(this.nombre_proy.toUpperCase());
             ag.setMontoViabilidad(montoD);
             ag.setFechaViabilidad(pasar_A_Date());
@@ -267,7 +265,7 @@ public class RegistroPreInversion {
             estado = false;
             estado2 = true;
             estado4 = true;
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HA GUARDADO EL PROYECTO " + nombre_proy.toUpperCase() + ", CON SNIP: " + codigo);
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HA GUARDADO EL PROYECTO " + nombre_proy.toUpperCase() + ", CON SNIP: " + codigo_int);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         } catch (Exception e) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "!!!ERROR¡¡¡", "NO SE HA PODIDO GUARDAR EL PROYECTO");
@@ -321,7 +319,7 @@ public class RegistroPreInversion {
         FacesMessage message = null;
         try {
             Componentes comp = new Componentes();
-            comp.setCodigoProy(Integer.valueOf(this.codigoaux));
+            comp.setCodigoProy(codigo_int);
             comp.setMontoExpTec(this.exp_tecnicoD);
             comp.setMontoInfra(this.infraestructuraD);
             comp.setMontoEquipMov(this.equip_mobiliD);
@@ -329,9 +327,13 @@ public class RegistroPreInversion {
             comp.setMontoCapac(this.capacitacionD);
             comp.setMontoOtros(this.otrosD);
             comp.setFecharegistro(pasar_A_Date());
-            comp.setTipoRegistro("0");
             comp.setMontoModif(0.0);
             comp.setNumMonto(0);
+            comp.setEtapa(0);
+            comp.setNumeroExp(0);
+            comp.setTipoDocu(1);
+            comp.setNumeroRR("Sin RR");
+            comp.setEstado(0);
             rpd.RegistrarComponentes(comp);
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HA GUARDADO HAN GUARDADO TODOS LOS COMPONENTES");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -349,14 +351,6 @@ public class RegistroPreInversion {
             System.out.println(e.getMessage());
         }
 
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public String getOrigen() {
@@ -615,14 +609,6 @@ public class RegistroPreInversion {
         this.montoauxiliar = montoauxiliar;
     }
 
-    public String getCodigoaux() {
-        return codigoaux;
-    }
-
-    public void setCodigoaux(String codigoaux) {
-        this.codigoaux = codigoaux;
-    }
-
     public boolean isEstado4() {
         return estado4;
     }
@@ -741,6 +727,14 @@ public class RegistroPreInversion {
 
     public void setResoluciones(List<String> resoluciones) {
         this.resoluciones = resoluciones;
+    }
+
+    public Integer getCodigo_int() {
+        return codigo_int;
+    }
+
+    public void setCodigo_int(Integer codigo_int) {
+        this.codigo_int = codigo_int;
     }
 
 }

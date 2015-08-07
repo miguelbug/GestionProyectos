@@ -196,7 +196,7 @@ public class BusquedaPreInversion {
 
     public String partirMonto(int j) {
         String[] cadena = new String[3];
-        StringTokenizer stk = new StringTokenizer(b25, " ");
+        StringTokenizer stk = new StringTokenizer(partirMontoModif(), " ");
         int i = 0;
         while (stk.hasMoreElements()) {
             cadena[i] = stk.nextToken();
@@ -204,11 +204,18 @@ public class BusquedaPreInversion {
         }
         return cadena[j];
     }
-
+    public String partirMontoModif(){
+        String cadena="";
+        java.util.StringTokenizer stk= new java.util.StringTokenizer(b25,":");
+       while(stk.hasMoreTokens()){
+           cadena=stk.nextToken();
+       }
+       return cadena.trim();
+    }
     public void getComponentesDeMonto() {
         estado14 = false;
         List<busquedaPreInversionMontos> lista = new ArrayList<busquedaPreInversionMontos>();
-        lista = bpi.getComponentesDeMonto(b25, b20);
+        lista = bpi.getComponentesDeMonto(partirMontoModif(), b20);
         for (int i = 0; i < lista.size(); i++) {
             b13D = Double.parseDouble(lista.get(i).getExp_tecn());
             b14D = Double.parseDouble(lista.get(i).getInfraestructura());
@@ -421,6 +428,8 @@ public class BusquedaPreInversion {
             mdf.clear();
             mdf = montd.getMontosModificados(b20);
             this.montosModificados();
+            limpiarComponentes();
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -504,7 +513,7 @@ public class BusquedaPreInversion {
 
     public void llenarMontos() {
         if (etapaSelect.equals("0")) {
-            listaBPI_2 = bpi.listaBusqPI_3(b20);
+            listaBPI_2 = bpi.listaBusqPI_2(b20, etapaSelect);
         } else {
             listaBPI_2 = bpi.listaBusqPI_2(b20, etapaSelect);
         }
@@ -618,7 +627,7 @@ public class BusquedaPreInversion {
 
     }
 
-    public String getMontoConcatenado(List<Montos> lista) {
+    /*public String getMontoConcatenado(List<Montos> lista) {
         String cadena = "";
         for (int i = 0; i < lista.size(); i++) {
             cadena = cadena + lista.get(i).getFecha() + " - " + lista.get(i).getMonto();
@@ -628,7 +637,7 @@ public class BusquedaPreInversion {
         }
         cadena = cadena + "\n";
         return cadena;
-    }
+    }*/
 
     public void guardarNuevosComponentes() {
         GuardarNuevComp gnc = new GuardarNuevComp();
@@ -713,17 +722,17 @@ public class BusquedaPreInversion {
         montosModif.clear();
         List<Montos> listaaux = montd.getMontosModificados(b20);
         for (int i = 0; i < listaaux.size(); i++) {
-            this.montosModif.add(listaaux.get(i).getMonto() + " - " + listaaux.get(i).getFecha());
+            this.montosModif.add(listaaux.get(i).getExpediente());
         }
     }
 
     public void limpiarComponentes() {
-        b13D = 0.0;
-        b14D = 0.0;
-        b15D = 0.0;
-        b16D = 0.0;
-        b17D = 0.0;
-        b18D = 0.0;
+        b13D = null;
+        b14D = null;
+        b15D = null;
+        b16D = null;
+        b17D = null;
+        b18D = null;
         b19 = "";
     }
 

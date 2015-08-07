@@ -79,40 +79,37 @@
     </select>
     
     <select id="getBPI_2" resultMap="lista_busqPreInv2" parameterType="java.util.Map">
-        SELECT  ID_COMP AS IDCOMP,
-        CO.EXP_TECN AS EXPTECN,
-        CO.INFRAESTRUCTURA AS INFRA,
-        CO.EQUIP_MOBIL AS EQUIPMOB,
-        CO.SUPERVISION AS SUPERVISION,
-        CO.CAPACITACION AS CAPACITACION,
-        CO.OTROS AS OTROS,
-        TO_CHAR(CO.FECHA_REG,'DD/MM/YYYY') AS FECHAMODIF,
-        CO.MONTO_MODIF AS MONTOMODIF
+        SELECT  PE.ID_PROYEXPT AS IDCOMP,
+        PE.EXP_TECN AS EXPTECN,
+        PE.INFRAESTRUCTURA AS INFRA,
+        PE.EQUIP_MOBIL AS EQUIPMOB,
+        PE.SUPERVISION AS SUPERVISION,
+        PE.CAPACITACION AS CAPACITACION,
+        PE.OTROS AS OTROS,
+        TO_CHAR(PE.FECHA_REG,'DD/MM/YYYY') AS FECHAMODIF,
+        PE.MONTO_MODIF AS MONTOMODIF
         
-        FROM PROYECTO P, COMPONENTES CO, PROY_EXPT PE
-        WHERE P.ID_PROYECTO=CO.ID_PROYECTO
-        AND CO.ID_PROYEXPT=PE.ID_PROYEXPT
-        AND P.ID_PROYECTO=#{codigo}
+        FROM PROY_EXPT PE
+        WHERE PE.ID_PROYECTO=#{codigo}
         AND PE.ETAPA=#{etapa}
     </select>
-    
+    <!--YA NO VA-->
     <select id="getBPI_3" resultMap="lista_busqPreInv2" parameterType="String">
-        SELECT  ID_COMP AS IDCOMP,
-        CO.EXP_TECN AS EXPTECN,
-        CO.INFRAESTRUCTURA AS INFRA,
-        CO.EQUIP_MOBIL AS EQUIPMOB,
-        CO.SUPERVISION AS SUPERVISION,
-        CO.CAPACITACION AS CAPACITACION,
-        CO.OTROS AS OTROS,
-        TO_CHAR(CO.FECHA_REG,'DD/MM/YYYY') AS FECHAMODIF,
-        CO.MONTO_MODIF AS MONTOMODIF
+        SELECT  PE.ID_PROYEXPT AS IDCOMP,
+        PE.EXP_TECN AS EXPTECN,
+        PE.INFRAESTRUCTURA AS INFRA,
+        PE.EQUIP_MOBIL AS EQUIPMOB,
+        PE.SUPERVISION AS SUPERVISION,
+        PE.CAPACITACION AS CAPACITACION,
+        PE.OTROS AS OTROS,
+        TO_CHAR(PE.FECHA_REG,'DD/MM/YYYY') AS FECHAMODIF,
+        PE.MONTO_MODIF AS MONTOMODIF
         
-        FROM PROYECTO P, COMPONENTES CO
-        WHERE P.ID_PROYECTO=CO.ID_PROYECTO
-        AND P.ID_PROYECTO=#{codigo}
-        AND CO.ID_PROYEXPT IS NULL
+        FROM PROY_EXPT PE
+        WHERE PE.ID_PROYECTO=#{codigo}
+        AND PE.NUMERO_EXP = '0'
     </select>
-    
+    <!-- -->
     <insert id="insert_gnc" parameterType="gp.model.GuardarNuevComp">
         INSERT INTO COMPONENTES (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,TIPO_REG,ID_PROYECTO,NUM_MONTO)
         VALUES (#{exp_tecn},#{infraestructura},#{equip_mobil},#{supervision},#{capacitacion},#{otros},#{fecha_reg},#{monto_modif},#{tipo_reg},#{id_proyecto},#{num_monto})
@@ -134,7 +131,7 @@
     </update>
     
     <update id="update_Co" parameterType="gp.model.Componentes">
-        UPDATE COMPONENTES
+        UPDATE PROY_EXPT
         SET
         EXP_TECN=#{montoExpTec},
         INFRAESTRUCTURA=#{montoInfra},
@@ -146,7 +143,7 @@
         MONTO_MODIF=#{montoModif}
         
         WHERE ID_PROYECTO = #{codigoProy}
-        AND ID_COMP=#{idcomp}
+        AND ID_PROYEXPT=#{idcomp}
     </update>
     
     <select id="getMontosHistorial" resultMap="lista_componentesHistorial" parameterType="String">
@@ -157,7 +154,8 @@
         CAPACITACION AS CAPACIT,
         OTROS AS OTROS,
         TO_CHAR(FECHA_REG,'DD/MM/YYYY') AS FECHA_REG
-        FROM COMPONENTES WHERE ID_PROYECTO=#{codigo}
+        FROM PROY_EXPT 
+        WHERE ID_PROYECTO=#{codigo}
     </select>
     
     <select id="getComponenteDeMonto" resultMap="listaComponentesDeMonto" parameterType="java.util.Map">
@@ -167,8 +165,8 @@
         SUPERVISION AS SUPERV,
         CAPACITACION AS CAPACIT,
         OTROS AS OTROS,
-        ID_COMP AS IDCOMP
-        FROM COMPONENTES WHERE ID_PROYECTO=#{codigo}
+        ID_PROYEXPT AS IDCOMP
+        FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo}
         AND MONTO_MODIF||' - '||TO_CHAR(FECHA_REG,'DD/MM/YYYY') = #{montoFecha}
     </select>
     
@@ -178,10 +176,9 @@
     
     <select id="listaEtapas" resultMap="Etapa_Lista" parameterType="String">
         SELECT PE.ETAPA AS ETAPA
-        FROM COMPONENTES COM, PROY_EXPT PE
-        WHERE COM.ID_PROYEXPT=PE.ID_PROYEXPT
-        AND COM.ID_PROYECTO=#{proy}
-        GROUP BY COM.ID_PROYECTO,PE.ETAPA
+        FROM PROY_EXPT PE
+        WHERE PE.ID_PROYECTO=#{proy}
+        GROUP BY PE.ETAPA
         ORDER BY PE.ETAPA ASC
     </select>
 </mapper>

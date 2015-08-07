@@ -24,6 +24,7 @@ public class DetalleExpTecnico implements Serializable {
     private String resolucion;
     private Integer idhistorial;
     private Integer idnuevodoc;
+    private String montoDocu;
     
     public DetalleExpTecnico() {
     }
@@ -74,6 +75,14 @@ public class DetalleExpTecnico implements Serializable {
 
     public void setIdnuevodoc(Integer idnuevodoc) {
         this.idnuevodoc = idnuevodoc;
+    }
+
+    public String getMontoDocu() {
+        return montoDocu;
+    }
+
+    public void setMontoDocu(String montoDocu) {
+        this.montoDocu = montoDocu;
     }
     
 }
