@@ -59,6 +59,7 @@
         WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
         AND PE.ID_PROYECTO=#{codigo}
         AND ESTADO IN ('1','2')
+        AND TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP = #{nombre}
         ORDER BY PE.FECHA_REG DESC
     </select>
     <select id="getExpTecn" resultMap="ExpTecn" parameterType="String">

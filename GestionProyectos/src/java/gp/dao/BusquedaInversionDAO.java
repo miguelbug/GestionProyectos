@@ -34,6 +34,6 @@ public interface BusquedaInversionDAO {
     public List<MostrarEjecucion> getEjecucionMontos(String codigo, String mes, String anio);
     public void actualizarMontoEjecucion(ActualizarEjecucion codigo);
     public void validarEjecucion(String codigo);
-    public List<MostrarExpedientesTecnicos> getListaExpedientes(String codigo);
+    public List<MostrarExpedientesTecnicos> getListaExpedientes(String codigo, String nombreDocu);
     public void actualizarMontoModif(ExpedienteTecnico e);
 }

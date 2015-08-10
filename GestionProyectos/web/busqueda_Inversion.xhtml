@@ -130,7 +130,7 @@
                                         <br></br>
                                     </p:rowExpansion>
                                     <p:column style="width:32px;text-align: center" headerText="HISTORIAL">
-                                        <p:commandButton immediate="true" process="DatosExpedientesTecn" update=":form:detalleDial" oncomplete="PF('detalleDialog').show()" icon="ui-icon-search" title="Detalle">
+                                        <p:commandButton action="#{busquedaInversion.historialExpTecn()}" process="DatosExpedientesTecn" update=":form:detalleDial" oncomplete="PF('detalleDialog').show()" icon="ui-icon-search" title="Detalle">
                                             <f:setPropertyActionListener value="#{busq}" target="#{busquedaInversion.selectedMET}" />
                                         </p:commandButton>
                                     </p:column>
@@ -204,9 +204,9 @@
                             </center>
                         </p:tab>
                     </p:tabView>
-                    <p:dialog header="Detalle Expediente" widgetVar="detalleDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="detalleDial" closeOnEscape="true">
+                    <p:dialog header="Detalle Expediente" widgetVar="detalleDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="detalleDial" closeOnEscape="true" >
                         <p:outputPanel id="ExpDetail" style="text-align:center;">
-                            <p:dataTable value="#{busquedaInversion.historialExpTecn()}" var="ejecu" id="detalleExp" emptyMessage="SIN DATOS PARA MOSTRAR">
+                            <p:dataTable value="#{busquedaInversion.met2}" var="ejecu" id="detalleExp" emptyMessage="SIN DATOS PARA MOSTRAR">
                                 <p:column headerText="NÚMERO EXPEDIENTE" style="text-align: center">
                                     <h:outputText value="#{ejecu.documento}"/>
                                 </p:column>
@@ -221,9 +221,9 @@
                                 </p:column>
                             </p:dataTable>
                         </p:outputPanel>
-
                     </p:dialog>
                 </h:form>
+                
             </ui:define>
         </ui:composition>
     </h:body>

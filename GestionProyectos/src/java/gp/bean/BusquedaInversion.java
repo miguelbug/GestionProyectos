@@ -289,12 +289,11 @@ public class BusquedaInversion {
         }
     }
     
-    public List<MostrarExpedientesTecnicos> historialExpTecn(){
+    public void historialExpTecn(){
         System.out.println("EL CODIGO: "+codigo);
         if(codigo!=null){
-            met2=bid.getListaExpedientes(codigo);
+            met2=bid.getListaExpedientes(codigo,selectedMET.getDocumento());
         }
-        return met2;
     }
     
     public String getCodigo() {
