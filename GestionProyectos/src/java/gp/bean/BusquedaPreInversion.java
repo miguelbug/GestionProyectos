@@ -86,7 +86,6 @@ public class BusquedaPreInversion {
     private boolean estado9;
     private boolean estado11;
     private boolean estado12;
-    private boolean estado14 = true;
     private int estado10;
     private List<BusqPreInversion> listaBPI_1;
     private List<BusqPreInversion> listaBPI_2;
@@ -132,6 +131,7 @@ public class BusquedaPreInversion {
     private int i;
     private String id_comp;
     private boolean estadof;
+    private boolean tabview;
 
     public BusquedaPreInversion() {
         cantidad = "2";
@@ -144,6 +144,12 @@ public class BusquedaPreInversion {
         lista_origen = new ArrayList<String>();
         estado = true;
         estado2 = true;
+        estado9 = true;
+        estado4 = false;
+        estado3 = true;
+        estado5 = true;
+        estado6 = false;
+        estado7 = true;
         mont = new MontosDaoImpl();
         widhtcomp = "";
         rpd = new RegistroPreInversionDaoImpl();
@@ -151,14 +157,11 @@ public class BusquedaPreInversion {
         historialMontos = new ArrayList<HistorialMontos>();
         estado10 = -1;
         estado = true;
-        estado4 = false;
-        estado3 = true;
-        estado5 = true;
-        estado6 = false;
+
         estado2 = true;
-        estado7 = true;
+
         estado8 = true;
-        estado9 = true;
+
         estado12 = true;
         b20 = "";
         color = "black";
@@ -176,6 +179,7 @@ public class BusquedaPreInversion {
         adelante = true;
         atras = true;
         estadof = true;
+        tabview = false;
         llenar_OPI();
         llenar_NE();
     }
@@ -204,16 +208,17 @@ public class BusquedaPreInversion {
         }
         return cadena[j];
     }
-    public String partirMontoModif(){
-        String cadena="";
-        java.util.StringTokenizer stk= new java.util.StringTokenizer(b25,":");
-       while(stk.hasMoreTokens()){
-           cadena=stk.nextToken();
-       }
-       return cadena.trim();
+
+    public String partirMontoModif() {
+        String cadena = "";
+        java.util.StringTokenizer stk = new java.util.StringTokenizer(b25, ":");
+        while (stk.hasMoreTokens()) {
+            cadena = stk.nextToken();
+        }
+        return cadena.trim();
     }
+
     public void getComponentesDeMonto() {
-        estado14 = false;
         List<busquedaPreInversionMontos> lista = new ArrayList<busquedaPreInversionMontos>();
         lista = bpi.getComponentesDeMonto(partirMontoModif(), b20);
         for (int i = 0; i < lista.size(); i++) {
@@ -369,7 +374,6 @@ public class BusquedaPreInversion {
             ag.setNumRR(b10.toUpperCase());
             ag.setOpiResp(rpd.getId_Opi(b11));
             bpi.actualizarAspectosGenerales(ag);
-            estado8 = true;
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO EL PROYECTO");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         } catch (Exception e) {
@@ -429,7 +433,7 @@ public class BusquedaPreInversion {
             mdf = montd.getMontosModificados(b20);
             this.montosModificados();
             limpiarComponentes();
-            
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -488,6 +492,7 @@ public class BusquedaPreInversion {
             listaEtapas.clear();
             listaEtapas.add(0);
             this.listaEtapas = bpi.etapas(b20);
+            this.tabview = true;
         }
     }
 
@@ -628,17 +633,16 @@ public class BusquedaPreInversion {
     }
 
     /*public String getMontoConcatenado(List<Montos> lista) {
-        String cadena = "";
-        for (int i = 0; i < lista.size(); i++) {
-            cadena = cadena + lista.get(i).getFecha() + " - " + lista.get(i).getMonto();
-            if (i < lista.size() - 1) {
-                cadena = cadena + ", ";
-            }
-        }
-        cadena = cadena + "\n";
-        return cadena;
-    }*/
-
+     String cadena = "";
+     for (int i = 0; i < lista.size(); i++) {
+     cadena = cadena + lista.get(i).getFecha() + " - " + lista.get(i).getMonto();
+     if (i < lista.size() - 1) {
+     cadena = cadena + ", ";
+     }
+     }
+     cadena = cadena + "\n";
+     return cadena;
+     }*/
     public void guardarNuevosComponentes() {
         GuardarNuevComp gnc = new GuardarNuevComp();
         FacesMessage message = null;
@@ -711,7 +715,7 @@ public class BusquedaPreInversion {
         estadof = false;
         b25 = " ";
         b26D = null;
-        nuevaFecha= "";
+        nuevaFecha = "";
         limpiarComponentes();
         getExpedientesLista();
         getInformesLista();
@@ -737,6 +741,9 @@ public class BusquedaPreInversion {
         b17D = null;
         b18D = null;
         b19 = "";
+        b25 = " ";
+        b26D = null;
+        nuevaFecha = "";
     }
 
     public boolean isEstado4() {
@@ -1383,14 +1390,6 @@ public class BusquedaPreInversion {
         this.montoViable = montoViable;
     }
 
-    public boolean isEstado14() {
-        return estado14;
-    }
-
-    public void setEstado14(boolean estado14) {
-        this.estado14 = estado14;
-    }
-
     public int getIndex() {
         return index;
     }
@@ -1453,6 +1452,14 @@ public class BusquedaPreInversion {
 
     public void setEstadof(boolean estadof) {
         this.estadof = estadof;
+    }
+
+    public boolean isTabview() {
+        return tabview;
+    }
+
+    public void setTabview(boolean tabview) {
+        this.tabview = tabview;
     }
 
 }

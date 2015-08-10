@@ -25,7 +25,7 @@
                         </h:panelGrid>
                     </center>
                     <br></br>
-                    <p:tabView dynamic="true" id="tab" activeIndex="#{busquedaPreInversion.index}">
+                    <p:tabView dynamic="true" id="tab" activeIndex="#{busquedaPreInversion.index}" rendered="#{busquedaPreInversion.tabview}">
                         <p:tab title="ASPECTOS GENERALES" id="tab1" >
                             <center>
                                 <h:panelGrid columns="2" id="regPreInvAG" cellspacing="6">
@@ -169,13 +169,13 @@
                                     </p:selectOneMenu>
 
                                     <p:outputLabel value="Monto Seleccionado: " rendered="#{busquedaPreInversion.estado4}"/>
-                                    <pe:inputNumber value="#{busquedaPreInversion.b26D}" thousandSeparator="," decimalSeparator="." rendered="#{busquedaPreInversion.estado4}" disabled="#{busquedaPreInversion.estado14}" emptyValue="empty" required="false"  style="text-align: right">  
+                                    <pe:inputNumber value="#{busquedaPreInversion.b26D}" thousandSeparator="," decimalSeparator="." rendered="#{busquedaPreInversion.estado4}"  emptyValue="empty" required="false"  style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                         <p:ajax event="change" listener="#{busquedaPreInversion.guardarMontoSeleccionado()}" />
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Fecha Seleccionada: " rendered="#{busquedaPreInversion.estado4}"/>
-                                    <p:inputMask value="#{busquedaPreInversion.nuevaFecha}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado4}" disabled="#{busquedaPreInversion.estado14}" style="text-align: right">
+                                    <p:inputMask value="#{busquedaPreInversion.nuevaFecha}" mask="99/99/9999" rendered="#{busquedaPreInversion.estado4}" style="text-align: right">
                                         <p:ajax event="change" listener="#{busquedaPreInversion.guardarFechaSeleccionada()}"/>
                                     </p:inputMask>
                                 </h:panelGrid>
@@ -229,8 +229,8 @@
                                 <br></br>
                                 <br></br>
                                 <h:panelGrid cellpadding="4" columns="2">
-                                    <p:commandButton value="Guardar" id="guardComp" disabled="#{busquedaPreInversion.estado11}" actionListener="#{busquedaPreInversion.agregar_Actualizar()}" icon="ui-icon ui-icon-check" immediate="true" update="tab"></p:commandButton>
-                                    <p:commandButton value="Cancelar" id="cancelarComp" disabled="#{busquedaPreInversion.estado11}" actionListener="#{busquedaPreInversion.cambiarCanelar()}" update=":form:" icon="ui-icon ui-icon-close" immediate="true"></p:commandButton>
+                                    <p:commandButton value="Guardar" id="guardComp" disabled="#{busquedaPreInversion.estado11}" actionListener="#{busquedaPreInversion.agregar_Actualizar()}" icon="ui-icon ui-icon-check" update="tab"></p:commandButton>
+                                    <p:commandButton value="Cancelar" id="cancelarComp" disabled="#{busquedaPreInversion.estado11}" actionListener="#{busquedaPreInversion.cambiarCanelar()}" update="tab" icon="ui-icon ui-icon-close"></p:commandButton>
                                 </h:panelGrid>
                             </center>
                         </p:tab>
