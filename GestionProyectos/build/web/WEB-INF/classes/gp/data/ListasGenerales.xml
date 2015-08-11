@@ -25,6 +25,14 @@
         <result property="nombreMonto" column="MONTO"/>
     </resultMap>
     
+    <resultMap id="proyecto_aspectosGenerales" type="gp.model.MostrarAPG">
+        <result property="codigo" column="CODIGO"/>
+        <result property="nombre" column="NOMBRE"/>
+        <result property="origen" column="ORIGEN"/>
+        <result property="montoViabilidad" column="MONTOVIABILIDAD"/>
+        <result property="fechaViabilidad" column="FECHAVIABILIDAD"/>
+    </resultMap>
+    
     <select id="getExpedientes" resultMap="lista_Exp">
         SELECT TRAM_NUM AS NUMEROTRAMITE FROM vw_ogpl002@DB_LINK_TRAMITE
         WHERE DEPE_COD='1001872'
@@ -57,5 +65,29 @@
         FROM PROYECTO P
         WHERE P.ID_PROYECTO=#{codigo}
     </select>
+    
+    <select id="getAspectosGenerales1" resultMap="proyecto_aspectosGenerales" parameterType="String">
+        SELECT P.ID_PROYECTO AS CODIGO,
+        P.NOMBRE_PROY AS NOMBRE,
+        D.NOMBRE_DEP AS ORIGEN,
+        P.MONTO_VIAB AS MONTOVIABILIDAD,
+        TO_CHAR(P.FECHA_VIAB,'DD/MM/YYYY') AS FECHAVIABILIDAD
+        FROM PROYECTO P, DEPENDENCIA D
+        WHERE P.ID_DEP=D.ID_DEP
+        AND P.ID_PROYECTO=#{codigo}      
+        ORDER BY FECHA_VIAB ASC
+    </select>
+    
+    <select id="getAspectosGenerales2" resultMap="proyecto_aspectosGenerales">
+        SELECT P.ID_PROYECTO AS CODIGO,
+        P.NOMBRE_PROY AS NOMBRE,
+        D.NOMBRE_DEP AS ORIGEN,
+        P.MONTO_VIAB AS MONTOVIABILIDAD,
+        TO_CHAR(P.FECHA_VIAB,'DD/MM/YYYY') AS FECHAVIABILIDAD
+        FROM PROYECTO P, DEPENDENCIA D
+        WHERE P.ID_DEP=D.ID_DEP    
+        ORDER BY FECHA_VIAB ASC
+    </select>
+    
     
 </mapper>

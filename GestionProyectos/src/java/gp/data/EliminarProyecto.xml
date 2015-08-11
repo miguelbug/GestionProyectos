@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="EliminarProy">
+    
+    <delete id="deleteND" parameterType="String">
+        DELETE FROM NUEVOS_DOCUMENTOS WHERE ID_PROYEXPT IN (SELECT PE.ID_PROYEXPT 
+        FROM PROY_EXPT PE, PROYECTO P 
+        WHERE P.ID_PROYECTO=PE.ID_PROYECTO 
+        AND P.ID_PROYECTO=#{codigo})
+    </delete>
+    <delete id="deleteET" parameterType="String">
+        DELETE FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo}
+    </delete>
+    <delete id="deleteProy" parameterType="String">
+        DELETE FROM PROYECTO WHERE ID_PROYECTO=#{codigo}
+    </delete>
+    <delete id="deleteEjecu" parameterType="String">
+        DELETE FROM EJECUCION WHERE ID_PROYEXPT IN (SELECT PE.ID_PROYEXPT 
+        FROM PROY_EXPT PE, PROYECTO P 
+        WHERE P.ID_PROYECTO=PE.ID_PROYECTO 
+        AND P.ID_PROYECTO=#{codigo})
+    </delete>
+</mapper>

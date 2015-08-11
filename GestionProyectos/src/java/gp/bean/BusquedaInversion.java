@@ -254,14 +254,12 @@ public class BusquedaInversion {
     }
 
     public List<String> coincidencias(String query) {
-
         List<String> cadena = new ArrayList<String>();
         try {
             cadena = rid.getCoincidencias(query);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
         return cadena;
     }
 

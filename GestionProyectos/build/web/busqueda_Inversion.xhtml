@@ -205,7 +205,8 @@
                         </p:tab>
                     </p:tabView>
                     <p:dialog header="Detalle Expediente" widgetVar="detalleDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="detalleDial" closeOnEscape="true" >
-                        <p:outputPanel id="ExpDetail" style="text-align:center;">
+                        <center>
+                            <p:outputPanel id="ExpDetail" style="text-align:center; width: 75%">
                             <p:dataTable value="#{busquedaInversion.met2}" var="ejecu" id="detalleExp" emptyMessage="SIN DATOS PARA MOSTRAR">
                                 <p:column headerText="NÚMERO EXPEDIENTE" style="text-align: center">
                                     <h:outputText value="#{ejecu.documento}"/>
@@ -221,6 +222,7 @@
                                 </p:column>
                             </p:dataTable>
                         </p:outputPanel>
+                        </center>
                     </p:dialog>
                 </h:form>
                 

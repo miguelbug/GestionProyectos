@@ -6,7 +6,9 @@
 
 package gp.dao;
 
+import gp.model.AspectosGenerales;
 import gp.model.HistorialMontos;
+import gp.model.MostrarAPG;
 import java.util.List;
 
 /**
@@ -19,4 +21,8 @@ public interface ListasGeneralesDAO {
     public List<String> getResoluciones();
     public List<HistorialMontos> getMontosHistorial(String codigo);
     public HistorialMontos getMontoViable(String codigo);
+    public List<MostrarAPG> getProyeco(String codigo);
+    public List<MostrarAPG> getProyeco2();
+    public void EliminarProyecto(String codigo);
+    
 }

@@ -148,7 +148,7 @@
         WHERE ID_PROYECTO=#{codigo}
         AND ID_TIPOSDOCUS=#{tipo}
         AND NUMERO_EXP=#{numero}
-        AND NUMERO_MONTO IN (SELECT MAX(PE.NUMERO_MONTO) FROM PROY_EXPT PE)
+        AND NUMERO_MONTO IN (SELECT MAX(PE.NUMERO_MONTO) FROM PROY_EXPT PE WHERE PE.ID_PROYECTO=#{codigo})
     </select>
     
     <select id="getIdProyectoExpt" resultMap="resultado21" parameterType="java.util.HashMap">

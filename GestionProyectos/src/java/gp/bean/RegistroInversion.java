@@ -486,7 +486,10 @@ public class RegistroInversion {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA GUARDADO EL ADICIONAL");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         }
-
+        adicional=" ";
+        monto_adicD= null;
+        resolucion_adic=" ";
+        fechaaux_adic="";
     }
 
     public void guardarNuevoDeductivo() {
@@ -519,6 +522,7 @@ public class RegistroInversion {
         monto_deducD = null;
         resolucion_deduc = " ";
         fechaaux_deduc = "";
+        deductivo=" ";
     }
 
     public void guardarNuevoContrato() {
@@ -530,6 +534,7 @@ public class RegistroInversion {
             nd.setMonto(monto_contratoD);
             nd.setFecha(getDate(fecha_contrato));
             nd.setTipodocu(4);
+            System.out.println("Expediente tecnico: "+nd.getExptecn());
             rid.guardarContrato(nd);
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL CONTRATO: " + nombredocu3);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -540,6 +545,7 @@ public class RegistroInversion {
         nombredocu3 = "";
         monto_contratoD = null;
         fecha_contrato = "";
+        contrato=" ";
     }
 
     public Date getDate(String fecha) {
