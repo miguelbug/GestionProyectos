@@ -178,9 +178,9 @@ public class RegistroPreInversion {
     }
 
     public void onTabChange(TabChangeEvent event) {
-        if (event.getTab().getTitle().equals("COMPONENTES")) {
+        /*if (event.getTab().getTitle().equals("COMPONENTES")) {
             System.out.println(monto);
-        }
+        }*/
     }
 
     public void llenar_origen() {
@@ -232,7 +232,7 @@ public class RegistroPreInversion {
     public void limpiarAG() {
         codigo_int = null;
         nombre_proy = "";
-        montoD = 0.0;
+        montoD = null;
         fecha_viab_aux = "";
         informe_tecnico = "";
         exped_administ = "";
@@ -243,12 +243,13 @@ public class RegistroPreInversion {
     }
 
     public void limpiarComp() {
-        exp_tecnicoD = 0.0;
-        infraestructuraD = 0.0;
-        equip_mobiliD = 0.0;
-        supervisionD = 0.0;
-        capacitacionD = 0.0;
-        otrosD = 0.0;
+        exp_tecnicoD = null;
+        infraestructuraD = null;
+        equip_mobiliD = null;
+        supervisionD = null;
+        capacitacionD = null;
+        otrosD = null;
+        totalD = null;
     }
 
     public void GuardarAG() throws ParseException {
@@ -280,18 +281,7 @@ public class RegistroPreInversion {
             e.printStackTrace();
         }
     }
-
-    public BigDecimal pasarADecimal(String valor) {
-        BigDecimal numero = null;
-        try {
-            numero = BigDecimal.valueOf(Double.parseDouble(valor));
-        } catch (Exception e) {
-            numero = new BigDecimal("0.0");
-        }
-        return numero;
-
-    }
-
+    
     public void sumaComponentes() {
         Double[] cadena = new Double[6];
         BigDecimal valor = new BigDecimal("0.0");
@@ -310,13 +300,16 @@ public class RegistroPreInversion {
             valor = valor.add(nuevo);
             i++;
         }
-        total = (String.valueOf(valor));
-        if (Double.parseDouble(total) == montoauxiliar) {
+        totalD = valor.doubleValue();
+        if (totalD.equals(montoauxiliar)) {
             color = "clase1";
             estado3 = false;
         } else {
-            color = "clase2";
-            estado3 = true;
+            if (!totalD.equals(montoauxiliar)) {
+                color = "clase2";
+                estado3 = true;
+            }
+
         }
     }
 

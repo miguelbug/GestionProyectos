@@ -222,7 +222,9 @@
                                     </pe:inputNumber>
 
                                     <p:outputLabel value="Total:"/>
-                                    <p:outputLabel value="#{busquedaPreInversion.b19}" id="totalBusqPreInv" styleClass="#{busquedaPreInversion.color}" style="text-align: right"/>
+                                    <pe:inputNumber styleClass="#{busquedaPreInversion.color}" value="#{busquedaPreInversion.b19D}" id="totalBusqPreInv" style="text-align: right" thousandSeparator="," decimalSeparator="." disabled="true" emptyValue="empty" required="false">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
                                 </h:panelGrid>
                                 <br></br>
                                 <p:commandButton value="Historial" icon="ui-icon-circle-zoomin" actionListener="#{busquedaPreInversion.mostrarHistorial()}" update=":form:historialMontos,:form:historialComponentesTable" oncomplete="PF('historialComp').show()" immediate="true"/>

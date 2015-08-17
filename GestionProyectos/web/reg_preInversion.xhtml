@@ -133,7 +133,9 @@
                                         <p:ajax event="change" listener="#{registroPreInversion.sumaComponentes()}" update="sumaTotal,guardarComp"/>
                                     </pe:inputNumber>
                                     <p:outputLabel value="Total: S/."/>
-                                    <p:outputLabel value="#{registroPreInversion.total}"  id="sumaTotal" styleClass="#{registroPreInversion.color}" style="text-align: right"></p:outputLabel>
+                                    <pe:inputNumber styleClass="#{registroPreInversion.color}" disabled="true" value="#{registroPreInversion.totalD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" style="text-align: right" id="sumaTotal">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
                                 </h:panelGrid>
                                 <br></br>
                                 <br></br>
