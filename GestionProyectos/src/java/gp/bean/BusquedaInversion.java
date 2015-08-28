@@ -91,17 +91,15 @@ public class BusquedaInversion {
             anios.clear();
             met = bid.getListaExpedientesTecnicos(codigo);
             nombreProy = bid.getNombreProy(codigo);
-            System.out.println("Dimension: " + met.size() + " " + nombreProy);
             meses = bid.getEjecucionMeses(codigo);
             anios = bid.getEjecucionAnios(codigo);
-            if(meses.size()==0 && anios.size()==0){meses.add("Sin Meses");anios.add("Sin Años"); mostrar=true;}else{mostrar=false;}
-            if (met.size() == 0 && !nombreProy.equals("")) {
-                System.out.println("SIN HISTORIAL");
+            if(meses.isEmpty() && anios.isEmpty()){meses.add("Sin Meses");anios.add("Sin Años"); mostrar=true;}else{mostrar=false;}
+            if (met.isEmpty() && !nombreProy.equals("")) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "PROYECTO SIN HISTORIAL DE EJECUCION");
                 RequestContext.getCurrentInstance().showMessageInDialog(message);
                 estado = false;
             }
-            if (met.size() > 0) {
+            if (!met.isEmpty()) {
                 estado = true;
             }
 

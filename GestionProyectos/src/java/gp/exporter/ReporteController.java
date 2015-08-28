@@ -6,26 +6,16 @@
 package gp.exporter;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-//import org.apache.log4j.Logger;
-//import org.hibernate.impl.SessionFactoryImpl;
-
-//import edu.unmsm.quipucamayoc.comedor.common.listener.ContextLoaderListener;
-import gp.exporter.Reporte;
-
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -33,32 +23,30 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.JasperRunManager;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import java.util.Locale;
 
 public class ReporteController {
 
-    private String XLS_EXTENSION = ".xls";
-    private String PDF_EXTENSION = ".pdf";
+    private String XLS_EXTENSION;
+    private String PDF_EXTENSION;
     private static Reporte reportParam;
-    private String URL = "/Reportes/";
-//	private static Logger log = Logger.getLogger(ReporteController.class);
+    private String URL;
     private static ReporteController reporteController;
     private Connection conexion;
-    private int tipoFormato = 0;
+    private int tipoFormato;
 
-    /*public ReporteController(String nombre) {
-     reportParam=new Reporte();
-     reportParam.setNombreReport(nombre);
-     reportParam.setQueryParams(new HashMap<String,Object>());
-     // TODO Auto-generated constructor stub
-     }*/
+    public ReporteController() {
+        XLS_EXTENSION = ".xls";
+        PDF_EXTENSION = ".pdf";
+        URL = "/Reportes/";
+        tipoFormato = 0;
+    }
+
     public static ReporteController getInstance(String nombre) {
         if (reporteController == null) {
-            System.out.println("creando nuevo reporte controller "+nombre);
+            System.out.println("creando nuevo reporte controller " + nombre);
             reporteController = new ReporteController();
         }
         reporteController.setReportParam(ReporteController.getInstanceReporte(nombre));
@@ -67,7 +55,7 @@ public class ReporteController {
 
     private static Reporte getInstanceReporte(String nombre) {
         if (reportParam == null) {
-            System.out.println("creando nuevo reporte "+nombre);
+            System.out.println("creando nuevo reporte " + nombre);
             reportParam = new Reporte();
         }
         reportParam.setQueryParams(new HashMap<String, Object>());
@@ -107,28 +95,23 @@ public class ReporteController {
         String outfile = request.getRealPath("/");// archivo de salida
         outfile += XLS_EXTENSION;
         JRXlsExporter xlsExporter = new JRXlsExporter();
-       // xlsExporter.setParameter(JRExporterParameter.JASPER_PRINT,jasperPrint);
 
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             preparedExporterXls(xlsExporter, jasperPrint, baos);
             xlsExporter.exportReport();
             preparedResponse(response, baos);
-            //JasperExportManager.exportReportToPdfFile(jasperPrint,outfile);
 
         } catch (JRException e) {
             StringWriter stringWriter = new StringWriter();
             response.setContentType("text/plain");
             response.getOutputStream().print(stringWriter.toString());
-            // log.error(e);
         }
     }
 
     private void exportarReporteaPDF(JasperPrint jasperPrint, FacesContext context, HttpServletResponse response, HttpServletRequest request) throws IOException {
-
         byte[] pdf;
         try {
-
             pdf = JasperExportManager.exportReportToPdf(jasperPrint);
             System.out.println("nombre report:" + reportParam.getNombreReport());
             response.addHeader("Content-disposition", "attachment;filename=" + reportParam.getNombreReport() + ".pdf");
@@ -136,48 +119,38 @@ public class ReporteController {
             response.getOutputStream().write(pdf);
             response.setContentType("application/pdf");
             context.responseComplete();
-
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
-
     }
 
     private void exportarReporteaXLS(JasperPrint jasperPrint, FacesContext context, HttpServletResponse response, HttpServletRequest request) throws IOException {
-
         JRXlsExporter xlsExporter = new JRXlsExporter();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] xls;
-
         xlsExporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         xlsExporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
         xlsExporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
         xlsExporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
         xlsExporter.setParameter(JRExporterParameter.OUTPUT_STREAM, baos);
-
         try {
 
             xlsExporter.exportReport();
             xls = baos.toByteArray();
-
             System.out.println("nombre report:" + reportParam.getNombreReport());
             response.addHeader("Content-disposition", "attachment;filename=" + reportParam.getNombreReport() + ".xls");
             response.setContentLength(xls.length);
             response.getOutputStream().write(xls);
             response.setContentType("application/vnd.ms-excel");
             context.responseComplete();
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     public boolean ejecutaReporte(FacesContext context, ServletContext sc) {
         try {
-            //initReporteParams();
-            //beforeExecuteReporte(reportParam);  
             HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
             HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
             JasperPrint jasperPrint = execReport(context, sc);
@@ -195,7 +168,7 @@ public class ReporteController {
                     }
                     System.out.println("Tiene hojas");
                     return true;
-                }else{
+                } else {
                     System.out.println("lista es null");
                 }
             }
@@ -208,12 +181,7 @@ public class ReporteController {
         return false;
     }
 
-    /* private void beforeExecuteReporte(ReportBean reportParam) {		 
-     reportParam.addQueryParam("parametro1","1");	
-     reportParam.addQueryParam("parametro2","2");		
-     }*/
     public void addMapParam(Map map) {
-
         map.put("REPORT_LOCALE", Locale.ENGLISH);
         reportParam.setQueryParams(map);
     }
@@ -222,11 +190,6 @@ public class ReporteController {
         reportParam.addQueryParam(hash, value);
     }
 
-    /*
-     private void initReporteParams() {
-     reportParam.setJasperFileName(reportParam.getNombreReport() + JASPER_EXTENSION);	        
-     }
-     */
     public JasperPrint execReport(FacesContext context, ServletContext sc) {
         try {
             JasperReport report = null;
@@ -244,9 +207,9 @@ public class ReporteController {
             }
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, reportParam.getQueryParams(), conexion);
-            System.out.println("SIZE DEL JASPERPRINT: "+jasperPrint.getPages().size());
-            System.out.println("NOMBRE DEL JASPERPRINT: "+jasperPrint.getName());
-            System.out.println("NOMBRE DE LA COEXION: "+conexion.toString());
+            System.out.println("SIZE DEL JASPERPRINT: " + jasperPrint.getPages().size());
+            System.out.println("NOMBRE DEL JASPERPRINT: " + jasperPrint.getName());
+            System.out.println("NOMBRE DE LA CONEXION: " + conexion.toString());
             System.out.println("SE HA CREADO");
             return jasperPrint;
 
@@ -260,17 +223,6 @@ public class ReporteController {
         return new JasperPrint();
     }
 
-    /*public Connection getConnection(){
-     //SessionFactoryImpl s=(SessionFactoryImpl)ContextLoaderListener.getBean("sessionFactory");
-     try {
-     return getSqlMapClientTemplate().getDataSource().getConnection();
-     //s.getConnectionProvider().getConnection();
-     } catch (SQLException e) {
-     //log.error(e);
-     e.printStackTrace();
-     }
-     return null;
-     }*/
     public Connection getConexion() {
         return conexion;
     }

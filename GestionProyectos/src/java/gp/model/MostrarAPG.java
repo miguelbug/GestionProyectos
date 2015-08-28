@@ -21,8 +21,9 @@ public class MostrarAPG implements Serializable{
     private String codigo;
     private String nombre;
     private String origen;
-    private String montoViabilidad;
+    private Double montoViabilidad;
     private String fechaViabilidad;
+    private String nivelEstudio;
     
     public MostrarAPG() {
     }
@@ -51,20 +52,28 @@ public class MostrarAPG implements Serializable{
         this.origen = origen;
     }
 
-    public String getMontoViabilidad() {
-        return montoViabilidad;
-    }
-
-    public void setMontoViabilidad(String montoViabilidad) {
-        this.montoViabilidad = montoViabilidad;
-    }
-
     public String getFechaViabilidad() {
         return fechaViabilidad;
     }
 
     public void setFechaViabilidad(String fechaViabilidad) {
         this.fechaViabilidad = fechaViabilidad;
+    }
+
+    public Double getMontoViabilidad() {
+        return montoViabilidad;
+    }
+
+    public void setMontoViabilidad(Double montoViabilidad) {
+        this.montoViabilidad = montoViabilidad;
+    }
+
+    public String getNivelEstudio() {
+        return nivelEstudio;
+    }
+
+    public void setNivelEstudio(String nivelEstudio) {
+        this.nivelEstudio = nivelEstudio;
     }
     
 }

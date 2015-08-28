@@ -31,6 +31,11 @@
         <result property="origen" column="ORIGEN"/>
         <result property="montoViabilidad" column="MONTOVIABILIDAD"/>
         <result property="fechaViabilidad" column="FECHAVIABILIDAD"/>
+        <result property="nivelEstudio" column="NOMBRENIVEL"/>
+    </resultMap>
+    
+    <resultMap id="lista_dependencias" type="String">
+        <result property="nombre_dep" column="NOMBRE"/>
     </resultMap>
     
     <select id="getExpedientes" resultMap="lista_Exp">
@@ -71,10 +76,12 @@
         P.NOMBRE_PROY AS NOMBRE,
         D.NOMBRE_DEP AS ORIGEN,
         P.MONTO_VIAB AS MONTOVIABILIDAD,
-        TO_CHAR(P.FECHA_VIAB,'DD/MM/YYYY') AS FECHAVIABILIDAD
-        FROM PROYECTO P, DEPENDENCIA D
+        TO_CHAR(P.FECHA_VIAB,'DD/MM/YYYY') AS FECHAVIABILIDAD,
+        NE.NOMBRE_NIVEL AS NOMBRENIVEL
+        FROM PROYECTO P, DEPENDENCIA D, NIVEL_ESTUD NE
         WHERE P.ID_DEP=D.ID_DEP
-        AND P.ID_PROYECTO=#{codigo}      
+        AND P.ID_PROYECTO=#{codigo}
+        AND P.ID_NIVEL=NE.ID_NIVEL
         ORDER BY FECHA_VIAB ASC
     </select>
     
@@ -89,5 +96,11 @@
         ORDER BY FECHA_VIAB ASC
     </select>
     
-    
+    <select id="getDependencias" resultMap="lista_dependencias" parameterType="String">
+        SELECT NOMBRE_DEP AS NOMBRE
+        FROM DEPENDENCIA
+        WHERE TIPO_DEPE=#{codigo}
+        ORDER BY ID_DEP
+    </select>
+   
 </mapper>

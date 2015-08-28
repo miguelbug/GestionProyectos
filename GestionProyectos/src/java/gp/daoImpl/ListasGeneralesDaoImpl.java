@@ -8,6 +8,7 @@ package gp.daoImpl;
 import gp.connectionFactory.MyBatisConnectionFactory;
 import gp.dao.ListasGeneralesDAO;
 import gp.model.AspectosGenerales;
+import gp.model.Dependencias;
 import gp.model.HistorialMontos;
 import gp.model.MostrarAPG;
 import java.util.List;
@@ -193,6 +194,22 @@ public class ListasGeneralesDaoImpl implements ListasGeneralesDAO {
             session.close();
         }
         return h;
+    }
+
+    @Override
+    public List<String> getDependencias(String codigo) {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<String> list = null;
+        try {
+            list = session.selectList("ListasGenerales.getDependencias",codigo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
     }
 
 }

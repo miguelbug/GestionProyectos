@@ -30,6 +30,7 @@ public class EliminarProyectoBean {
     private ListasGeneralesDAO lgd;
     private RegistroInversionDAO rid;
     private MostrarAPG selectedAPG;
+    private List<MostrarAPG> listafiltro;
     
     public EliminarProyectoBean() {
         lgd = new ListasGeneralesDaoImpl();
@@ -41,7 +42,7 @@ public class EliminarProyectoBean {
 
     public void buscar() {
         listaProyectos.clear();
-        if(codigo==""){
+        if(codigo.equals("")){
             listaProyectos = lgd.getProyeco2();
         }else{
             listaProyectos = lgd.getProyeco(codigo);
@@ -113,6 +114,14 @@ public class EliminarProyectoBean {
 
     public void setSelectedAPG(MostrarAPG selectedAPG) {
         this.selectedAPG = selectedAPG;
+    }
+
+    public List<MostrarAPG> getListafiltro() {
+        return listafiltro;
+    }
+
+    public void setListafiltro(List<MostrarAPG> listafiltro) {
+        this.listafiltro = listafiltro;
     }
 
 }

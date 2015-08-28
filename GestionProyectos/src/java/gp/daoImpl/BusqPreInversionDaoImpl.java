@@ -10,8 +10,12 @@ import gp.dao.BusqPreInversionDAO;
 import gp.model.AspectosGenerales;
 import gp.model.BusqPreInversion;
 import gp.model.Componentes;
+import gp.model.ComponentesMostrar;
 import gp.model.GuardarNuevComp;
+import gp.model.MostrarDesdeDependencias;
+import gp.model.MostrarFechaInicFin;
 import gp.model.busquedaPreInversionMontos;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,7 +176,7 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
     }
 
     @Override
-    public List<BusqPreInversion> listaBusqPI_3(String codigo) {
+public List<BusqPreInversion> listaBusqPI_3(String codigo) {
         SqlSession session = sqlSessionFactory.openSession();
         List<BusqPreInversion> list = null;
         try {
@@ -187,4 +191,105 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
         return list;
     }
 
+    @Override
+    public List<ComponentesMostrar> listaBusqPI_4(String codigo) {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<ComponentesMostrar> list = null;
+        try {
+            list = session.selectList("BusqPreInversion.getBPI_4", codigo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
+    public List<MostrarFechaInicFin> fechaInic_fechaFin(String fecha1, String fecha2) {
+        SqlSession session = sqlSessionFactory.openSession();
+        System.out.println(fecha1+" "+fecha2);
+         Map<String, String> map = new HashMap<String, String>();
+        map.put("fecha1", fecha1);
+        map.put("fecha2", fecha2);
+        List<MostrarFechaInicFin> list = null;
+        try {
+            list = session.selectList("BusqPreInversion.getBPI_5", map);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
+    public List<MostrarDesdeDependencias> mostrarDesdeDependencias(String nombre) {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<MostrarDesdeDependencias> list = null;
+        try {
+            list = session.selectList("BusqPreInversion.getBPI_6", nombre);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
+    public List<MostrarDesdeDependencias> mostrarDesdeFacult() {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<MostrarDesdeDependencias> list = null;
+        try {
+            list = session.selectList("BusqPreInversion.getBPI_7");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
+    public List<MostrarDesdeDependencias> mostrarDesdeDepes() {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<MostrarDesdeDependencias> list = null;
+        try {
+            list = session.selectList("BusqPreInversion.getBPI_8");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
+    public List<MostrarDesdeDependencias> mostrarDesdeDepesyFacus() {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<MostrarDesdeDependencias> list = null;
+        try {
+            list = session.selectList("BusqPreInversion.getBPI_9");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    
 }

@@ -1,0 +1,214 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>REGISTRO PRE INVERSION</title>
+        <link rel="stylesheet" type="text/css" href="resources/css2/estilos.css" />
+    </h:head>
+    <h:body>
+        <ui:composition template="./menucentral.xhtml">
+            <ui:define name="content">
+                <h:form id="form">
+
+                    <br></br>
+                    <p:tabView dynamic="true" id="tab">
+                        <p:tab title="POR CÓDIGO" id="tab1" >
+                            <center>
+                                <h:panelGrid columns="3" cellspacing="3">
+                                    <h:panelGrid columns="2" cellspacing="3">
+                                        <p:outputLabel value="Ingrese Código: "/>
+                                        <p:autoComplete id="autoCompleteLabel" value="#{reportePreInversion.codigo}" completeMethod="#{reportePreInversion.coincidencias}"/> 
+                                    </h:panelGrid>
+                                    <p:commandButton value="Buscar" actionListener="#{reportePreInversion.Buscar()}" update="tab" icon="ui-icon-search"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <br></br>
+                                <h:panelGrid columns="2" rendered="#{reportePreInversion.mostrar}" cellpadding="6" cellspacing="4">
+                                    <p:outputLabel value="Codigo: "/>
+                                    <h:outputText value="#{reportePreInversion.codigo}"/>
+                                    <p:outputLabel value="Nombre:"/>
+                                    <h:outputText value="#{reportePreInversion.nombre}"/>
+                                    <p:outputLabel value="Nivel de Estudio:"/>
+                                    <h:outputText value="#{reportePreInversion.nivEstud}"/>
+                                    <p:outputLabel value="Monto de Viabilidad:"/>
+                                    <h:outputText value="#{reportePreInversion.montoViab}">
+                                        <f:convertNumber currencySymbol="s/" type="currency" locale="en_US"/>
+                                    </h:outputText>
+                                    <p:outputLabel value="Fecha de Viabilidad: "/>
+                                    <h:outputText value="#{reportePreInversion.fechaViab}"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <p:dataTable value="#{reportePreInversion.busqPreInv2}" var="codi" id="componentesExport" emptyMessage="SIN DATOS PARA MOSTRAR" rendered="#{reportePreInversion.mostrar}">
+                                    <p:columnGroup type="header" >
+                                        <p:row>
+                                            <p:column headerText="EXP. TECNICO"/>
+                                            <p:column headerText="INFRAESTRUCTURA"/>
+                                            <p:column headerText="EQUIP. MOBIL."/>	
+                                            <p:column headerText="SUPERVISION"/>
+                                            <p:column headerText="CAPACITACION"/>
+                                            <p:column headerText="OTROS"/>
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <p:column headerText="EXP. TECNICO" style="text-align: right">
+                                        <h:outputText value="#{codi.expTecn}" >
+                                            <f:convertNumber currencySymbol="s/" type="currency" locale="en_US"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="INFRAESTRUCTURA" style="text-align: right" >
+                                        <h:outputText value="#{codi.infraEstruct}" >
+                                            <f:convertNumber currencySymbol="s/" type="currency" locale="en_US"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="EQUIP. MOBIL." style="text-align: right">
+                                        <h:outputText value="#{codi.equipMob}" >
+                                            <f:convertNumber currencySymbol="s/" type="currency" locale="en_US"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="SUPERVISION" style="text-align: right">
+                                        <h:outputText value="#{codi.superVision}" >
+                                            <f:convertNumber currencySymbol="s/" type="currency" locale="en_US"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="CAPACITACION" style="text-align: right" >
+                                        <h:outputText value="#{codi.capaciT}" >
+                                            <f:convertNumber currencySymbol="s/" type="currency" locale="en_US"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="OTROS" style="text-align: right">
+                                        <h:outputText value="#{codi.otros}" >
+                                            <f:convertNumber currencySymbol="s/" type="currency" locale="en_US"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                                <br></br>
+                                <br></br>
+                                <p:commandButton id="reporte" value="Imprimir"  ajax="false" icon="ui-icon-arrowstop-1-s" actionListener="#{reportePreInversion.Imprimir()}" title="Reporte"  rendered="#{reportePreInversion.mostrar}">
+                                </p:commandButton>
+                            </center>
+                        </p:tab>
+                        <p:tab title="POR FECHA" id="tab2">
+                            <center>
+                                <h:panelGrid columns="3" cellspacing="5">
+                                    <h:panelGrid columns="2">
+                                        <p:outputLabel value="Fecha Inicio: "/>
+                                        <p:calendar id="mask1" value="#{reportePreInversion.fechaIni}" pattern="dd/MM/yyyy" mask="true" locale="es" />
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2">
+                                        <p:outputLabel value="Fecha Fin: "/>
+                                        <p:calendar id="mask2" value="#{reportePreInversion.fechaFin}" pattern="dd/MM/yyyy" mask="true" locale="es" />
+                                    </h:panelGrid>
+                                    <p:commandButton value="Buscar" actionListener="#{reportePreInversion.Buscar2()}" update="tab" icon="ui-icon-search"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <br></br>
+                                <p:dataTable value="#{reportePreInversion.busqPreInv3}" paginator="true" rows="15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" var="codi2" id="componentesExport2" emptyMessage="SIN DATOS PARA MOSTRAR" rendered="#{reportePreInversion.mostrar2}">
+                                    <p:column headerText="CÓDIGO" style="text-align: center; width: 8%">
+                                        <h:outputText value="#{codi2.codigo}"/>
+                                    </p:column>
+                                    <p:column headerText="NOMBRE" style="text-align: center">
+                                        <h:outputText value="#{codi2.nombre}"/>
+                                    </p:column>
+                                    <p:column headerText="NIVEL ESTUDIO" style="text-align: center; width: 10%">
+                                        <h:outputText value="#{codi2.nivelEstud}"/>
+                                    </p:column>
+                                    <p:column headerText="MONTO VIABILIDAD" style="text-align: right; width: 12%"
+                                              footerText="Total: S/ #{reportePreInversion.SumaPorFecha()}">
+                                        <h:outputText value="#{codi2.montoViab}">
+                                            <f:convertNumber currencySymbol="s/" type="currency" locale="en_US"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                                <br></br>
+                                <br></br>
+                                <p:commandButton id="reporte2" value="Imprimir"  ajax="false" icon="ui-icon-arrowstop-1-s" actionListener="#{reportePreInversion.Imprimir2()}" title="Reporte"  rendered="#{reportePreInversion.mostrar2}">
+                                </p:commandButton>
+                            </center>
+                        </p:tab>
+                        <p:tab title="POR FACULTAD O DEPENDENCIA" id="tab3">
+                            <center>
+                                <h:panelGrid columns="3" cellspacing="4">
+                                    <h:panelGrid  columns="2">
+                                        <p:outputLabel value="Tipo de Origen: "/>
+                                        <p:selectOneMenu value="#{reportePreInversion.tipo}" >
+                                            <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                            <f:selectItem itemLabel="Facultad" itemValue="2"/>
+                                            <f:selectItem itemLabel="Dependencia" itemValue="1"/>
+                                            <f:selectItem itemLabel="Solo Facultades" itemValue="3"/>
+                                            <f:selectItem itemLabel="Solo Dependencias" itemValue="4"/>
+                                            <f:selectItem itemLabel="Facultades y Dependencias" itemValue="5"/>
+                                            <p:ajax event="change" listener="#{reportePreInversion.llenarDepes()}" update="tab"/>
+                                        </p:selectOneMenu>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2" rendered="#{reportePreInversion.mostrar4}">
+                                        <p:outputLabel value="Seleccione: "/>
+                                        <p:selectOneMenu value="#{reportePreInversion.nombreDepe}" filter="true" filterMatchMode="contains">
+                                            <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                            <f:selectItems value="#{reportePreInversion.listaDepe}" />
+                                        </p:selectOneMenu>
+                                    </h:panelGrid>
+                                    <p:commandButton value="Buscar" actionListener="#{reportePreInversion.Buscar3()}"  update="tab" icon="ui-icon-search"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <p:dataTable paginator="true"
+                                             rows="15"
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" value="#{reportePreInversion.listaDesdeDepe}" var="codi3" id="componentesExport3" emptyMessage="SIN DATOS PARA MOSTRAR" rendered="#{reportePreInversion.mostrar3}">
+                                    <p:column headerText="CÓDIGO" style="text-align: center; width: 10%">
+                                        <h:outputText value="#{codi3.codigo}"/>
+                                    </p:column>
+                                    <p:column headerText="NOMBRE" style="text-align: center">
+                                        <h:outputText value="#{codi3.nombre}"/>
+                                    </p:column>
+                                    <p:column headerText="NIVEL ESTUDIO" style="text-align: center; width: 10%">
+                                        <h:outputText value="#{codi3.nivelEstud}"/>
+                                    </p:column>
+                                    <p:column headerText="MONTO VIABILIDAD" style="text-align: right; width: 10%" footerText="Total: s/ #{reportePreInversion.SumarPorDependencia()}">
+                                        <h:outputText value="#{codi3.montoViab}">
+                                            <f:convertNumber currencySymbol="s/" type="currency" locale="en_US"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                                <br></br>
+                                <br></br>
+                                <p:commandButton id="reporte3" value="Imprimir" ajax="false" icon="ui-icon-arrowstop-1-s" actionListener="#{reportePreInversion.Imprimir3()}" title="Reporte"  rendered="#{reportePreInversion.mostrar3}">
+                                </p:commandButton>
+                            </center>
+                        </p:tab>
+                    </p:tabView>
+                    <script type="text/javascript">
+                        PrimeFaces.locales['es'] = {
+                            closeText: 'Cerrar',
+                            prevText: 'Anterior',
+                            nextText: 'Siguiente',
+                            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                            monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                            dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                            dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                            dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+                            weekHeader: 'Semana',
+                            firstDay: 1,
+                            isRTL: false,
+                            showMonthAfterYear: false,
+                            yearSuffix: '',
+                            timeOnlyTitle: 'Sólo hora',
+                            timeText: 'Tiempo',
+                            hourText: 'Hora',
+                            minuteText: 'Minuto',
+                            secondText: 'Segundo',
+                            currentText: 'Fecha actual',
+                            ampm: false,
+                            month: 'Mes',
+                            week: 'Semana',
+                            day: 'Día',
+                            allDayText: 'Todo el día'
+                        };
+                    </script>  
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

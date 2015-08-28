@@ -5,17 +5,18 @@
  
 <mapper namespace="BusqPreInversion">
     
-    <resultMap id="lista_busqPreInv" type="gp.model.BusqPreInversion">
-        <result property="c1" column="CODIGO"/>
-        <result property="c2" column="NOMBRE"/>
-        <result property="c3" column="ORIGEN"/>
-        <result property="c4" column="MONTOV"/>
-        <result property="c5" column="FECHAMOV"/>
-        <result property="c6" column="INFORMETECN"/>
-        <result property="c7" column="EXPADMIN"/>
-        <result property="c8" column="RESOLUC"/>
-        <result property="c9" column="NOMBOPI"/>
-        <result property="c10" column="NOMBNIV"/>
+    <resultMap id="mostrarPorFecha" type="gp.model.MostrarFechaInicFin">
+        <result property="codigo" column="CODIGO"/>
+        <result property="nombre" column="NOMBRE"/>
+        <result property="montoViab" column="MONTOV"/>
+        <result property="nivelEstud" column="NOMBNIV"/>
+    </resultMap>
+    
+    <resultMap id="mostrarPorDependencia" type="gp.model.MostrarDesdeDependencias">
+        <result property="codigo" column="CODIGO"/>
+        <result property="nombre" column="NOMBRE"/>
+        <result property="montoViab" column="MONTOV"/>
+        <result property="nivelEstud" column="NOMBNIV"/>
     </resultMap>
     
     <resultMap id="lista_busqPreInv2" type="gp.model.BusqPreInversion">
@@ -28,6 +29,31 @@
         <result property="c16" column="OTROS"/>
         <result property="c17" column="FECHAMODIF"/>
         <result property="c18" column="MONTOMODIF"/>
+    </resultMap>
+    
+    <resultMap id="lista_busqPreInv3" type="gp.model.ComponentesMostrar">
+        <result property="idcomp" column="IDCOMP"/>
+        <result property="expTecn" column="EXPTECN"/>
+        <result property="infraEstruct" column="INFRA"/>
+        <result property="equipMob" column="EQUIPMOB"/>
+        <result property="superVision" column="SUPERVISION"/>
+        <result property="capaciT" column="CAPACITACION"/>
+        <result property="otros" column="OTROS"/>
+        <result property="fechaModif" column="FECHAMODIF"/>
+        <result property="montoModif" column="MONTOMODIF"/>
+    </resultMap>
+    
+    <resultMap id="lista_busqPreInv" type="gp.model.BusqPreInversion">
+        <result property="c1" column="CODIGO"/>
+        <result property="c2" column="NOMBRE"/>
+        <result property="c3" column="ORIGEN"/>
+        <result property="c4" column="MONTOV"/>
+        <result property="c5" column="FECHAMOV"/>
+        <result property="c6" column="INFORMETECN"/>
+        <result property="c7" column="EXPADMIN"/>
+        <result property="c8" column="RESOLUC"/>
+        <result property="c9" column="NOMBOPI"/>
+        <result property="c10" column="NOMBNIV"/>
     </resultMap>
     
     <resultMap id="lista_componentesHistorial" type="gp.model.busquedaPreInversionMontos">
@@ -109,6 +135,88 @@
         WHERE PE.ID_PROYECTO=#{codigo}
         AND PE.NUMERO_EXP = '0'
     </select>
+    
+    <select id="getBPI_4" resultMap="lista_busqPreInv3" parameterType="String">
+        SELECT  PE.ID_PROYEXPT AS IDCOMP,
+        PE.EXP_TECN AS EXPTECN,
+        PE.INFRAESTRUCTURA AS INFRA,
+        PE.EQUIP_MOBIL AS EQUIPMOB,
+        PE.SUPERVISION AS SUPERVISION,
+        PE.CAPACITACION AS CAPACITACION,
+        PE.OTROS AS OTROS,
+        TO_CHAR(PE.FECHA_REG,'DD/MM/YYYY') AS FECHAMODIF,
+        PE.MONTO_MODIF AS MONTOMODIF
+        
+        FROM PROY_EXPT PE
+        WHERE PE.ID_PROYECTO=#{codigo}
+        AND PE.NUMERO_EXP = '0'
+    </select>
+    
+    <select id="getBPI_5" resultMap="mostrarPorFecha" parameterType="java.util.Map">
+        SELECT P.ID_PROYECTO AS CODIGO,
+        P.NOMBRE_PROY AS NOMBRE,
+        P.MONTO_VIAB AS MONTOV,
+        NE.NOMBRE_NIVEL AS NOMBNIV
+        
+        FROM PROYECTO P, NIVEL_ESTUD NE
+        WHERE P.ID_NIVEL=NE.ID_NIVEL
+        AND P.FECHA_VIAB BETWEEN #{fecha1} AND #{fecha2}
+        ORDER BY P.FECHA_VIAB DESC
+    </select>
+    
+    <select id="getBPI_6" resultMap="mostrarPorDependencia" parameterType="java.util.Map">
+        SELECT P.ID_PROYECTO AS CODIGO,
+        P.NOMBRE_PROY AS NOMBRE,
+        P.MONTO_VIAB AS MONTOV,
+        NE.NOMBRE_NIVEL AS NOMBNIV
+        
+        FROM PROYECTO P, NIVEL_ESTUD NE, DEPENDENCIA D
+        WHERE P.ID_NIVEL=NE.ID_NIVEL
+        AND P.ID_DEP=D.ID_DEP
+        AND D.NOMBRE_DEP=#{nombre}
+        ORDER BY P.FECHA_VIAB DESC
+    </select>
+    <!-- -->
+    
+    <select id="getBPI_7" resultMap="mostrarPorDependencia">
+        SELECT P.ID_PROYECTO AS CODIGO,
+        P.NOMBRE_PROY AS NOMBRE,
+        P.MONTO_VIAB AS MONTOV,
+        NE.NOMBRE_NIVEL AS NOMBNIV
+        
+        FROM PROYECTO P, NIVEL_ESTUD NE, DEPENDENCIA D
+        WHERE P.ID_NIVEL=NE.ID_NIVEL
+        AND P.ID_DEP=D.ID_DEP
+        AND D.TIPO_DEPE='2'
+        ORDER BY P.FECHA_VIAB DESC
+    </select>
+    
+    <select id="getBPI_8" resultMap="mostrarPorDependencia">
+        SELECT P.ID_PROYECTO AS CODIGO,
+        P.NOMBRE_PROY AS NOMBRE,
+        P.MONTO_VIAB AS MONTOV,
+        NE.NOMBRE_NIVEL AS NOMBNIV
+        
+        FROM PROYECTO P, NIVEL_ESTUD NE, DEPENDENCIA D
+        WHERE P.ID_NIVEL=NE.ID_NIVEL
+        AND P.ID_DEP=D.ID_DEP
+        AND D.TIPO_DEPE='1'
+        ORDER BY P.FECHA_VIAB DESC
+    </select>
+    
+    <select id="getBPI_9" resultMap="mostrarPorDependencia">
+        SELECT P.ID_PROYECTO AS CODIGO,
+        P.NOMBRE_PROY AS NOMBRE,
+        P.MONTO_VIAB AS MONTOV,
+        NE.NOMBRE_NIVEL AS NOMBNIV
+        
+        FROM PROYECTO P, NIVEL_ESTUD NE, DEPENDENCIA D
+        WHERE P.ID_NIVEL=NE.ID_NIVEL
+        AND P.ID_DEP=D.ID_DEP
+        AND D.TIPO_DEPE IN ('1','2')
+        ORDER BY P.FECHA_VIAB DESC
+    </select>
+    
     <!-- -->
     <insert id="insert_gnc" parameterType="gp.model.GuardarNuevComp">
         INSERT INTO COMPONENTES (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,TIPO_REG,ID_PROYECTO,NUM_MONTO)

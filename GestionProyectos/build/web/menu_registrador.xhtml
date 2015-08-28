@@ -2,8 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Facelet Title</title>
         <link rel="stylesheet" type="text/css" href="resources/css2/estilos.css" />
@@ -25,7 +24,7 @@
                     <p:menuitem value="Por Código" action="ProyectoDatos?faces-redirect=true"/>
                 </p:submenu>
                 <p:submenu label="REPORTES" icon="ui-icon-wrench" styleClass="conf">
-                    <p:menuitem value="Pre Inversión"/>
+                    <p:menuitem value="Pre Inversión" action="reporte_PreInversion?faces-redirect=true"/>
                     <p:menuitem value="Inversión"/>
                     <p:menuitem value="Post Inversión"/>
                 </p:submenu>

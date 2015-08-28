@@ -7,16 +7,12 @@ package gp.exporter;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.persistence.EntityManager;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 /**
  *
  * @author USUARIO
  */
-public class categoriaServicio {
+public class CategoriaServicio {
 
     conexion nuevacon;
 

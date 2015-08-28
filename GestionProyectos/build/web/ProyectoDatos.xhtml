@@ -4,8 +4,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:pe="http://primefaces.org/ui/extensions">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>REGISTRO PRE INVERSION</title>
         <link rel="stylesheet" type="text/css" href="resources/css2/estilos.css" />
@@ -25,21 +24,26 @@
                         </h:panelGrid>
                         <br></br>
                         <br></br>
-                        <p:dataTable id="DatosAspectosGenerales" selection="#{eliminarProyectoBean.selectedAPG}" rowKey="#{ag.codigo}" value="#{eliminarProyectoBean.listaProyectos}" var="ag" style="width:75%" emptyMessage="SIN DATOS PARA MOSTRAR">
+                        <p:dataTable id="DatosAspectosGenerales" selection="#{eliminarProyectoBean.selectedAPG}" rowKey="#{ag.codigo}" value="#{eliminarProyectoBean.listaProyectos}" 
+                                     var="ag" style="width:95%" emptyMessage="SIN DATOS PARA MOSTRAR" rows="15"
+                                     paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15" filteredValue="#{eliminarProyectoBean.listafiltro}">
                             <p:column selectionMode="single" style="width:16px;text-align:center"/>
-                            <p:column headerText="CODIGO" style="text-align: center; width: 7%">
+                            <p:column headerText="CODIGO" style="text-align: center;width: 10%" sortBy="#{ag.codigo}" filterBy="#{ag.codigo}" filterMatchMode="contains">
                                 <h:outputText value="#{ag.codigo}"/>
                             </p:column>
-                            <p:column headerText="NOMBRE DE PROYECTO" style="text-align: left; width: 50%">
-                                <h:outputText value="#{ag.nombre}"/>
+                            <p:column headerText="NOMBRE DE PROYECTO" style="text-align: center;" sortBy="#{ag.nombre}" filterBy="#{ag.nombre}" filterMatchMode="contains">
+                                <h:outputText value="#{ag.nombre}"  style="text-align: left"/>
                             </p:column>
-                            <p:column headerText="ORIGEN" style="text-align: center">
+                            <p:column headerText="ORIGEN" style="text-align: center" sortBy="#{ag.origen}" filterBy="#{ag.origen}" filterMatchMode="contains">
                                 <h:outputText value="#{ag.origen}"/>
                             </p:column>
-                            <p:column headerText="MONTO VIABILIDAD" style="text-align: center">
-                                <h:outputText value="#{ag.montoViabilidad}"/>
+                            <p:column headerText="MONT. VIAB." style="text-align: center;width: 10%" sortBy="#{ag.montoViabilidad}" filterBy="#{ag.montoViabilidad}" filterMatchMode="contains">
+                                <h:outputText value="#{ag.montoViabilidad}">
+                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                </h:outputText>
                             </p:column>
-                            <p:column headerText="FECHA VIABILIDAD" style="text-align: center">
+                            <p:column headerText="FECH. VIAB." style="text-align: center;width: 10%" sortBy="#{ag.fechaViabilidad}" filterBy="#{ag.fechaViabilidad}" filterMatchMode="contains">
                                 <h:outputText value="#{ag.fechaViabilidad}"/>
                             </p:column>
                             <f:facet name="footer">
