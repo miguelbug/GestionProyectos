@@ -88,7 +88,7 @@ public class LoginBean implements Serializable {
 
     public void getPathRol() {
         if (usu != null) {
-            if (usu.getTipoNombre().equals("REGISTRADOR")) {
+            if (usu.getTipoNombre().equals("REGISTRADOR") || usu.getTipoNombre().equals("ADMINISTRADOR")) {
                 direccion = "menu_registrador.xhtml";
             }
             if (usu.getTipoNombre().equals("CONSULTOR")) {

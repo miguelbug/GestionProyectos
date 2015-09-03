@@ -11,9 +11,21 @@
         <result property="estado" column="ESTADO"/>
         <result property="tipoNombre" column="TIPO_NOMBRE"/>
         <result property="nombreUsuario" column="NOMBRE"/>
-
     </resultMap>
-
+    
+    <resultMap id="listaUsuarios" type="gp.model.listarUsuarios">
+        <result property="idUsuario" column="IDUSU"/>
+        <result property="usuario" column="USUARIO"/>
+        <result property="estado" column="ESTADO"/>
+        <result property="nombre" column="NOMBRE"/>
+        <result property="apellidos" column="APELLIDO"/>
+        <result property="tipoUsuario" column="NOMBRETIPO"/>
+    </resultMap>
+    
+    <resultMap id="idtipousu" type="Integer">
+        <result property="idtipoUsuario" column="IDTIPO"/>
+    </resultMap>
+    
     <select id="getUsuario" resultMap="result" parameterType="java.util.Map" >
         SELECT U.USU_NOMBRE AS USU_NOMBRE,
         U.CLAVE AS CLAVE,
@@ -27,5 +39,33 @@
         AND U.ESTADO='A'
         AND U.ID_TIPOUSUARIO=TU.ID_TIPOUSUARIO
     </select>
+    
+    <select id="lista_usuarios" resultMap="listaUsuarios">
+        SELECT U.ID_USUARIO AS IDUSU,
+        U.USU_NOMBRE AS USUARIO,
+        DECODE(U.ESTADO,'A','ACTIVO','I','INACTIVO') AS ESTADO,
+        U.NOMBRE_PERSONA AS NOMBRE,
+        U.APELLIDOS_PERSONA AS APELLIDO,
+        T.NOMBRE_TIPO AS NOMBRETIPO
 
+        FROM USUARIO U, TIPO_USUARIO T
+        WHERE U.ID_TIPOUSUARIO=T.ID_TIPOUSUARIO
+        ORDER BY U.APELLIDOS_PERSONA DESC
+    </select>
+    
+    <insert id="insert_usu" parameterType="gp.model.Usuario">
+        INSERT INTO USUARIO (USU_NOMBRE,ESTADO,CLAVE,NOMBRE_PERSONA,APELLIDOS_PERSONA,ID_TIPOUSUARIO)
+        VALUES (#{usuario},#{estado},#{clave},#{nombreUsuario},#{apellidos},#{tipoUsuario})
+    </insert>
+    
+    <update id="actualizar_usu" parameterType="gp.model.actualizarUsuario">
+        UPDATE USUARIO SET USU_NOMBRE=#{usu_nombre},ESTADO=#{estado},NOMBRE_PERSONA=#{nombre}, APELLIDOS_PERSONA=#{apellidos}, ID_TIPOUSUARIO=#{idtipo}
+        WHERE ID_USUARIO=#{idusuario}
+    </update>
+
+    <select id="getIdTipoUsuario" resultMap="idtipousu" parameterType="String">
+        SELECT ID_TIPOUSUARIO AS IDTIPO
+        FROM TIPO_USUARIO
+        WHERE NOMBRE_TIPO=#{nombre}
+    </select>
 </mapper>

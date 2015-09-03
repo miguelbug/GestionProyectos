@@ -23,11 +23,12 @@
                     <p:menuitem value="Post Inversión"/>
                     <p:menuitem value="Por Código" action="ProyectoDatos?faces-redirect=true"/>
                 </p:submenu>
-                <p:submenu label="REPORTES" icon="ui-icon-wrench" styleClass="conf">
+                <p:submenu label="REPORTES" icon="ui-icon ui-icon-document" styleClass="conf">
                     <p:menuitem value="Pre Inversión" action="reporte_PreInversion?faces-redirect=true"/>
                     <p:menuitem value="Inversión"/>
                     <p:menuitem value="Post Inversión"/>
                 </p:submenu>
+                <p:menuitem value="GESTIÓN USUARIOS" icon="ui-icon ui-icon-gear" action="gestionUsuario?faces-redirect=true"/>
 
                 <p:submenu label=" #{loginBean.usu.nombreUsuario}" icon="ui-icon-person" style="position:absolute; right:3px;" styleClass="conf">
                     <p:menuitem value ="Salir" action="#{loginBean.logout()}" icon="ui-icon-close" />

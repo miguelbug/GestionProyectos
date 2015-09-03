@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>GESTIÓN USUARIO</title>
+        <link rel="stylesheet" type="text/css" href="resources/css2/estilos.css" />
+    </h:head>
+    <h:body>
+        <ui:composition template="./menucentral.xhtml">
+            <ui:define name="content">
+                <h:form id="form">
+                    <br></br>
+                    <br></br>
+                    <center>
+                        <p:commandButton value="Agregar Usuario" oncomplete="PF('agregUsu').show()" actionListener="#{gestionUsuarios.formatearValores()}"/>
+                        <br></br>
+                        <br></br>
+                        <p:dataTable value="#{gestionUsuarios.listaUsu}" paginator="true" rows="15"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} 
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                                     var="usu" id="listaUsuario" emptyMessage="SIN DATOS PARA MOSTRAR" editable="true" rowKey="#{usu.idUsuario}"
+                                     >
+
+                            <p:ajax event="rowEdit" listener="#{gestionUsuarios.onRowEdit}" update="listaUsuario" />
+                            <p:ajax event="rowEditCancel" listener="#{gestionUsuarios.onRowCancel}" />
+                            
+                            <p:column style="display: none">
+                                <h:outputText value="#{usu.idUsuario}"/>
+                            </p:column>
+                            <p:column headerText="USUARIO" style="text-align: center">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{usu.usuario}"/></f:facet>
+                                    <f:facet name="input"><h:inputText value="#{usu.usuario}"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="NOMBRE" style="text-align: center">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{usu.nombre}"/></f:facet>
+                                    <f:facet name="input"><h:inputText value="#{usu.nombre}"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="APELLIDOS" style="text-align: center">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{usu.apellidos}"/></f:facet>
+                                    <f:facet name="input"><h:inputText value="#{usu.apellidos}"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="ESTADO" style="text-align: center">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{usu.estado}"/></f:facet>
+                                    <f:facet name="input">
+                                        <h:selectOneMenu value="#{usu.estado}">
+                                            <f:selectItems value="#{gestionUsuarios.estado}"/>
+                                        </h:selectOneMenu>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="TIPO USUARIO" style="text-align: center">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{usu.tipoUsuario}"/></f:facet>
+                                    <f:facet name="input">
+                                        <h:selectOneMenu value="#{usu.tipoUsuario}">
+                                            <f:selectItems value="#{gestionUsuarios.tipoUsuario}"/>                                   
+                                        </h:selectOneMenu>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column style="width:32px">
+                                <p:rowEditor />
+                            </p:column>
+                        </p:dataTable>
+                        <p:dialog header="Agregar Usuario" widgetVar="agregUsu" modal="true" showEffect="fade" hideEffect="fade" resizable="false" position="center center" closeOnEscape="true">
+                            <center>
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <p:outputLabel value="Nombre:" />
+                                    <p:inputText value="#{gestionUsuarios.nombre}" style="text-transform: uppercase">
+                                        <p:ajax event="change" listener="#{gestionUsuarios.unirNombre()}" update="nombUsuarioid"/>
+                                    </p:inputText>
+                                    <p:outputLabel value="Apellido Paterno: "/>
+                                    <p:inputText value="#{gestionUsuarios.apellidoPat}" style="text-transform: uppercase">
+                                        <p:ajax event="change" listener="#{gestionUsuarios.unirApellido()}" update="nombUsuarioid"/>
+                                    </p:inputText>
+                                    <p:outputLabel value="Apellido Maternos:"/>
+                                    <p:inputText value="#{gestionUsuarios.apellidoMat}" style="text-transform: uppercase"/>
+                                    <p:outputLabel value="Tipo de Usuario"/>
+                                    <p:selectOneMenu id="tiposUsuario" value="#{gestionUsuarios.tipoUsu}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItem itemLabel="Registrador" itemValue="1"/>
+                                        <f:selectItem itemLabel="Consultor" itemValue="2"/>
+                                        <f:selectItem itemLabel="Administrador" itemValue="3"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Nombre Usuario:"/>
+                                    <p:inputText value="#{gestionUsuarios.nombreUsuario}" id="nombUsuarioid"/>
+                                    <p:outputLabel value="Clave: "/>
+                                    <p:password value="#{gestionUsuarios.claveUsuario}"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <h:panelGrid columns="2">
+                                    <p:commandButton value="Guardar" actionListener="#{gestionUsuarios.guardarUsuario()}" update=":form:listaUsuario">
+                                        <f:ajax event="click" onevent="agregUsu.hide()"/>
+                                    </p:commandButton>
+                                    <p:commandButton value="Cancelar">
+                                        <f:ajax event="click" onevent="agregUsu.hide()"/>
+                                    </p:commandButton>
+                                </h:panelGrid>
+                            </center>
+                        </p:dialog>
+                    </center>
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

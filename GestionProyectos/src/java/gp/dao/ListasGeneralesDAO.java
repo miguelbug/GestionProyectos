@@ -26,5 +26,6 @@ public interface ListasGeneralesDAO {
     public List<MostrarAPG> getProyeco2();
     public void EliminarProyecto(String codigo);
     public List<String> getDependencias(String codigo);
+    public List<String> getTipoUsuario();
     
 }

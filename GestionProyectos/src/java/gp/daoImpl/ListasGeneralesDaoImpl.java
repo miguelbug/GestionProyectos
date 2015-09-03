@@ -212,4 +212,20 @@ public class ListasGeneralesDaoImpl implements ListasGeneralesDAO {
         return list;
     }
 
+    @Override
+    public List<String> getTipoUsuario() {
+        SqlSession session = sqlSessionFactory.openSession();
+        List<String> list = null;
+        try {
+            list = session.selectList("ListasGenerales.getiposUsuarios");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
 }
