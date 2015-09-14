@@ -63,6 +63,7 @@ public class BusquedaInversion {
     private List<String> nuevosmeses;
     private boolean mostrar;
     private MostrarExpedientesTecnicos selectedMET;
+    private boolean mostrar2;
 
     public BusquedaInversion() {
         meses = new ArrayList<String>();
@@ -81,6 +82,7 @@ public class BusquedaInversion {
         det = new ArrayList<DetalleExpTecnico>();
         resoluciones = lgd.getResoluciones();
         ri = new RegistroInversionDaoImpl();
+        mostrar2 = false;
     }
 
     public void buscar() {
@@ -93,7 +95,13 @@ public class BusquedaInversion {
             nombreProy = bid.getNombreProy(codigo);
             meses = bid.getEjecucionMeses(codigo);
             anios = bid.getEjecucionAnios(codigo);
-            if(meses.isEmpty() && anios.isEmpty()){meses.add("Sin Meses");anios.add("Sin Años"); mostrar=true;}else{mostrar=false;}
+            if (meses.isEmpty() && anios.isEmpty()) {
+                meses.add("Sin Meses");
+                anios.add("Sin Años");
+                mostrar = true;
+            } else {
+                mostrar = false;
+            }
             if (met.isEmpty() && !nombreProy.equals("")) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "PROYECTO SIN HISTORIAL DE EJECUCION");
                 RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -123,6 +131,7 @@ public class BusquedaInversion {
                 System.out.println("ENTRA A FECHA");
                 fecha = mej.get(0).getFecha();
                 idproy = String.valueOf(mej.get(0).getIdproy());
+                mostrar2 = true;
             } else {
                 fecha = "";
             }
@@ -144,28 +153,30 @@ public class BusquedaInversion {
         }
         return d;
     }
-    public Double obtenerMonto(Integer idexp){
-        Double montaux=0.0;
-        for(int i=0;i<met.size();i++){
-            if(met.get(i).getIdhistorial()==idexp){
-                montaux=Double.parseDouble(met.get(i).getMonto());
+
+    public Double obtenerMonto(Integer idexp) {
+        Double montaux = 0.0;
+        for (int i = 0; i < met.size(); i++) {
+            if (met.get(i).getIdhistorial() == idexp) {
+                montaux = met.get(i).getMonto();
                 break;
             }
         }
         return montaux;
     }
+
     public void onRowEdit(RowEditEvent event) {
         FacesMessage message = null;
         String documento = "";
-        Double montoaux=0.0,montoaux2=0.0;
-        System.out.println(((MostrarExpedientesTecnicos) event.getObject()).getDocumento() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getFecha() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getMonto() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getRr() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getIdhistorial()+ " "+((MostrarExpedientesTecnicos) event.getObject()).getMontoModificado());
+        Double montoaux = 0.0, montoaux2 = 0.0;
+        System.out.println(((MostrarExpedientesTecnicos) event.getObject()).getDocumento() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getFecha() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getMonto() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getRr() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getIdhistorial() + " " + ((MostrarExpedientesTecnicos) event.getObject()).getMontoModificado());
         documento = ((MostrarExpedientesTecnicos) event.getObject()).getDocumento();
         ExpedienteTecnico exp = new ExpedienteTecnico();
         exp.setFecha(getFecha(((MostrarExpedientesTecnicos) event.getObject()).getFecha()));
         exp.setResolucion(((MostrarExpedientesTecnicos) event.getObject()).getRr());
-        exp.setMonto(Double.parseDouble(((MostrarExpedientesTecnicos) event.getObject()).getMonto()));
+        exp.setMonto(((MostrarExpedientesTecnicos) event.getObject()).getMonto());
         exp.setIdhistorial(((MostrarExpedientesTecnicos) event.getObject()).getIdhistorial());
-        System.out.println("Resultado modificado: "+exp.getMontoModif());
+        System.out.println("Resultado modificado: " + exp.getMontoModif());
         try {
             bid.ActualizarExpedienteTecnico(exp);
             bid.actualizarMontoModif(exp);
@@ -180,33 +191,33 @@ public class BusquedaInversion {
     public void onRowEdit2(RowEditEvent event) {
         System.out.println(((DetalleExpTecnico) event.getObject()).getDocumento() + " " + ((DetalleExpTecnico) event.getObject()).getFecha() + " " + ((DetalleExpTecnico) event.getObject()).getMonto() + " " + ((DetalleExpTecnico) event.getObject()).getResolucion() + " " + ((DetalleExpTecnico) event.getObject()).getIdhistorial() + " " + ((DetalleExpTecnico) event.getObject()).getIdnuevodoc());
         /*DocumentosNuevos d = new DocumentosNuevos();
-        d.setFecha(getFecha(((DetalleExpTecnico) event.getObject()).getFecha()));
-        d.setMonto(Double.parseDouble(((DetalleExpTecnico) event.getObject()).getMonto()));
-        d.setResolucion(((DetalleExpTecnico) event.getObject()).getResolucion());
-        d.setIdhistorial(((DetalleExpTecnico) event.getObject()).getIdhistorial());
-        d.setDocumento(((DetalleExpTecnico) event.getObject()).getDocumento());
-        d.setIdnuevodocu(((DetalleExpTecnico) event.getObject()).getIdnuevodoc());
-        try {
-            if (d.getDocumento().indexOf("CONTRATO") != -1) {
-                String nuevoDocu = d.getDocumento().substring(12, 18);
-                d.setDocumento(nuevoDocu);
-                bid.ActualizarContrato(d);
-            } else {
-                bid.ActualizarDocumentos(d);
-            }
-        } catch (Exception e) {
+         d.setFecha(getFecha(((DetalleExpTecnico) event.getObject()).getFecha()));
+         d.setMonto(Double.parseDouble(((DetalleExpTecnico) event.getObject()).getMonto()));
+         d.setResolucion(((DetalleExpTecnico) event.getObject()).getResolucion());
+         d.setIdhistorial(((DetalleExpTecnico) event.getObject()).getIdhistorial());
+         d.setDocumento(((DetalleExpTecnico) event.getObject()).getDocumento());
+         d.setIdnuevodocu(((DetalleExpTecnico) event.getObject()).getIdnuevodoc());
+         try {
+         if (d.getDocumento().indexOf("CONTRATO") != -1) {
+         String nuevoDocu = d.getDocumento().substring(12, 18);
+         d.setDocumento(nuevoDocu);
+         bid.ActualizarContrato(d);
+         } else {
+         bid.ActualizarDocumentos(d);
+         }
+         } catch (Exception e) {
 
-        }*/
+         }*/
 
     }
 
     public void onRowEdit3(RowEditEvent event) {
-        FacesMessage message = null;
-        System.out.println(((MostrarEjecucion) event.getObject()).getDocumento() + " " + ((MostrarEjecucion) event.getObject()).getMontoPre() + " " + ((MostrarEjecucion) event.getObject()).getMontoEje() + " " + ((MostrarEjecucion) event.getObject()).getRdrror() + " " + ((MostrarEjecucion) event.getObject()).getIdejecucion());
+        /*FacesMessage message = null;
+        System.out.println(" " + ((MostrarEjecucion) event.getObject()).getRdrror() + " " + ((MostrarEjecucion) event.getObject()).getIdejecucion());
         try {
             ActualizarEjecucion save = new ActualizarEjecucion();
-            save.setMontoP(Double.parseDouble(((MostrarEjecucion) event.getObject()).getMontoPre()));
-            save.setMontoE(Double.parseDouble(((MostrarEjecucion) event.getObject()).getMontoEje()));
+            save.setMontoP(((MostrarEjecucion) event.getObject()).getMontoPre());
+            save.setMontoE(((MostrarEjecucion) event.getObject()).getMontoEje());
             save.setTiporor((ri.getIDRoRdR(((MostrarEjecucion) event.getObject()).getRdrror())));
             save.setIdejecu(Integer.valueOf(((MostrarEjecucion) event.getObject()).getIdejecucion()));
             bid.actualizarMontoEjecucion(save);
@@ -218,7 +229,7 @@ public class BusquedaInversion {
             System.out.println(e.getMessage());
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA PODIDO ACTUALIZADO EL MONTO");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
-        }
+        }*/
 
     }
 
@@ -284,14 +295,14 @@ public class BusquedaInversion {
             nuevosanios.add(String.valueOf(i));
         }
     }
-    
-    public void historialExpTecn(){
-        System.out.println("EL CODIGO: "+codigo);
-        if(codigo!=null){
-            met2=bid.getListaExpedientes(codigo,selectedMET.getDocumento());
+
+    public void historialExpTecn() {
+        System.out.println("EL CODIGO: " + codigo);
+        if (codigo != null) {
+            met2 = bid.getListaExpedientes(codigo, selectedMET.getDocumento());
         }
     }
-    
+
     public String getCodigo() {
         return codigo;
     }
@@ -506,6 +517,14 @@ public class BusquedaInversion {
 
     public void setMet2(List<MostrarExpedientesTecnicos> met2) {
         this.met2 = met2;
+    }
+
+    public boolean isMostrar2() {
+        return mostrar2;
+    }
+
+    public void setMostrar2(boolean mostrar2) {
+        this.mostrar2 = mostrar2;
     }
 
 }

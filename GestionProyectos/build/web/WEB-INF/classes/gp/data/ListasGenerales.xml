@@ -42,6 +42,10 @@
         <result property="nombre_tipo" column="NOMBRE"/>
     </resultMap>
     
+    <resultMap id="MAP1" type="Integer">
+        <result property="id_dep" column="CODIGO"/>
+    </resultMap>
+    
     <select id="getExpedientes" resultMap="lista_Exp">
         SELECT TRAM_NUM AS NUMEROTRAMITE FROM vw_ogpl002@DB_LINK_TRAMITE
         WHERE DEPE_COD='1001872'
@@ -110,6 +114,12 @@
     <select id="getiposUsuarios" resultMap="lista_tiposU">
         SELECT NOMBRE_TIPO AS NOMBRE
         FROM TIPO_USUARIO
+    </select>
+    
+    <select id="getIdDependencia" resultMap="MAP1" parameterType="String">
+        SELECT ID_DEP AS CODIGO
+        FROM DEPENDENCIA
+        WHERE NOMBRE_DEP=#{nombre}
     </select>
     
 </mapper>

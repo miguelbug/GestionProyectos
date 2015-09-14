@@ -22,6 +22,7 @@ public class MostrarDesdeDependencias implements Serializable {
     private String nombre;
     private String nivelEstud;
     private Double montoViab;
+    private Double montoTotal;
     
     public MostrarDesdeDependencias() {
     }
@@ -56,6 +57,14 @@ public class MostrarDesdeDependencias implements Serializable {
 
     public void setMontoViab(Double montoViab) {
         this.montoViab = montoViab;
+    }
+
+    public Double getMontoTotal() {
+        return montoTotal;
+    }
+
+    public void setMontoTotal(Double montoTotal) {
+        this.montoTotal = montoTotal;
     }
     
 }

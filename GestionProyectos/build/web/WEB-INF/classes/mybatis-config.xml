@@ -32,5 +32,6 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         <mapper resource="gp/data/ListasGenerales.xml"/>
         <mapper resource="gp/data/Busq_Inversion.xml"/>
         <mapper resource="gp/data/EliminarProyecto.xml"/>
+        <mapper resource="gp/data/Reporte_Inversion.xml"/>
     </mappers>
 </configuration>

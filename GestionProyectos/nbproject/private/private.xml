@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
+        <file>
+            <url>src/java/gp/daoImpl/ReporteInversionDaoImpl.java</url>
+            <bookmark id="2">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+        </file>
         <file>
             <url>src/java/gp/data/Busq_PreInv.xml</url>
             <bookmark id="1">
@@ -12,11 +20,12 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/data/UsuarioData.xml</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/daoImpl/gestionUsuarioDaoImpl.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/web/gestionUsuario.xhtml</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/model/Usuario.java</file>
-            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/bean/gestionUsuarios.java</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/data/Reporte_Inversion.xml</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/web/ProyectoDatos.xhtml</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/web/reporte_por_Codigo.xhtml</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/bean/ReporteInversion.java</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/src/java/gp/daoImpl/ReporteInversionDaoImpl.java</file>
+            <file>file:/C:/Users/OGPL/Documents/GitHub/GPS/GestionProyectos/GestionProyectos/web/reporte_por_Dependencia.xhtml</file>
         </group>
     </open-files>
 </project-private>

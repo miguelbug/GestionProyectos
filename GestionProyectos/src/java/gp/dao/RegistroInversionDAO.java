@@ -26,15 +26,17 @@ public interface RegistroInversionDAO {
     public void guardarNuevoDocumento(NuevosDocumentos dato,Historial h,Integer numerodocu ,String exptecn, Integer tipodocu);
     public void guardarNuevoDocumentoContrato(NuevosDocumentos dato, Historial h,String codigocont,String codigproy, String c);
     public String getIdExpedienteTecn(String proy, String tipo,String numero);
-    public void guardarEjecucion(List<Ejecucion> e);
+    //public void guardarEjecucion(List<Ejecucion> e);
+    public void guardarEjecucion(Ejecucion e);
     public String validarProy(String codigo);
     public List<String> getCoincidencias(String codigo);
     public Integer getIDRoRdR(String nombre);
     public List<String> getListaEtapas(String idproy);
     public Integer getIdProyExpt(String codigo, String etapa);
-    public Integer validarProyecto(String codigo, String etapa);
-    public List<EjecucionMostrado> getMontosEjecutados(String codigo, String id);
-    public void ActualizarMontosEjecutados(List<Ejecucion> ejecu , String idproy);
+    public Integer validarProyecto(String codigo, String etapa, String mes, String anio);
+    public List<EjecucionMostrado> getMontosEjecutados(String codigo, String mes, String anio, String etapa);
+    //public void ActualizarMontosEjecutados(List<Ejecucion> ejecu , String idproy);
+    public void ActualizarMontosEjecutados(Ejecucion ejecu , String idproy);
     public Integer getIdProyExpt2(Integer numero, Integer idproy, Integer etapa);
     public void nuevaInfraestructura(Componentes c);
     public void agregarMontoET(Historial h);
@@ -47,4 +49,5 @@ public interface RegistroInversionDAO {
     public void actualizarEstadoExpTecn(String etapa, String proyecto);
     public Integer getCantidadExpTecn(String proyecto);
     public Componentes getExpediente0(String proyecto);
+    public Integer getNumeroEjecu(String codProy, String anio);
 }

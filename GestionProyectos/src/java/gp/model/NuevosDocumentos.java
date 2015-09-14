@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package gp.model;
 
 import java.io.Serializable;
@@ -17,7 +16,7 @@ import javax.faces.bean.RequestScoped;
  */
 @ManagedBean
 @RequestScoped
-public class NuevosDocumentos implements Serializable{
+public class NuevosDocumentos implements Serializable {
 
     private Double monto;
     private String resolucion;
@@ -28,8 +27,11 @@ public class NuevosDocumentos implements Serializable{
     private String idProy;
     private String codigoContrato;
     private Integer etapa;
-    
-    
+    private String motivo;
+    private Integer numeroEjecu;
+    private String num_docu;
+    private String fechaFormato;
+
     public NuevosDocumentos() {
     }
 
@@ -110,6 +112,36 @@ public class NuevosDocumentos implements Serializable{
         this.etapa = etapa;
     }
 
-    
-    
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    public Integer getNumeroEjecu() {
+        return numeroEjecu;
+    }
+
+    public void setNumeroEjecu(Integer numeroEjecu) {
+        this.numeroEjecu = numeroEjecu;
+    }
+
+    public String getNum_docu() {
+        return num_docu;
+    }
+
+    public void setNum_docu(String num_docu) {
+        this.num_docu = num_docu;
+    }
+
+    public String getFechaFormato() {
+        return fechaFormato;
+    }
+
+    public void setFechaFormato(String fechaFormato) {
+        this.fechaFormato = fechaFormato;
+    }
+
 }

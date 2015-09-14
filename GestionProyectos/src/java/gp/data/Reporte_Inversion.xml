@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="ReporteInversion">
+    
+    <resultMap id="Map1" type="gp.model.RIdatosProyecto">
+        <result property="proyectoCodigo" column="IDPROY"/>
+        <result property="nombreProyecto" column="NOMBREPROY"/>
+        <result property="montoviab" column="MONTOVIAB"/>
+        <result property="montoModif" column="MONTOMODIF"/>
+        <result property="etapa" column="ETAPA"/>
+    </resultMap>
+    
+    <resultMap id="Map2" type="gp.model.MostrarTablaEjecucion">
+        <result property="numerEjecu" column="NUMEJECU"/>
+        <result property="anio" column="ANIO"/>
+        <result property="monto" column="MONTO"/>
+    </resultMap>
+    
+    <resultMap id="Map3" type="gp.model.MostrarTablaEjecucion">
+        <result property="anio" column="ANIO"/>
+        <result property="etapa" column="ETAPA"/>
+        <result property="c1" column="EXP"/>
+        <result property="c2" column="INF"/>
+        <result property="c3" column="EQUI"/>
+        <result property="c4" column="SUPER"/>
+        <result property="c5" column="CAPAC"/>
+        <result property="c6" column="OTROS"/>
+    </resultMap>
+    
+    <resultMap id="Map4" type="String">
+        <result property="anio" column="ANIO"/>
+    </resultMap>
+    
+    <resultMap id="Map5" type="gp.model.NuevosDocumentos">
+        <result property="num_docu" column="NUMERO_DOCU"/>
+        <result property="motivo" column="MOTIVO"/>
+        <result property="monto" column="MONTO"/>
+        <result property="fechaFormato" column="FECHA"/>
+    </resultMap>
+    
+    <resultMap id="Map6" type="gp.model.ExpedienteTecnico">
+        <result property="documento" column="NUMEXP"/>
+        <result property="monto" column="MONTOEXP"/>
+        <result property="montoModif" column="MONTOMODIF"/>
+    </resultMap>
+    
+    <resultMap id="Map7" type="gp.model.MostrarDesdeDependencias">
+        <result property="codigo" column="CODIGO"/>
+        <result property="nombre" column="NOMBRE"/>
+        <result property="montoTotal" column="MONTO"/>
+    </resultMap>
+
+   
+    <select id="getDatosProyEjecu" resultMap="Map1" parameterType="String">
+        SELECT P.ID_PROYECTO AS IDPROY,
+        P.NOMBRE_PROY AS NOMBREPROY,
+        P.MONTO_VIAB AS MONTOVIAB,
+        ET.MONTO_MODIF AS MONTOMODIF,
+        ET.ETAPA AS ETAPA
+        FROM PROYECTO P, PROY_EXPT ET
+        WHERE ET.ID_PROYECTO=P.ID_PROYECTO
+        AND P.ID_PROYECTO=#{codigo}
+        AND ET.ESTADO='2'
+    </select>
+    
+    <select id="getEjecu1" resultMap="Map2" parameterType="java.util.Map">
+        SELECT 'EJECUCION N° '||R.ETAPA AS NUMEJECU,
+        R.ANIO AS ANIO,
+        R.MONTO AS MONTO
+        FROM (  SELECT E.ANIO AS ANIO,
+        PT.ETAPA AS ETAPA,
+        SUM(E.NUM_EJECU+E.INFRAEST_E+E.EQUIPMOBIL_E+E.SUPERV_E+E.CAPACITAC_E+E.OTROS_E) AS MONTO
+        FROM EJECUCION E, PROY_EXPT PT
+        WHERE E.ID_PROYEXPT IN (SELECT ID_PROYEXPT FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo})
+        AND E.ID_PROYEXPT=PT.ID_PROYEXPT
+        GROUP BY E.ANIO, PT.ETAPA
+        ORDER BY E.ANIO ASC   )R
+    </select>
+    
+    <select id="getEjecu2" resultMap="Map3" parameterType="java.util.Map">
+        SELECT R.ANIO AS ANIO,
+        R.ETAPA AS ETAPA,
+        SUM(R.EXP) AS EXP,
+        SUM(R.INF) AS INF,
+        SUM(R.EQUI) AS EQUI,
+        SUM(R.SUPERV) AS SUPER,
+        SUM(R.CAPAC) AS CAPAC,
+        SUM(R.OTROS) AS OTROS
+        
+        FROM (SELECT E.EXPTECN_E AS EXP,
+        E.INFRAEST_E AS INF,
+        E.EQUIPMOBIL_E AS EQUI,
+        E.SUPERV_E AS SUPERV,
+        E.CAPACITAC_E AS CAPAC,
+        E.OTROS_E AS OTROS,
+        PE.ETAPA AS ETAPA,
+        E.ANIO AS ANIO
+        FROM EJECUCION E, PROY_EXPT PE
+        WHERE  E.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND E.ID_PROYEXPT IN (SELECT ID_PROYEXPT FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo})
+        GROUP BY PE.ETAPA,E.EXPTECN_E,E.INFRAEST_E,E.EQUIPMOBIL_E,E.SUPERV_E,E.CAPACITAC_E,E.OTROS_E,E.ANIO
+        ORDER BY PE.ETAPA)R
+        GROUP BY R.ETAPA,R.ANIO
+        ORDER BY R.ETAPA
+    </select>
+
+    <select id="getaniosdedadic" resultMap="Map4" parameterType="String">
+        SELECT TO_CHAR(FECHA,'YYYY') AS ANIO
+        FROM NUEVOS_DOCUMENTOS
+        WHERE ID_PROYEXPT IN (SELECT ID_PROYEXPT FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo})
+        GROUP BY TO_CHAR(FECHA,'YYYY')
+    </select>
+    
+    <select id="getAdicionales" resultMap="Map5" parameterType="java.util.HashMap">
+        SELECT R.NUMDOCU AS NUMERO_DOCU,
+        R.MOTIVO AS MOTIVO,
+        R.MONTO AS MONTO,
+        R.FECHA AS FECHA
+        FROM (SELECT TD.NOMBRE_TIPODOCU||' N° '||ND.NUMERO_DOCU AS NUMDOCU,
+        ND.MOTIVO AS MOTIVO,
+        ND.MONTO AS MONTO,
+        PE.ETAPA AS ETAPA,
+        TO_CHAR(ND.FECHA,'DD/MM/YYYY') AS FECHA
+        FROM TIPOS_DOCUMENTOS TD, NUEVOS_DOCUMENTOS ND, PROY_EXPT PE
+        WHERE ND.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND ND.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND ND.ID_PROYEXPT IN (SELECT ID_PROYEXPT FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo} AND ETAPA=#{etapa})
+        AND TD.ID_TIPOSDOCUS ='2'
+        ORDER BY PE.ETAPA,TD.NOMBRE_TIPODOCU||' N° '||ND.NUMERO_DOCU)R
+    </select>
+    
+    <select id="getDeductivos" resultMap="Map5" parameterType="java.util.HashMap">
+        SELECT R.NUMDOCU AS NUMERO_DOCU,
+        R.MOTIVO AS MOTIVO,
+        R.MONTO AS MONTO,
+        R.FECHA AS FECHA
+        FROM (SELECT TD.NOMBRE_TIPODOCU||' N° '||ND.NUMERO_DOCU AS NUMDOCU,
+        ND.MOTIVO AS MOTIVO,
+        ND.MONTO AS MONTO,
+        PE.ETAPA AS ETAPA,
+        TO_CHAR(ND.FECHA,'DD/MM/YYYY') AS FECHA
+        FROM TIPOS_DOCUMENTOS TD, NUEVOS_DOCUMENTOS ND, PROY_EXPT PE
+        WHERE ND.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND ND.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND ND.ID_PROYEXPT IN (SELECT ID_PROYEXPT FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo} AND ETAPA=#{etapa})
+        AND TD.ID_TIPOSDOCUS ='3'
+        ORDER BY PE.ETAPA,TD.NOMBRE_TIPODOCU||' N° '||ND.NUMERO_DOCU)R
+    </select>
+    
+    <select id="getExpedientes" resultMap="Map6" parameterType="java.util.HashMap">
+        SELECT TD.NOMBRE_TIPODOCU||' N° '||PE.ETAPA AS NUMEXP,
+        PE.INFRAESTRUCTURA as MONTOEXP,
+        PE.MONTO_MODIF AS MONTOMODIF
+        FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
+        WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
+        AND PE.ID_PROYECTO=#{codigo}
+        AND PE.ESTADO='2'
+    </select>
+
+    <select id="getDatosDesdeDepes" resultMap="Map7" parameterType="Integer">
+        SELECT SUM(EJ.EXPTECN_E+EJ.INFRAEST_E+EJ.EQUIPMOBIL_E+EJ.SUPERV_E+EJ.CAPACITAC_E+EJ.OTROS_E) AS MONTO,
+        P.ID_PROYECTO AS CODIGO,
+        P.NOMBRE_PROY AS NOMBRE
+        FROM EJECUCION EJ, PROY_EXPT PE, PROYECTO P
+        WHERE EJ.ID_PROYEXPT=PE.ID_PROYEXPT
+        AND EJ.ID_PROYEXPT IN (SELECT PE.ID_PROYEXPT AS IDPROYEXPT
+        FROM PROY_EXPT PE, PROYECTO P
+        WHERE P.ID_PROYECTO=PE.ID_PROYECTO
+        AND P.ID_DEP=#{codigoDepe})
+        AND P.ID_PROYECTO=PE.ID_PROYECTO
+        GROUP BY P.ID_PROYECTO,P.NOMBRE_PROY
+    </select>
+
+</mapper>

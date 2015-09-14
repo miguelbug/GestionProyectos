@@ -30,11 +30,24 @@
         <result property="idejecucion" column="IDEJECU"/>
         <result property="mes" column="MES"/>
         <result property="anio" column="ANIO"/>
-        <result property="montoPre" column="MONTO_PRELIMINAR"/>
-        <result property="montoEje" column="MONTO_EJECUTADO"/>
-        <result property="documento" column="DOCUMENTO"/>
-        <result property="rdrror" column="RNRRDR"/>
-        <result property="fecha" column="FECHA"/>
+        <result property="c1E" column="EXPE"/>
+        <result property="c2E" column="INFAE"/>
+        <result property="c3E" column="EQUIMOBE"/>
+        <result property="c4E" column="SUPERVE"/>
+        <result property="c5E" column="CAPACE"/>
+        <result property="c6E" column="OTROSE"/>
+        <result property="c1P" column="EXPPRE"/>
+        <result property="c2P" column="INFRAPRE"/>
+        <result property="c3P" column="EQUIMOBPRE"/>
+        <result property="c4P" column="SUPERPRE"/>
+        <result property="c5P" column="CAPAPRE"/>
+        <result property="c6P" column="OTROSPRE"/>
+        <result property="rordr1" column="RO1"/>
+        <result property="rordr2" column="RO2"/>
+        <result property="rordr3" column="RO3"/>
+        <result property="rordr4" column="RO4"/>
+        <result property="rordr5" column="RO5"/>
+        <result property="rordr6" column="RO6"/>
     </resultMap>
     
     <resultMap id="proyecto" type="String">
@@ -143,36 +156,46 @@
     
     <select id="getMesEjecu" parameterType="String" resultMap="MesEjecu">
         SELECT E.MES AS MES
-        FROM EJECUCION E,PROY_EXPT PE, RO_RDR ROR
-        WHERE E.ID_RORDR=ROR.ID_RORDR
-        AND PE.ID_PROYEXPT=E.ID_PROYEXPT
+        FROM EJECUCION E,PROY_EXPT PE
+        WHERE PE.ID_PROYEXPT=E.ID_PROYEXPT
         AND PE.ID_PROYECTO=#{codigo}
         GROUP BY E.MES
     </select>
     
     <select id="getAnioEjecu" parameterType="String" resultMap="AnioEjecu">
         SELECT E.ANIO AS ANIO
-        FROM EJECUCION E, TIPOS_DOCUMENTOS TD, RO_RDR ROR, PROY_EXPT PE
-        WHERE E.ID_RORDR=ROR.ID_RORDR
-        AND PE.ID_PROYEXPT=E.ID_PROYEXPT
+        FROM EJECUCION E, PROY_EXPT PE
+        WHERE PE.ID_PROYEXPT=E.ID_PROYEXPT
         AND PE.ID_PROYECTO=#{codigo}
         GROUP BY E.ANIO
     </select>
     
-    <select id="getEjecucion" resultMap="Ejecucion" parameterType="String">
+    <select id="getEjecucion" resultMap="Ejecucion" parameterType="java.util.Map">
         SELECT E.ID_PROYEXPT AS IDPROY,
         E.ID_EJECUCION AS IDEJECU, 
         E.MES AS MES,
         E.ANIO AS ANIO,
-        E.MONTO2 as MONTO_PRELIMINAR,
-        E.MONTO AS MONTO_EJECUTADO,
-        TD.NOMBRE_TIPODOCU AS DOCUMENTO,
-        ROR.NOMBRE AS RNRRDR,
-        TO_CHAR(E.FECHA,'DD/MM/YYYY') AS FECHA
-        FROM EJECUCION E, TIPOS_DOCUMENTOS TD, RO_RDR ROR, PROY_EXPT PE
-        WHERE E.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
-        AND E.ID_RORDR=ROR.ID_RORDR
-        AND PE.ID_PROYEXPT=E.ID_PROYEXPT
+        TO_CHAR(E.FECHA,'DD/MM/YYYY') AS FECHA,
+        E.EXPTECN_E AS EXPE,
+        E.INFRAEST_E AS INFAE,
+        E.EQUIPMOBIL_E AS EQUIMOBE,
+        E.SUPERV_E AS SUPERVE,
+        E.CAPACITAC_E AS CAPACE,
+        E.OTROS_E AS OTROSE,
+        E.EXPTECN_PRE AS EXPPRE,
+        E.INFRAEST_PRE AS INFRAPRE,
+        E.EQUIPMOBIL_PRE AS EQUIMOBPRE,
+        E.SUPERV_PRE AS SUPERPRE,
+        E.CAPACITAC_PRE AS CAPAPRE,
+        E.OTROS_PRE AS OTROSPRE,
+        E.RORDR1 AS RO1,
+        E.RORDR2 AS RO2,
+        E.RORDR3 AS RO3,
+        E.RORDR4 AS RO4,
+        E.RORDR5 AS RO5,
+        E.RORDR6 AS RO6
+        FROM EJECUCION E,PROY_EXPT PE
+        WHERE PE.ID_PROYEXPT=E.ID_PROYEXPT
         AND PE.ID_PROYECTO=#{codigo}
         AND E.MES=#{mes}
         AND E.ANIO=#{anio}

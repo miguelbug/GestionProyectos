@@ -249,10 +249,14 @@
                                 </p:row>
                             </p:columnGroup>
                             <p:column headerText="MODIFICADO" style="text-align: center">
-                                <h:outputText value="#{variab.nombreMonto}" />
+                                <h:outputText value="#{variab.nombreMonto}" >
+                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                </h:outputText>
                             </p:column>
                             <p:column headerText="MONTO" style="text-align: center" >
-                                <h:outputText value="#{variab.montoviable}" />
+                                <h:outputText value="#{variab.montoviable}" >
+                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                </h:outputText>
                             </p:column>
                             <p:column headerText="FECHA" style="text-align: center">
                                 <h:outputText value="#{variab.fecha}" />
@@ -264,25 +268,38 @@
                         <br></br>
                         <p:dataTable var="historial" value="#{busquedaPreInversion.bqpim}" id="historialComponentesTable">
                             <p:column headerText="FECHA" style="text-align: center" >
-                                <h:outputText value="#{historial.fecha_reg}" />
+                                <h:outputText value="#{historial.fecha_reg}" >
+                                </h:outputText>
                             </p:column>
                             <p:column headerText="EXPEDIENTE TECNICO" style="text-align: center">
-                                <h:outputText value="#{historial.exp_tecn}" />
+                                <h:outputText value="#{historial.exp_tecn}" >
+                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                </h:outputText>
                             </p:column>
                             <p:column headerText="INFRAESTRUCTURA" style="text-align: center">
-                                <h:outputText value="#{historial.infraestructura}" />
+                                <h:outputText value="#{historial.infraestructura}" >
+                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                </h:outputText>
                             </p:column>
                             <p:column headerText="EQUIPAMIENTO Y MOBILIDAD" style="text-align: center">
-                                <h:outputText value="#{historial.equip_mobil}" />
+                                <h:outputText value="#{historial.equip_mobil}" >
+                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                </h:outputText>
                             </p:column>
                             <p:column headerText="SUPERVISION" style="text-align: center">
-                                <h:outputText value="#{historial.supervision}" />
+                                <h:outputText value="#{historial.supervision}" >
+                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                </h:outputText>
                             </p:column>
                             <p:column headerText="CAPACITACION" style="text-align: center">
-                                <h:outputText value="#{historial.capacitacion}" />
+                                <h:outputText value="#{historial.capacitacion}" >
+                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                </h:outputText>
                             </p:column>
                             <p:column headerText="OTROS" style="text-align: center">
-                                <h:outputText value="#{historial.otros}" />
+                                <h:outputText value="#{historial.otros}" >
+                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                </h:outputText>
                             </p:column>
                         </p:dataTable>
                         <br></br>

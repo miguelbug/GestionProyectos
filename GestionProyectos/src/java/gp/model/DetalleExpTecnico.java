@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package gp.model;
 
 import java.io.Serializable;
@@ -20,12 +19,12 @@ public class DetalleExpTecnico implements Serializable {
 
     private String documento;
     private String fecha;
-    private String monto;
+    private Double monto;
     private String resolucion;
     private Integer idhistorial;
     private Integer idnuevodoc;
-    private String montoDocu;
-    
+    private Double montoDocu;
+
     public DetalleExpTecnico() {
     }
 
@@ -45,11 +44,11 @@ public class DetalleExpTecnico implements Serializable {
         this.fecha = fecha;
     }
 
-    public String getMonto() {
+    public Double getMonto() {
         return monto;
     }
 
-    public void setMonto(String monto) {
+    public void setMonto(Double monto) {
         this.monto = monto;
     }
 
@@ -77,12 +76,12 @@ public class DetalleExpTecnico implements Serializable {
         this.idnuevodoc = idnuevodoc;
     }
 
-    public String getMontoDocu() {
+    public Double getMontoDocu() {
         return montoDocu;
     }
 
-    public void setMontoDocu(String montoDocu) {
+    public void setMontoDocu(Double montoDocu) {
         this.montoDocu = montoDocu;
     }
-    
+
 }

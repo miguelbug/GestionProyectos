@@ -228,4 +228,19 @@ public class ListasGeneralesDaoImpl implements ListasGeneralesDAO {
         return list;
     }
 
+    @Override
+    public Integer getIdDepencencia(String nombre) {
+        SqlSession session = sqlSessionFactory.openSession();
+        Integer h = null;
+        try {
+        h = session.selectOne("ListasGenerales.getIdDependencia", nombre);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("ERROR EN EL GET USU");
+        } finally {
+            session.close();
+        }
+        return h;
+    }
+
 }

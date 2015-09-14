@@ -44,18 +44,22 @@ public class RegistroInversion {
     private String fechaaux2;
     private String horaaux;
     private List listaExpedientes;
+    private String etapAux;
+    private String mesaux;
 
     private String monto_adic;
     private Double monto_adicD = null;
     private String resolucion_adic;
     private Date fecha_adic;
     private String fechaaux_adic;
+    private String motivoAdic;
 
     private String monto_deduc;
     private Double monto_deducD = null;
     private String resolucion_deduc;
     private Date fecha_deduc;
     private String fechaaux_deduc;
+    private String motivoDeduc;
 
     private String cod_proy;
     private boolean mostrar;
@@ -135,6 +139,9 @@ public class RegistroInversion {
         }
         nombredocu1 = "1";
         nombredocu2 = "1";
+        etapa = " ";
+        mes = " ";
+        anio = " ";
 
     }
 
@@ -160,52 +167,61 @@ public class RegistroInversion {
 
     }
 
+    public void agregar1() {
+        this.etapAux = etapa;
+    }
+
+    public void agregar2() {
+        this.mesaux = mes;
+    }
+
     public void llenarMontos() {
-        System.out.println("LLENAR MONTOS");
         int i = -1;
-        if (!etapa.equals(" ")) {
-            i = rid.validarProyecto(cod_proy, etapa);
+        if (!etapAux.equals(" ") && !mesaux.equals(" ") && !anio.equals(" ")) {
+            i = rid.validarProyecto(cod_proy, etapAux, mesaux, anio);
             if (i > 0) {
-                System.out.println("VALIDACION: " + i);
+                System.out.println("iterador: " + i);
+                System.out.println("VALIDACION ACTUALIZA: " + i);
                 esta = true;//se actualiza
-                getMontosEjecucion(cod_proy);
+                getMontosEjecucion(cod_proy, mesaux, anio, etapAux);
             } else {
+                System.out.println("iterador: " + i);
                 if (i == 0) {
                     limpiarEjecucion();
-                    System.out.println("VALIDACION: " + i);
+                    System.out.println("VALIDACION INGRESA: " + i);
                     esta = false;//se ingresa nuevos registros
                 }
             }
         }
     }
 
-    public void getMontosEjecucion(String codigo) {
-        List<EjecucionMostrado> lista = rid.getMontosEjecutados(codigo, String.valueOf(rid.getIdProyExpt(cod_proy, etapa)));
+    public void getMontosEjecucion(String codigo, String mesi, String anioi, String etapai) {
+        List<EjecucionMostrado> lista = rid.getMontosEjecutados(codigo, mesi, anioi, etapai);
         System.out.println("Dimension: " + lista.size());
-        if (lista.size() != 0) {
-            this.exp_tecnicoD = Double.parseDouble(lista.get(0).getMonto());
-            exp_tecnicoPre = Double.parseDouble(lista.get(0).getMonto2());
-            this.t1 = lista.get(0).getNombRoRdR();
+        if (!lista.isEmpty()) {
+            this.exp_tecnicoD = (lista.get(0).getC1E());
+            exp_tecnicoPre = (lista.get(0).getC1P());
+            this.t1 = lista.get(0).getRordr1();
 
-            this.infraestructuraD = Double.parseDouble(lista.get(1).getMonto());
-            this.infraestructuraPre = Double.parseDouble(lista.get(1).getMonto2());
-            this.t2 = lista.get(1).getNombRoRdR();
+            this.infraestructuraD = (lista.get(0).getC2E());
+            this.infraestructuraPre = (lista.get(0).getC2P());
+            this.t2 = lista.get(0).getRordr2();
 
-            this.equip_mobiliD = Double.parseDouble(lista.get(2).getMonto());
-            this.equip_mobiliPre = Double.parseDouble(lista.get(2).getMonto2());
-            this.t3 = lista.get(2).getNombRoRdR();
+            this.equip_mobiliD = (lista.get(0).getC3E());
+            this.equip_mobiliPre = (lista.get(0).getC3P());
+            this.t3 = lista.get(0).getRordr3();
 
-            this.supervisionD = Double.parseDouble(lista.get(3).getMonto());
-            this.supervisionPre = Double.parseDouble(lista.get(3).getMonto2());
-            this.t4 = lista.get(3).getNombRoRdR();
+            this.supervisionD = (lista.get(0).getC4E());
+            this.supervisionPre = (lista.get(0).getC4P());
+            this.t4 = lista.get(0).getRordr4();
 
-            this.capacitacionD = Double.parseDouble(lista.get(4).getMonto());
-            this.capacitacionPre = Double.parseDouble(lista.get(4).getMonto2());
-            this.t5 = lista.get(4).getNombRoRdR();
+            this.capacitacionD = (lista.get(0).getC5E());
+            this.capacitacionPre = (lista.get(0).getC5P());
+            this.t5 = lista.get(0).getRordr5();
 
-            this.otrosD = Double.parseDouble(lista.get(5).getMonto());
-            this.otrosPre = Double.parseDouble(lista.get(5).getMonto2());
-            this.t6 = lista.get(5).getNombRoRdR();
+            this.otrosD = (lista.get(0).getC6E());
+            this.otrosPre = (lista.get(0).getC6P());
+            this.t6 = lista.get(0).getRordr6();
 
             this.mes = lista.get(0).getMes();
             this.anio = lista.get(0).getAnio();
@@ -263,29 +279,43 @@ public class RegistroInversion {
         try {
             if (esta == false) {
                 System.out.println("SE GUARDA");
-                List<Ejecucion> ejecu = new ArrayList<Ejecucion>();
-                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), exp_tecnicoD == null ? 0.0 : exp_tecnicoD, 1, rid.getIDRoRdR(t1), date, exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre, rid.getIdProyExpt(cod_proy, etapa)));
-                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), infraestructuraD == null ? 0.0 : infraestructuraD, 5, rid.getIDRoRdR(t2), date, this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre, rid.getIdProyExpt(cod_proy, etapa)));
-                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), equip_mobiliD == null ? 0.0 : equip_mobiliD, 8, rid.getIDRoRdR(t3), date, equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre, rid.getIdProyExpt(cod_proy, etapa)));
-                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), supervisionD == null ? 0.0 : supervisionD, 9, rid.getIDRoRdR(t4), date, supervisionPre == null ? 0.0 : this.supervisionPre, rid.getIdProyExpt(cod_proy, etapa)));
-                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), capacitacionD == null ? 0.0 : capacitacionD, 6, rid.getIDRoRdR(t5), date, capacitacionPre == null ? 0.0 : this.capacitacionPre, rid.getIdProyExpt(cod_proy, etapa)));
-                ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), otrosD == null ? 0.0 : otrosD, 7, rid.getIDRoRdR(t6), date, otrosPre == null ? 0.0 : this.otrosPre, rid.getIdProyExpt(cod_proy, etapa)));
-
+                /*List<Ejecucion> ejecu = new ArrayList<Ejecucion>();
+                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), exp_tecnicoD == null ? 0.0 : exp_tecnicoD, 1, rid.getIDRoRdR(t1), date, exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
+                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), infraestructuraD == null ? 0.0 : infraestructuraD, 5, rid.getIDRoRdR(t2), date, this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
+                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), equip_mobiliD == null ? 0.0 : equip_mobiliD, 8, rid.getIDRoRdR(t3), date, equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
+                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), supervisionD == null ? 0.0 : supervisionD, 9, rid.getIDRoRdR(t4), date, supervisionPre == null ? 0.0 : this.supervisionPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
+                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), capacitacionD == null ? 0.0 : capacitacionD, 6, rid.getIDRoRdR(t5), date, capacitacionPre == null ? 0.0 : this.capacitacionPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
+                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), otrosD == null ? 0.0 : otrosD, 7, rid.getIDRoRdR(t6), date, otrosPre == null ? 0.0 : this.otrosPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
+                 */
+                Ejecucion ejecu = new Ejecucion();
+                ejecu.setMes(mes);ejecu.setAnio(Integer.parseInt(anio));ejecu.setIdProyectoExpt(rid.getIdProyExpt(cod_proy, etapa));ejecu.setNumEjecu(rid.getNumeroEjecu(cod_proy, anio));ejecu.setC1E(exp_tecnicoD == null ? 0.0 : exp_tecnicoD);ejecu.setC2E(infraestructuraD == null ? 0.0 : infraestructuraD);
+                ejecu.setC3E(equip_mobiliD == null ? 0.0 : equip_mobiliD);ejecu.setC4E(supervisionD == null ? 0.0 : supervisionD);ejecu.setC5E(capacitacionD == null ? 0.0 : capacitacionD);
+                ejecu.setC6E(otrosD == null ? 0.0 : otrosD);ejecu.setC1P(exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre);ejecu.setC2P(this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre);
+                ejecu.setC3P(equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre);ejecu.setC4P(supervisionPre == null ? 0.0 : this.supervisionPre);ejecu.setC5P(capacitacionPre == null ? 0.0 : this.capacitacionPre);
+                ejecu.setC6P(otrosPre == null ? 0.0 : this.otrosPre);ejecu.setRordr1(t1);ejecu.setRordr2(t2);ejecu.setRordr3(t3);ejecu.setRordr4(t4);ejecu.setRordr5(t5);ejecu.setRordr6(t6);
+                ejecu.setFecha(date);
                 rid.guardarEjecucion(ejecu);
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS NUEVOS MONTOS");
                 RequestContext.getCurrentInstance().showMessageInDialog(message);
             } else {
                 if (esta == true) {
                     System.out.println("SE ACTUALIZA");
-                    System.out.println(exp_tecnicoPre + " " + infraestructuraPre + " " + equip_mobiliPre + " " + supervisionPre + " " + capacitacionPre + " " + otrosPre);
-                    List<Ejecucion> ejecu = new ArrayList<Ejecucion>();
-                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), exp_tecnicoD == null ? 0.0 : exp_tecnicoD, 1, rid.getIDRoRdR(t1), date, exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre, rid.getIdProyExpt(cod_proy, etapa)));
-                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), infraestructuraD == null ? 0.0 : infraestructuraD, 5, rid.getIDRoRdR(t2), date, this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre, rid.getIdProyExpt(cod_proy, etapa)));
-                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), equip_mobiliD == null ? 0.0 : equip_mobiliD, 8, rid.getIDRoRdR(t3), date, equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre, rid.getIdProyExpt(cod_proy, etapa)));
-                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), supervisionD == null ? 0.0 : supervisionD, 9, rid.getIDRoRdR(t4), date, supervisionPre == null ? 0.0 : this.supervisionPre, rid.getIdProyExpt(cod_proy, etapa)));
-                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), capacitacionD == null ? 0.0 : capacitacionD, 6, rid.getIDRoRdR(t5), date, capacitacionPre == null ? 0.0 : this.capacitacionPre, rid.getIdProyExpt(cod_proy, etapa)));
-                    ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), otrosD == null ? 0.0 : otrosD, 7, rid.getIDRoRdR(t6), date, otrosPre == null ? 0.0 : this.otrosPre, rid.getIdProyExpt(cod_proy, etapa)));
-                    System.out.println(ejecu.get(0).getMonto2() + "  " + ejecu.get(0).getMonto());
+                    /*System.out.println(exp_tecnicoPre + " " + infraestructuraPre + " " + equip_mobiliPre + " " + supervisionPre + " " + capacitacionPre + " " + otrosPre);
+                     List<Ejecucion> ejecu = new ArrayList<Ejecucion>();
+                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), exp_tecnicoD == null ? 0.0 : exp_tecnicoD, 1, rid.getIDRoRdR(t1), date, exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre, rid.getIdProyExpt(cod_proy, etapa)));
+                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), infraestructuraD == null ? 0.0 : infraestructuraD, 5, rid.getIDRoRdR(t2), date, this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre, rid.getIdProyExpt(cod_proy, etapa)));
+                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), equip_mobiliD == null ? 0.0 : equip_mobiliD, 8, rid.getIDRoRdR(t3), date, equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre, rid.getIdProyExpt(cod_proy, etapa)));
+                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), supervisionD == null ? 0.0 : supervisionD, 9, rid.getIDRoRdR(t4), date, supervisionPre == null ? 0.0 : this.supervisionPre, rid.getIdProyExpt(cod_proy, etapa)));
+                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), capacitacionD == null ? 0.0 : capacitacionD, 6, rid.getIDRoRdR(t5), date, capacitacionPre == null ? 0.0 : this.capacitacionPre, rid.getIdProyExpt(cod_proy, etapa)));
+                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), otrosD == null ? 0.0 : otrosD, 7, rid.getIDRoRdR(t6), date, otrosPre == null ? 0.0 : this.otrosPre, rid.getIdProyExpt(cod_proy, etapa)));
+                     */
+                    Ejecucion ejecu = new Ejecucion();
+                    ejecu.setMes(mes);ejecu.setAnio(Integer.parseInt(anio));ejecu.setIdProyectoExpt(rid.getIdProyExpt(cod_proy, etapa));ejecu.setNumEjecu(rid.getNumeroEjecu(cod_proy, anio));
+                    ejecu.setC1E(exp_tecnicoD == null ? 0.0 : exp_tecnicoD);ejecu.setC2E(infraestructuraD == null ? 0.0 : infraestructuraD);ejecu.setC3E(equip_mobiliD == null ? 0.0 : equip_mobiliD);
+                    ejecu.setC4E(supervisionD == null ? 0.0 : supervisionD);ejecu.setC5E(capacitacionD == null ? 0.0 : capacitacionD);ejecu.setC6E(otrosD == null ? 0.0 : otrosD);
+                    ejecu.setC1P(exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre);ejecu.setC2P(this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre);ejecu.setC3P(equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre);
+                    ejecu.setC4P(supervisionPre == null ? 0.0 : this.supervisionPre);ejecu.setC5P(capacitacionPre == null ? 0.0 : this.capacitacionPre);ejecu.setC6P(otrosPre == null ? 0.0 : this.otrosPre);
+                    ejecu.setRordr1(t1);ejecu.setRordr2(t2);ejecu.setRordr3(t3);ejecu.setRordr4(t4);ejecu.setRordr5(t5);ejecu.setRordr6(t6);
                     rid.ActualizarMontosEjecutados(ejecu, String.valueOf(rid.getIdProyExpt(cod_proy, etapa)));
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN ACTUALIZADO LOS MONTOS");
                     RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -463,7 +493,6 @@ public class RegistroInversion {
         try {
             NuevosDocumentos nd = new NuevosDocumentos();
             Componentes c = rid.getMontosPorEtapa(cod_proy, partirCadena(adicional));
-            c.setMontoInfra(c.getMontoInfra() + monto_adicD);
             c.setMontoModif(c.getMontoModif() + monto_adicD);
             c.setNumMonto(c.getNumMonto() + 1);
             System.out.println("nuevo numero monto:" + c.getNumMonto());
@@ -474,6 +503,7 @@ public class RegistroInversion {
             nd.setMonto(monto_adicD);
             nd.setResolucion(resolucion_adic);
             nd.setFecha(getDate(fechaaux_adic));
+            nd.setMotivo(this.motivoAdic.toUpperCase());
             rid.guardarDocumento(nd);
             rid.nuevaInfraestructura(c);
             rid.actualizarEstadoExpTecn(partirCadena(adicional), cod_proy);
@@ -486,10 +516,11 @@ public class RegistroInversion {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA GUARDADO EL ADICIONAL");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         }
-        adicional=" ";
-        monto_adicD= null;
-        resolucion_adic=" ";
-        fechaaux_adic="";
+        adicional = " ";
+        monto_adicD = null;
+        resolucion_adic = " ";
+        fechaaux_adic = "";
+        motivoAdic = "";
     }
 
     public void guardarNuevoDeductivo() {
@@ -499,7 +530,6 @@ public class RegistroInversion {
             NuevosDocumentos nd = new NuevosDocumentos();
             nd.setNumeroDocu(Integer.parseInt(nombredocu2));
             Componentes c = rid.getMontosPorEtapa(cod_proy, partirCadena(deductivo));
-            c.setMontoInfra(c.getMontoInfra() - monto_deducD);
             c.setMontoModif(c.getMontoModif() - monto_deducD);
             c.setNumMonto(c.getNumMonto() + 1);
             nombredocu2aux = nombredocu2;
@@ -508,6 +538,7 @@ public class RegistroInversion {
             nd.setMonto(monto_deducD);
             nd.setResolucion(resolucion_deduc);
             nd.setFecha(getDate(fechaaux_deduc));
+            nd.setMotivo(this.motivoDeduc.toUpperCase());
             rid.guardarDocumento(nd);
             rid.nuevaInfraestructura(c);
             rid.actualizarEstadoExpTecn(partirCadena(deductivo), cod_proy);
@@ -522,7 +553,8 @@ public class RegistroInversion {
         monto_deducD = null;
         resolucion_deduc = " ";
         fechaaux_deduc = "";
-        deductivo=" ";
+        deductivo = " ";
+        motivoDeduc = "";
     }
 
     public void guardarNuevoContrato() {
@@ -534,7 +566,7 @@ public class RegistroInversion {
             nd.setMonto(monto_contratoD);
             nd.setFecha(getDate(fecha_contrato));
             nd.setTipodocu(4);
-            System.out.println("Expediente tecnico: "+nd.getExptecn());
+            System.out.println("Expediente tecnico: " + nd.getExptecn());
             rid.guardarContrato(nd);
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE  HA GUARDADO EL CONTRATO: " + nombredocu3);
             RequestContext.getCurrentInstance().showMessageInDialog(message);
@@ -545,7 +577,7 @@ public class RegistroInversion {
         nombredocu3 = "";
         monto_contratoD = null;
         fecha_contrato = "";
-        contrato=" ";
+        contrato = " ";
     }
 
     public Date getDate(String fecha) {
@@ -1243,4 +1275,35 @@ public class RegistroInversion {
         this.expAgreg = expAgreg;
     }
 
+    public String getMotivoAdic() {
+        return motivoAdic;
+    }
+
+    public void setMotivoAdic(String motivoAdic) {
+        this.motivoAdic = motivoAdic;
+    }
+
+    public String getMotivoDeduc() {
+        return motivoDeduc;
+    }
+
+    public void setMotivoDeduc(String motivoDeduc) {
+        this.motivoDeduc = motivoDeduc;
+    }
+
+    public String getEtapAux() {
+        return etapAux;
+    }
+
+    public void setEtapAux(String etapAux) {
+        this.etapAux = etapAux;
+    }
+
+    public String getMesaux() {
+        return mesaux;
+    }
+
+    public void setMesaux(String mesaux) {
+        this.mesaux = mesaux;
+    }
 }

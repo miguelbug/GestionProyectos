@@ -11,7 +11,7 @@
     <h:body style="background-color: #CCCCFF;">
         <p:graphicImage url="/image/banner3.jpg" width="100%"/>
         <h:form id="f2">            
-            <p:menubar>
+            <p:menubar autoDisplay="false">
                 <p:submenu label="REGISTRO" icon="ui-icon-pencil">
                     <p:menuitem value="Pre Inversión" action="reg_preInversion?faces-redirect=true"/>
                     <p:menuitem value="Inversión" action="reg_Inversion?faces-redirect=true"/>
@@ -25,7 +25,10 @@
                 </p:submenu>
                 <p:submenu label="REPORTES" icon="ui-icon ui-icon-document" styleClass="conf">
                     <p:menuitem value="Pre Inversión" action="reporte_PreInversion?faces-redirect=true"/>
-                    <p:menuitem value="Inversión"/>
+                    <p:submenu label="Inversión" styleClass="conf">
+                        <p:menuitem value="Por Código" action="reporte_por_Codigo?faces-redirect=true"/>
+                        <p:menuitem value="Por Dependencia o Facultad" action="reporte_por_Dependencia?faces-redirect=true"/>
+                    </p:submenu>
                     <p:menuitem value="Post Inversión"/>
                 </p:submenu>
                 <p:menuitem value="GESTIÓN USUARIOS" icon="ui-icon ui-icon-gear" action="gestionUsuario?faces-redirect=true"/>

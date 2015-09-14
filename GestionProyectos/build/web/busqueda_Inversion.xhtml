@@ -42,7 +42,11 @@
                                     </p:column>
                                     <p:column headerText="MONTO" style="width: 10%; text-align: center">
                                         <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{busq.monto}" /></f:facet>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{busq.monto}" >
+                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                </h:outputText>
+                                            </f:facet>
                                             <f:facet name="input">
                                                 <pe:inputNumber value="#{busq.monto}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
                                                     <f:validateDoubleRange minimum="50"/>
@@ -92,7 +96,9 @@
                                             </p:column>
                                             <p:column headerText="MONTO" style="width: 10%; text-align: center">
                                                 <p:cellEditor>
-                                                    <f:facet name="output"><h:outputText value="#{detalle.montoDocu}" /></f:facet>
+                                                    <f:facet name="output"><h:outputText value="#{detalle.montoDocu}" >
+                                                            <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                        </h:outputText></f:facet>
                                                     <f:facet name="input">
                                                         <pe:inputNumber value="#{detalle.montoDocu}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
                                                             <f:validateDoubleRange minimum="50"/>
@@ -102,7 +108,11 @@
                                             </p:column>
                                             <p:column headerText="MONTO EXPEDIENTE" style="width: 10%; text-align: center">
                                                 <p:cellEditor>
-                                                    <f:facet name="output"><h:outputText value="#{detalle.monto}" /></f:facet>
+                                                    <f:facet name="output">
+                                                        <h:outputText value="#{detalle.monto}" >
+                                                            <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                        </h:outputText>
+                                                    </f:facet>
                                                     <f:facet name="input">
                                                         <pe:inputNumber value="#{detalle.monto}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
                                                             <f:validateDoubleRange minimum="50"/>
@@ -141,16 +151,16 @@
                                 <br></br>
                                 <br></br>
                                 <h:panelGrid columns="2" cellspacing="10">
-                                    <p:outputLabel value="Mes:"/>
-                                    <p:selectOneMenu value="#{busquedaInversion.mes}" editable="true" filter="true" filterMatchMode="contains">
-                                        <f:selectItems value="#{busquedaInversion.meses}"/>
-                                    </p:selectOneMenu>
                                     <p:outputLabel value="Año:"/>
                                     <p:selectOneMenu value="#{busquedaInversion.anio}" editable="true" filter="true" filterMatchMode="contains" >
                                         <f:selectItems value="#{busquedaInversion.anios}"/>
                                     </p:selectOneMenu>
+                                    <p:outputLabel value="Mes:"/>
+                                    <p:selectOneMenu value="#{busquedaInversion.mes}" editable="true" filter="true" filterMatchMode="contains">
+                                        <f:selectItems value="#{busquedaInversion.meses}"/>
+                                    </p:selectOneMenu>
                                     <p:outputLabel value="Mostrar Montos: "/>
-                                    <p:commandButton value="Mostrar" actionListener="#{busquedaInversion.llenarMontosEjecucion()}" disabled="#{busquedaInversion.mostrar}" update="fecharegistro,montosEjecucion">
+                                    <p:commandButton value="Mostrar" actionListener="#{busquedaInversion.llenarMontosEjecucion()}" disabled="#{busquedaInversion.mostrar}" update=":form:">
                                     </p:commandButton>
                                     <p:outputLabel value="Fecha Registro:"/>
                                     <p:inputMask mask="99/99/9999" value="#{busquedaInversion.fecha}" id="fecharegistro"/>
@@ -158,16 +168,206 @@
                                     <p:outputLabel value="#{busquedaInversion.idproy}" rendered="false"/>
                                 </h:panelGrid>
                                 <br></br>
-                                <p:dataTable  style="width:70%" value="#{busquedaInversion.mej}" var="ejecu" id="montosEjecucion" emptyMessage="SIN DATOS PARA MOSTRAR" editable="true">
+                                <p:dataTable value="#{busquedaInversion.mej}" var="ejecu" id="montosEjecucion" emptyMessage="SIN DATOS PARA MOSTRAR" editable="true" rendered="#{busquedaInversion.mostrar2}">
                                     <p:ajax event="rowEdit" listener="#{busquedaInversion.onRowEdit3}" />
                                     <p:ajax event="rowEditCancel" listener="#{busquedaInversion.onRowCancel3}"/>
-
-                                    <p:column headerText="DOCUMENTO" style="text-align: center">
+                                    <p:columnGroup type="header">
+                                        <p:row>
+                                            <p:column colspan="12" headerText="EJECUCIÓN MONTOS" />
+                                            <p:column rowspan="3" style="width: 15px"/>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column colspan="2" headerText="EXPEDIENTE TÉCNICO" />
+                                            <p:column colspan="2" headerText="INFRAESTRUCTURA" />
+                                            <p:column colspan="2" headerText="EQUIP. Y MOBIL." />
+                                            <p:column colspan="2" headerText="SUPERVISIÓN" />
+                                            <p:column colspan="2" headerText="CAPACITACIÓN" />
+                                            <p:column colspan="2" headerText="OTROS" />
+                                        </p:row>
+                                        <p:row>
+                                            <p:column headerText="M. EJEC." />
+                                            <p:column headerText="TIPO" />
+                                            <p:column headerText="M. EJEC." />
+                                            <p:column headerText="TIPO" />
+                                            <p:column headerText="M. EJEC." />
+                                            <p:column headerText="TIPO" />
+                                            <p:column headerText="M. EJEC." />
+                                            <p:column headerText="TIPO" />
+                                            <p:column headerText="M. EJEC." />
+                                            <p:column headerText="TIPO" />
+                                            <p:column headerText="M. EJEC." />
+                                            <p:column headerText="TIPO" />
+                                        </p:row>
+                                    </p:columnGroup>
+                                    <p:column style="text-align: center" >
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{ejecu.c1E}"  >
+                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <pe:inputNumber value="#{ejecu.c1E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
+                                                    <f:validateDoubleRange minimum="50"/>
+                                                </pe:inputNumber>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr1}" /></f:facet>
+                                            <f:facet name="input">
+                                                <p:selectOneMenu value="#{ejecu.rordr1}" editable="true" filter="true" filterMatchMode="contains">
+                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
+                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center" >
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{ejecu.c2E}"  >
+                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <pe:inputNumber value="#{ejecu.c2E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
+                                                    <f:validateDoubleRange minimum="50"/>
+                                                </pe:inputNumber>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr2}" /></f:facet>
+                                            <f:facet name="input">
+                                                <p:selectOneMenu value="#{ejecu.rordr2}" editable="true" filter="true" filterMatchMode="contains">
+                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
+                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center" >
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{ejecu.c3E}"  >
+                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <pe:inputNumber value="#{ejecu.c3E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
+                                                    <f:validateDoubleRange minimum="50"/>
+                                                </pe:inputNumber>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr3}" /></f:facet>
+                                            <f:facet name="input">
+                                                <p:selectOneMenu value="#{ejecu.rordr3}" editable="true" filter="true" filterMatchMode="contains">
+                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
+                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center" >
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{ejecu.c4E}"  >
+                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <pe:inputNumber value="#{ejecu.c4E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
+                                                    <f:validateDoubleRange minimum="50"/>
+                                                </pe:inputNumber>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr4}" /></f:facet>
+                                            <f:facet name="input">
+                                                <p:selectOneMenu value="#{ejecu.rordr4}" editable="true" filter="true" filterMatchMode="contains">
+                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
+                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center" >
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{ejecu.c5E}"  >
+                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <pe:inputNumber value="#{ejecu.c5E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
+                                                    <f:validateDoubleRange minimum="50"/>
+                                                </pe:inputNumber>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr5}" /></f:facet>
+                                            <f:facet name="input">
+                                                <p:selectOneMenu value="#{ejecu.rordr5}" editable="true" filter="true" filterMatchMode="contains">
+                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
+                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center" >
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{ejecu.c6E}"  >
+                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                </h:outputText>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <pe:inputNumber value="#{ejecu.c6E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
+                                                    <f:validateDoubleRange minimum="50"/>
+                                                </pe:inputNumber>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column style="text-align: center">
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr6}" /></f:facet>
+                                            <f:facet name="input">
+                                                <p:selectOneMenu value="#{ejecu.rordr6}" editable="true" filter="true" filterMatchMode="contains">
+                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
+                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
+                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="EDICION">
+                                        <p:rowEditor/>
+                                    </p:column>
+                                    <!--<p:column headerText="DOCUMENTO" style="text-align: center">
                                         <h:outputText value="#{ejecu.documento}" />
                                     </p:column>
                                     <p:column headerText="MONTO PRELIMINAR" style="text-align: center" >
                                         <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{ejecu.montoPre}" /></f:facet>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{ejecu.montoPre}"  >
+                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                </h:outputText>
+                                            </f:facet>
                                             <f:facet name="input">
                                                 <pe:inputNumber value="#{ejecu.montoPre}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
                                                     <f:validateDoubleRange minimum="50"/>
@@ -177,7 +377,11 @@
                                     </p:column>
                                     <p:column headerText="MONTO EJECUTADO" style="text-align: center">
                                         <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{ejecu.montoEje}" /></f:facet>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{ejecu.montoEje}"  >
+                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
+                                                </h:outputText>
+                                            </f:facet>
                                             <f:facet name="input">
                                                 <pe:inputNumber value="#{ejecu.montoEje}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
                                                     <f:validateDoubleRange minimum="50"/>
@@ -199,7 +403,7 @@
 
                                     <p:column headerText="EDICION">
                                         <p:rowEditor/>
-                                    </p:column>
+                                    </p:column>-->
                                 </p:dataTable>
                             </center>
                         </p:tab>
@@ -207,25 +411,27 @@
                     <p:dialog header="Detalle Expediente" widgetVar="detalleDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" id="detalleDial" closeOnEscape="true" >
                         <center>
                             <p:outputPanel id="ExpDetail" style="text-align:center; width: 75%">
-                            <p:dataTable value="#{busquedaInversion.met2}" var="ejecu" id="detalleExp" emptyMessage="SIN DATOS PARA MOSTRAR">
-                                <p:column headerText="NÚMERO EXPEDIENTE" style="text-align: center">
-                                    <h:outputText value="#{ejecu.documento}"/>
-                                </p:column>
-                                <p:column headerText="FECHA" style="text-align: center">
-                                    <h:outputText value="#{ejecu.fecha}"/>
-                                </p:column>
-                                <p:column headerText="MONTO" style="text-align: center">
-                                    <h:outputText value="#{ejecu.monto}"/>
-                                </p:column>
-                                <p:column headerText="RESOLUCIÓN" style="text-align: center">
-                                    <h:outputText value="#{ejecu.rr}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </p:outputPanel>
+                                <p:dataTable value="#{busquedaInversion.met2}" var="ejecu" id="detalleExp" emptyMessage="SIN DATOS PARA MOSTRAR">
+                                    <p:column headerText="NÚMERO EXPEDIENTE" style="text-align: center">
+                                        <h:outputText value="#{ejecu.documento}"/>
+                                    </p:column>
+                                    <p:column headerText="FECHA" style="text-align: center">
+                                        <h:outputText value="#{ejecu.fecha}"/>
+                                    </p:column>
+                                    <p:column headerText="MONTO" style="text-align: center">
+                                        <h:outputText value="#{ejecu.monto}">
+                                            <f:convertNumber currencySymbol="s/" type="currency"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="RESOLUCIÓN" style="text-align: center">
+                                        <h:outputText value="#{ejecu.rr}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:outputPanel>
                         </center>
                     </p:dialog>
                 </h:form>
-                
+
             </ui:define>
         </ui:composition>
     </h:body>

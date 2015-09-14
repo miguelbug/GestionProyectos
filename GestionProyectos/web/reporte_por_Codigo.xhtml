@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>REPORTE POR CODIGO</title>
+        <link rel="stylesheet" type="text/css" href="resources/css2/estilos.css" />
+        <script language="JavaScript" src="./resources/js/caducarSesiones.js" type="text/javascript"/>
+    </h:head>
+    <h:body>
+        <ui:composition template="./menucentral.xhtml">
+            <ui:define name="content">
+                <h:form id="form">
+                    <center>
+                        <h:panelGrid cellpadding="3" columns="3">
+                            <p:outputLabel value="SNIP : " styleClass="snip"/>
+                            <p:autoComplete id="autoCompleteLabel2" value="#{reporteInversion.codProy}" completeMethod="#{reporteInversion.coincidencias}"/>
+                            <p:commandButton value="Buscar" icon="ui-icon-search" actionListener="#{reporteInversion.mostrar()}"  update="form:"/>
+                        </h:panelGrid>
+                    </center>
+                    <br></br>
+                    <br></br>
+                    <p:tabView dynamic="true" id="tab" rendered="#{reporteInversion.mostrar}">
+                        <p:tab title="EJECUCION" id="tab1" >
+                            <br></br>
+                            <br></br>
+                            <h:panelGrid columns="2" cellspacing="4" cellpadding="4">
+                                <p:outputLabel value="CÓDIGO: "/>
+                                <p:outputLabel value="#{reporteInversion.codigoProyecto}"/>
+                                <p:outputLabel value="NOMBRE DE PROYECTO: "/>
+                                <p:outputLabel value="#{reporteInversion.nombreProyecto}"/>
+                            </h:panelGrid>
+                            <br></br>
+                            <br></br>
+                            <p:dataTable  style="width:70%" value="#{reporteInversion.listaDatos}" var="ejecu" id="reporteEjecu" emptyMessage="SIN DATOS PARA MOSTRAR">
+                                <p:column headerText="N° ETAPA" style="text-align: center">
+                                    <h:outputText value="#{ejecu.etapa}"  />
+                                </p:column>
+                                <p:column headerText="MONTO VIABLE" style="text-align: center">
+                                    <h:outputText value="#{ejecu.montoviab}"  >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="MONTO MODIFICADO" style="text-align: center">
+                                    <h:outputText value="#{ejecu.montoModif}"  >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                            <br></br>
+                            <br></br>
+                            <p:outputLabel value="EJECUCIÓN POR AÑO: "/>
+                            <br></br>
+                            <br></br>
+                            <p:dataTable style="width:90%" value="#{reporteInversion.listaTabEjec}" id="tabla1" emptyMessage="SIN DATOS PARA MOSTRAR" var="lista">
+                                <p:column headerText="N° EJECUCION" style="text-align: center" >
+                                    <h:outputText value="#{lista.numerEjecu}" />
+                                </p:column>
+                                <p:column headerText="ANIO" style="text-align: center" >
+                                    <h:outputText value="#{lista.anio}" />
+                                </p:column>
+                                <p:column headerText="MONTO" style="text-align: center" footerText="S/ #{reporteInversion.sumaEjecucion1()}" >
+                                    <h:outputText value="#{lista.monto}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                            <br></br>
+                            <br></br>
+                            <p:outputLabel value="EJECUCIÓN POR COMPONENTE: "/>
+                            <br></br>
+                            <br></br>
+                            <p:dataTable value="#{reporteInversion.listaTabEjec2}" id="tabla2" emptyMessage="SIN DATOS PARA MOSTRAR" var="lista"
+                                         rows="6" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+                                <p:column headerText="AÑO" style="text-align: center" >
+                                    <h:outputText value="#{lista.anio}" />
+                                </p:column>
+                                <p:column headerText="ETAPA" style="text-align: center" >
+                                    <h:outputText value="#{lista.etapa}" />
+                                </p:column>
+                                <p:column headerText="EXPEDIENTE TÉCNICO" style="text-align: center">
+                                    <h:outputText value="#{lista.c1}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="INFRAESTRUCTURA" style="text-align: center" >
+                                    <h:outputText value="#{lista.c2}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="EQUIPAMIENTO Y MOBILI." style="text-align: center"  >
+                                    <h:outputText value="#{lista.c3}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="SUPERVISIÓN" style="text-align: center" >
+                                    <h:outputText value="#{lista.c4}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="CAPACITACIÓN" style="text-align: center">
+                                    <h:outputText value="#{lista.c5}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="OTROS" style="text-align: center" >
+                                    <h:outputText value="#{lista.c6}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                        <p:tab title="DEDUCTIVO/ADICIONAL" id="tab2">
+                            <br></br>
+                            <br></br>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Seleccione Etapa: "/>
+                                <p:selectOneMenu value="#{reporteInversion.etapa}">
+                                    <f:selectItem itemLabel="Seleccione" itemValue=""/>
+                                    <f:selectItems value="#{reporteInversion.listaetapas}"/>
+                                    <p:ajax event="change" listener="#{reporteInversion.mostrar2()}" update="tab"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <br></br>
+                            <p:outputLabel value="ADICIONALES: " style="text-align: left"/>
+                            <br></br>
+                            <br></br>
+                            <p:dataTable style="width:90%" value="#{reporteInversion.listaDA2}" var="l2" id="tablaDA2" emptyMessage="SIN DATOS PARA MOSTRAR">
+                                <p:column headerText="N° DE DEDUCTIVO" style="text-align: center" >
+                                    <h:outputText value="#{l2.num_docu}" />
+                                </p:column>
+                                <p:column headerText="MOTIVO" style="text-align: center" >
+                                    <h:outputText value="#{l2.motivo}" />
+                                </p:column>
+                                <p:column headerText="MONTO" style="text-align: center" >
+                                    <h:outputText value="#{l2.monto}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="FECHA" style="text-align: center" >
+                                    <h:outputText value="#{l2.fechaFormato}"/>
+                                </p:column>
+                            </p:dataTable>
+                            <br></br>
+                            <br></br>
+                            <p:outputLabel value="DEDUCTIVOS: " style="text-align: left"/>
+                            <br></br>
+                            <br></br>
+                            <p:dataTable style="width:90%" value="#{reporteInversion.listaDA1}" var="l1" id="tablaDA1" emptyMessage="SIN DATOS PARA MOSTRAR">
+                                <p:column headerText="N° DE DEDUCTIVO" style="text-align: center" >
+                                    <h:outputText value="#{l1.num_docu}" />
+                                </p:column>
+                                <p:column headerText="MOTIVO" style="text-align: center" >
+                                    <h:outputText value="#{l1.motivo}" />
+                                </p:column>
+                                <p:column headerText="MONTO" style="text-align: center" >
+                                    <h:outputText value="#{l1.monto}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="FECHA" style="text-align: center" >
+                                    <h:outputText value="#{l1.fechaFormato}" />
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                        <p:tab title="EXPEDIENTES TÉCNICOS" id="tab3">
+                            <br></br>
+                            <p:dataTable style="width:90%" value="#{reporteInversion.listaExpedientes}" var="l3" id="tablaDA3" emptyMessage="SIN DATOS PARA MOSTRAR">
+                                <p:column headerText="N° DE EXPEDIENTE" style="text-align: center" >
+                                    <h:outputText value="#{l3.documento}" />
+                                </p:column>
+                                <p:column headerText="MONTO DEL EXPEDIENTE" style="text-align: center" >
+                                    <h:outputText value="#{l3.monto}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="MONTO MODIFICADO" style="text-align: center" >
+                                    <h:outputText value="#{l3.montoModif}" >
+                                        <f:convertNumber currencySymbol="s/" type="currency"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                    </p:tabView>
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

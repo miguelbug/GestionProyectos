@@ -117,17 +117,19 @@
                                     <p:selectOneMenu value="#{registroInversion.etapa}">
                                         <f:selectItem itemLabel="Seleccione" itemValue=" "/>
                                         <f:selectItems value="#{registroInversion.etapas}"/>
-                                        <p:ajax event="change" listener="#{registroInversion.llenarMontos()}" update="regPreInComp,mes,anio"/>
+                                        <p:ajax event="change" listener="#{registroInversion.agregar1()}"/>
                                     </p:selectOneMenu>
                                     <p:outputLabel value="Mes" styleClass="snip"/>
                                     <p:selectOneMenu value="#{registroInversion.mes}" filter="true" filterMatchMode="contains" id="mes">
                                         <f:selectItem itemLabel="Seleccione" itemValue=" "/>
                                         <f:selectItems value="#{registroInversion.lista_mes}"/>
+                                        <p:ajax event="change" listener="#{registroInversion.agregar2()}"/>
                                     </p:selectOneMenu>
                                     <p:outputLabel value="Año" styleClass="snip"/>
                                     <p:selectOneMenu value="#{registroInversion.anio}" filter="true" filterMatchMode="contains" id="anio">
                                         <f:selectItem itemLabel="Seleccione" itemValue=" "/>
                                         <f:selectItems value="#{registroInversion.lista_anio}"/>
+                                        <p:ajax event="change" listener="#{registroInversion.llenarMontos()}" update="regPreInComp"/>
                                     </p:selectOneMenu>
                                 </h:panelGrid>
                                 <br></br>
@@ -240,6 +242,8 @@
                                     <pe:inputNumber value="#{registroInversion.monto_adicD}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
+                                    <p:outputLabel value="Motivo: " styleClass="snip"/>
+                                    <p:inputTextarea rows="6" cols="30" value="#{registroInversion.motivoAdic}" style="text-transform: uppercase"/>
                                     <p:outputLabel value="R.R." styleClass="snip"/>
                                     <p:selectOneMenu value="#{registroInversion.resolucion_adic}" editable="true" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
                                         <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
@@ -271,6 +275,8 @@
                                     <pe:inputNumber value="#{registroInversion.monto_deducD}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="empty" style="text-align: right">  
                                         <f:validateDoubleRange minimum="50"/>
                                     </pe:inputNumber>
+                                    <p:outputLabel value="Motivo: " styleClass="snip"/>
+                                    <p:inputTextarea rows="6" cols="30" value="#{registroInversion.motivoDeduc}" style="text-transform: uppercase"/>
                                     <p:outputLabel value="R.R." styleClass="snip"/>
                                     <p:selectOneMenu value="#{registroInversion.resolucion_deduc}" editable="true" filter="true" filterMatchMode="contains" styleClass="adicSO" disabled="#{registroPreInversion.estado2}">
                                         <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>

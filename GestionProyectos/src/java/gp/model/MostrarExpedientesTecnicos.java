@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package gp.model;
 
 import java.io.Serializable;
@@ -16,15 +15,15 @@ import javax.faces.bean.RequestScoped;
  */
 @ManagedBean
 @RequestScoped
-public class MostrarExpedientesTecnicos implements Serializable{
+public class MostrarExpedientesTecnicos implements Serializable {
 
     private Integer idhistorial;
     private String documento;
-    private String monto;
+    private Double monto;
     private String rr;
     private String fecha;
     private String montoModificado;
-    
+
     public MostrarExpedientesTecnicos() {
     }
 
@@ -35,7 +34,7 @@ public class MostrarExpedientesTecnicos implements Serializable{
     public void setDocumento(String documento) {
         this.documento = documento;
     }
-    
+
     public String getRr() {
         return rr;
     }
@@ -60,11 +59,11 @@ public class MostrarExpedientesTecnicos implements Serializable{
         this.idhistorial = idhistorial;
     }
 
-    public String getMonto() {
+    public Double getMonto() {
         return monto;
     }
 
-    public void setMonto(String monto) {
+    public void setMonto(Double monto) {
         this.monto = monto;
     }
 
@@ -75,5 +74,5 @@ public class MostrarExpedientesTecnicos implements Serializable{
     public void setMontoModificado(String montoModificado) {
         this.montoModificado = montoModificado;
     }
-    
+
 }
