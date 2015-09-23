@@ -34,6 +34,7 @@ import org.primefaces.event.TabChangeEvent;
 @ViewScoped
 public class RegistroInversion {
 
+    private Integer idEjecucion;
     private String monto;
     private Double montoD = null;
     private Double montoD2 = null;
@@ -199,6 +200,8 @@ public class RegistroInversion {
         List<EjecucionMostrado> lista = rid.getMontosEjecutados(codigo, mesi, anioi, etapai);
         System.out.println("Dimension: " + lista.size());
         if (!lista.isEmpty()) {
+            this.idEjecucion = lista.get(0).getIdEjecucion();
+            System.out.println("ID ejecu: "+idEjecucion);
             this.exp_tecnicoD = (lista.get(0).getC1E());
             exp_tecnicoPre = (lista.get(0).getC1P());
             this.t1 = lista.get(0).getRordr1();
@@ -279,20 +282,29 @@ public class RegistroInversion {
         try {
             if (esta == false) {
                 System.out.println("SE GUARDA");
-                /*List<Ejecucion> ejecu = new ArrayList<Ejecucion>();
-                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), exp_tecnicoD == null ? 0.0 : exp_tecnicoD, 1, rid.getIDRoRdR(t1), date, exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
-                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), infraestructuraD == null ? 0.0 : infraestructuraD, 5, rid.getIDRoRdR(t2), date, this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
-                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), equip_mobiliD == null ? 0.0 : equip_mobiliD, 8, rid.getIDRoRdR(t3), date, equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
-                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), supervisionD == null ? 0.0 : supervisionD, 9, rid.getIDRoRdR(t4), date, supervisionPre == null ? 0.0 : this.supervisionPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
-                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), capacitacionD == null ? 0.0 : capacitacionD, 6, rid.getIDRoRdR(t5), date, capacitacionPre == null ? 0.0 : this.capacitacionPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
-                 ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), otrosD == null ? 0.0 : otrosD, 7, rid.getIDRoRdR(t6), date, otrosPre == null ? 0.0 : this.otrosPre, rid.getIdProyExpt(cod_proy, etapa), rid.getNumeroEjecu(cod_proy, anio)));
-                 */
                 Ejecucion ejecu = new Ejecucion();
-                ejecu.setMes(mes);ejecu.setAnio(Integer.parseInt(anio));ejecu.setIdProyectoExpt(rid.getIdProyExpt(cod_proy, etapa));ejecu.setNumEjecu(rid.getNumeroEjecu(cod_proy, anio));ejecu.setC1E(exp_tecnicoD == null ? 0.0 : exp_tecnicoD);ejecu.setC2E(infraestructuraD == null ? 0.0 : infraestructuraD);
-                ejecu.setC3E(equip_mobiliD == null ? 0.0 : equip_mobiliD);ejecu.setC4E(supervisionD == null ? 0.0 : supervisionD);ejecu.setC5E(capacitacionD == null ? 0.0 : capacitacionD);
-                ejecu.setC6E(otrosD == null ? 0.0 : otrosD);ejecu.setC1P(exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre);ejecu.setC2P(this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre);
-                ejecu.setC3P(equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre);ejecu.setC4P(supervisionPre == null ? 0.0 : this.supervisionPre);ejecu.setC5P(capacitacionPre == null ? 0.0 : this.capacitacionPre);
-                ejecu.setC6P(otrosPre == null ? 0.0 : this.otrosPre);ejecu.setRordr1(t1);ejecu.setRordr2(t2);ejecu.setRordr3(t3);ejecu.setRordr4(t4);ejecu.setRordr5(t5);ejecu.setRordr6(t6);
+                ejecu.setMes(mes);
+                ejecu.setAnio(Integer.parseInt(anio));
+                ejecu.setIdProyectoExpt(rid.getIdProyExpt(cod_proy, etapa));
+                ejecu.setNumEjecu(rid.getNumeroEjecu(cod_proy, anio));
+                ejecu.setC1E(exp_tecnicoD == null ? 0.0 : exp_tecnicoD);
+                ejecu.setC2E(infraestructuraD == null ? 0.0 : infraestructuraD);
+                ejecu.setC3E(equip_mobiliD == null ? 0.0 : equip_mobiliD);
+                ejecu.setC4E(supervisionD == null ? 0.0 : supervisionD);
+                ejecu.setC5E(capacitacionD == null ? 0.0 : capacitacionD);
+                ejecu.setC6E(otrosD == null ? 0.0 : otrosD);
+                ejecu.setC1P(exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre);
+                ejecu.setC2P(this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre);
+                ejecu.setC3P(equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre);
+                ejecu.setC4P(supervisionPre == null ? 0.0 : this.supervisionPre);
+                ejecu.setC5P(capacitacionPre == null ? 0.0 : this.capacitacionPre);
+                ejecu.setC6P(otrosPre == null ? 0.0 : this.otrosPre);
+                ejecu.setRordr1(t1);
+                ejecu.setRordr2(t2);
+                ejecu.setRordr3(t3);
+                ejecu.setRordr4(t4);
+                ejecu.setRordr5(t5);
+                ejecu.setRordr6(t6);
                 ejecu.setFecha(date);
                 rid.guardarEjecucion(ejecu);
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS NUEVOS MONTOS");
@@ -300,23 +312,31 @@ public class RegistroInversion {
             } else {
                 if (esta == true) {
                     System.out.println("SE ACTUALIZA");
-                    /*System.out.println(exp_tecnicoPre + " " + infraestructuraPre + " " + equip_mobiliPre + " " + supervisionPre + " " + capacitacionPre + " " + otrosPre);
-                     List<Ejecucion> ejecu = new ArrayList<Ejecucion>();
-                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), exp_tecnicoD == null ? 0.0 : exp_tecnicoD, 1, rid.getIDRoRdR(t1), date, exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre, rid.getIdProyExpt(cod_proy, etapa)));
-                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), infraestructuraD == null ? 0.0 : infraestructuraD, 5, rid.getIDRoRdR(t2), date, this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre, rid.getIdProyExpt(cod_proy, etapa)));
-                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), equip_mobiliD == null ? 0.0 : equip_mobiliD, 8, rid.getIDRoRdR(t3), date, equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre, rid.getIdProyExpt(cod_proy, etapa)));
-                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), supervisionD == null ? 0.0 : supervisionD, 9, rid.getIDRoRdR(t4), date, supervisionPre == null ? 0.0 : this.supervisionPre, rid.getIdProyExpt(cod_proy, etapa)));
-                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), capacitacionD == null ? 0.0 : capacitacionD, 6, rid.getIDRoRdR(t5), date, capacitacionPre == null ? 0.0 : this.capacitacionPre, rid.getIdProyExpt(cod_proy, etapa)));
-                     ejecu.add(new Ejecucion(mes, Integer.parseInt(anio), otrosD == null ? 0.0 : otrosD, 7, rid.getIDRoRdR(t6), date, otrosPre == null ? 0.0 : this.otrosPre, rid.getIdProyExpt(cod_proy, etapa)));
-                     */
                     Ejecucion ejecu = new Ejecucion();
-                    ejecu.setMes(mes);ejecu.setAnio(Integer.parseInt(anio));ejecu.setIdProyectoExpt(rid.getIdProyExpt(cod_proy, etapa));ejecu.setNumEjecu(rid.getNumeroEjecu(cod_proy, anio));
-                    ejecu.setC1E(exp_tecnicoD == null ? 0.0 : exp_tecnicoD);ejecu.setC2E(infraestructuraD == null ? 0.0 : infraestructuraD);ejecu.setC3E(equip_mobiliD == null ? 0.0 : equip_mobiliD);
-                    ejecu.setC4E(supervisionD == null ? 0.0 : supervisionD);ejecu.setC5E(capacitacionD == null ? 0.0 : capacitacionD);ejecu.setC6E(otrosD == null ? 0.0 : otrosD);
-                    ejecu.setC1P(exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre);ejecu.setC2P(this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre);ejecu.setC3P(equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre);
-                    ejecu.setC4P(supervisionPre == null ? 0.0 : this.supervisionPre);ejecu.setC5P(capacitacionPre == null ? 0.0 : this.capacitacionPre);ejecu.setC6P(otrosPre == null ? 0.0 : this.otrosPre);
-                    ejecu.setRordr1(t1);ejecu.setRordr2(t2);ejecu.setRordr3(t3);ejecu.setRordr4(t4);ejecu.setRordr5(t5);ejecu.setRordr6(t6);
-                    rid.ActualizarMontosEjecutados(ejecu, String.valueOf(rid.getIdProyExpt(cod_proy, etapa)));
+                    ejecu.setMes(mes);
+                    ejecu.setAnio(Integer.parseInt(anio));
+                    //ejecu.setIdProyectoExpt(rid.getIdProyExpt(cod_proy, etapa));
+                    ejecu.setIdEjecucion(idEjecucion);
+                    ejecu.setNumEjecu(rid.getNumeroEjecu(cod_proy, anio));
+                    ejecu.setC1E(exp_tecnicoD == null ? 0.0 : exp_tecnicoD);
+                    ejecu.setC2E(infraestructuraD == null ? 0.0 : infraestructuraD);
+                    ejecu.setC3E(equip_mobiliD == null ? 0.0 : equip_mobiliD);
+                    ejecu.setC4E(supervisionD == null ? 0.0 : supervisionD);
+                    ejecu.setC5E(capacitacionD == null ? 0.0 : capacitacionD);
+                    ejecu.setC6E(otrosD == null ? 0.0 : otrosD);
+                    ejecu.setC1P(exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre);
+                    ejecu.setC2P(this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre);
+                    ejecu.setC3P(equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre);
+                    ejecu.setC4P(supervisionPre == null ? 0.0 : this.supervisionPre);
+                    ejecu.setC5P(capacitacionPre == null ? 0.0 : this.capacitacionPre);
+                    ejecu.setC6P(otrosPre == null ? 0.0 : this.otrosPre);
+                    ejecu.setRordr1(t1);
+                    ejecu.setRordr2(t2);
+                    ejecu.setRordr3(t3);
+                    ejecu.setRordr4(t4);
+                    ejecu.setRordr5(t5);
+                    ejecu.setRordr6(t6);
+                    rid.ActualizarMontosEjecutados(ejecu);
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN ACTUALIZADO LOS MONTOS");
                     RequestContext.getCurrentInstance().showMessageInDialog(message);
                 }
@@ -1306,4 +1326,13 @@ public class RegistroInversion {
     public void setMesaux(String mesaux) {
         this.mesaux = mesaux;
     }
+
+    public Integer getIdEjecucion() {
+        return idEjecucion;
+    }
+
+    public void setIdEjecucion(Integer idEjecucion) {
+        this.idEjecucion = idEjecucion;
+    }
+
 }

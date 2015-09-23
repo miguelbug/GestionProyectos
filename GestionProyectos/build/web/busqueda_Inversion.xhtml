@@ -151,16 +151,23 @@
                                 <br></br>
                                 <br></br>
                                 <h:panelGrid columns="2" cellspacing="10">
+                                    <p:outputLabel value="Etapa: "/>
+                                    <p:selectOneMenu value="#{busquedaInversion.etapa}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaInversion.etapas}"/>
+                                    </p:selectOneMenu>
                                     <p:outputLabel value="Año:"/>
-                                    <p:selectOneMenu value="#{busquedaInversion.anio}" editable="true" filter="true" filterMatchMode="contains" >
+                                    <p:selectOneMenu value="#{busquedaInversion.anio}" filter="true" filterMatchMode="contains" >
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
                                         <f:selectItems value="#{busquedaInversion.anios}"/>
                                     </p:selectOneMenu>
                                     <p:outputLabel value="Mes:"/>
-                                    <p:selectOneMenu value="#{busquedaInversion.mes}" editable="true" filter="true" filterMatchMode="contains">
+                                    <p:selectOneMenu value="#{busquedaInversion.mes}" filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
                                         <f:selectItems value="#{busquedaInversion.meses}"/>
                                     </p:selectOneMenu>
                                     <p:outputLabel value="Mostrar Montos: "/>
-                                    <p:commandButton value="Mostrar" actionListener="#{busquedaInversion.llenarMontosEjecucion()}" disabled="#{busquedaInversion.mostrar}" update=":form:">
+                                    <p:commandButton value="Mostrar" actionListener="#{busquedaInversion.llenarMontos()}" update=":form:">
                                     </p:commandButton>
                                     <p:outputLabel value="Fecha Registro:"/>
                                     <p:inputMask mask="99/99/9999" value="#{busquedaInversion.fecha}" id="fecharegistro"/>
@@ -168,243 +175,94 @@
                                     <p:outputLabel value="#{busquedaInversion.idproy}" rendered="false"/>
                                 </h:panelGrid>
                                 <br></br>
-                                <p:dataTable value="#{busquedaInversion.mej}" var="ejecu" id="montosEjecucion" emptyMessage="SIN DATOS PARA MOSTRAR" editable="true" rendered="#{busquedaInversion.mostrar2}">
-                                    <p:ajax event="rowEdit" listener="#{busquedaInversion.onRowEdit3}" />
-                                    <p:ajax event="rowEditCancel" listener="#{busquedaInversion.onRowCancel3}"/>
-                                    <p:columnGroup type="header">
-                                        <p:row>
-                                            <p:column colspan="12" headerText="EJECUCIÓN MONTOS" />
-                                            <p:column rowspan="3" style="width: 15px"/>
-                                        </p:row>
-                                        <p:row>
-                                            <p:column colspan="2" headerText="EXPEDIENTE TÉCNICO" />
-                                            <p:column colspan="2" headerText="INFRAESTRUCTURA" />
-                                            <p:column colspan="2" headerText="EQUIP. Y MOBIL." />
-                                            <p:column colspan="2" headerText="SUPERVISIÓN" />
-                                            <p:column colspan="2" headerText="CAPACITACIÓN" />
-                                            <p:column colspan="2" headerText="OTROS" />
-                                        </p:row>
-                                        <p:row>
-                                            <p:column headerText="M. EJEC." />
-                                            <p:column headerText="TIPO" />
-                                            <p:column headerText="M. EJEC." />
-                                            <p:column headerText="TIPO" />
-                                            <p:column headerText="M. EJEC." />
-                                            <p:column headerText="TIPO" />
-                                            <p:column headerText="M. EJEC." />
-                                            <p:column headerText="TIPO" />
-                                            <p:column headerText="M. EJEC." />
-                                            <p:column headerText="TIPO" />
-                                            <p:column headerText="M. EJEC." />
-                                            <p:column headerText="TIPO" />
-                                        </p:row>
-                                    </p:columnGroup>
-                                    <p:column style="text-align: center" >
-                                        <p:cellEditor>
-                                            <f:facet name="output">
-                                                <h:outputText value="#{ejecu.c1E}"  >
-                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
-                                                </h:outputText>
-                                            </f:facet>
-                                            <f:facet name="input">
-                                                <pe:inputNumber value="#{ejecu.c1E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
-                                                    <f:validateDoubleRange minimum="50"/>
-                                                </pe:inputNumber>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr1}" /></f:facet>
-                                            <f:facet name="input">
-                                                <p:selectOneMenu value="#{ejecu.rordr1}" editable="true" filter="true" filterMatchMode="contains">
-                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
-                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
-                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
-                                                </p:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center" >
-                                        <p:cellEditor>
-                                            <f:facet name="output">
-                                                <h:outputText value="#{ejecu.c2E}"  >
-                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
-                                                </h:outputText>
-                                            </f:facet>
-                                            <f:facet name="input">
-                                                <pe:inputNumber value="#{ejecu.c2E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
-                                                    <f:validateDoubleRange minimum="50"/>
-                                                </pe:inputNumber>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr2}" /></f:facet>
-                                            <f:facet name="input">
-                                                <p:selectOneMenu value="#{ejecu.rordr2}" editable="true" filter="true" filterMatchMode="contains">
-                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
-                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
-                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
-                                                </p:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center" >
-                                        <p:cellEditor>
-                                            <f:facet name="output">
-                                                <h:outputText value="#{ejecu.c3E}"  >
-                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
-                                                </h:outputText>
-                                            </f:facet>
-                                            <f:facet name="input">
-                                                <pe:inputNumber value="#{ejecu.c3E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
-                                                    <f:validateDoubleRange minimum="50"/>
-                                                </pe:inputNumber>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr3}" /></f:facet>
-                                            <f:facet name="input">
-                                                <p:selectOneMenu value="#{ejecu.rordr3}" editable="true" filter="true" filterMatchMode="contains">
-                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
-                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
-                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
-                                                </p:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center" >
-                                        <p:cellEditor>
-                                            <f:facet name="output">
-                                                <h:outputText value="#{ejecu.c4E}"  >
-                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
-                                                </h:outputText>
-                                            </f:facet>
-                                            <f:facet name="input">
-                                                <pe:inputNumber value="#{ejecu.c4E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
-                                                    <f:validateDoubleRange minimum="50"/>
-                                                </pe:inputNumber>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr4}" /></f:facet>
-                                            <f:facet name="input">
-                                                <p:selectOneMenu value="#{ejecu.rordr4}" editable="true" filter="true" filterMatchMode="contains">
-                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
-                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
-                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
-                                                </p:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center" >
-                                        <p:cellEditor>
-                                            <f:facet name="output">
-                                                <h:outputText value="#{ejecu.c5E}"  >
-                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
-                                                </h:outputText>
-                                            </f:facet>
-                                            <f:facet name="input">
-                                                <pe:inputNumber value="#{ejecu.c5E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
-                                                    <f:validateDoubleRange minimum="50"/>
-                                                </pe:inputNumber>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr5}" /></f:facet>
-                                            <f:facet name="input">
-                                                <p:selectOneMenu value="#{ejecu.rordr5}" editable="true" filter="true" filterMatchMode="contains">
-                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
-                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
-                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
-                                                </p:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center" >
-                                        <p:cellEditor>
-                                            <f:facet name="output">
-                                                <h:outputText value="#{ejecu.c6E}"  >
-                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
-                                                </h:outputText>
-                                            </f:facet>
-                                            <f:facet name="input">
-                                                <pe:inputNumber value="#{ejecu.c6E}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
-                                                    <f:validateDoubleRange minimum="50"/>
-                                                </pe:inputNumber>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column style="text-align: center">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{ejecu.rordr6}" /></f:facet>
-                                            <f:facet name="input">
-                                                <p:selectOneMenu value="#{ejecu.rordr6}" editable="true" filter="true" filterMatchMode="contains">
-                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
-                                                    <f:selectItem itemLabel="RO" itemValue="RO"/>
-                                                    <f:selectItem itemLabel="RDR" itemValue="RDR"/>
-                                                </p:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column headerText="EDICION">
-                                        <p:rowEditor/>
-                                    </p:column>
-                                    <!--<p:column headerText="DOCUMENTO" style="text-align: center">
-                                        <h:outputText value="#{ejecu.documento}" />
-                                    </p:column>
-                                    <p:column headerText="MONTO PRELIMINAR" style="text-align: center" >
-                                        <p:cellEditor>
-                                            <f:facet name="output">
-                                                <h:outputText value="#{ejecu.montoPre}"  >
-                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
-                                                </h:outputText>
-                                            </f:facet>
-                                            <f:facet name="input">
-                                                <pe:inputNumber value="#{ejecu.montoPre}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
-                                                    <f:validateDoubleRange minimum="50"/>
-                                                </pe:inputNumber>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column headerText="MONTO EJECUTADO" style="text-align: center">
-                                        <p:cellEditor>
-                                            <f:facet name="output">
-                                                <h:outputText value="#{ejecu.montoEje}"  >
-                                                    <f:convertNumber currencySymbol="s/" type="currency"/>
-                                                </h:outputText>
-                                            </f:facet>
-                                            <f:facet name="input">
-                                                <pe:inputNumber value="#{ejecu.montoEje}" thousandSeparator="," decimalSeparator="." required="false" emptyValue="zero" style="text-align: right">  
-                                                    <f:validateDoubleRange minimum="50"/>
-                                                </pe:inputNumber>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
-                                    <p:column headerText="TIPO" style="text-align: center">
-                                        <p:cellEditor>
-                                            <f:facet name="output"><h:outputText value="#{ejecu.rdrror}" /></f:facet>
-                                            <f:facet name="input">
-                                                <p:selectOneMenu value="#{ejecu.rdrror}" editable="true" filter="true" filterMatchMode="contains">
-                                                    <f:selectItem itemLabel="Seleccione RR" itemValue=" "/>
-                                                    <f:selectItems value="#{busquedaInversion.resoluciones}"/>
-                                                </p:selectOneMenu>
-                                            </f:facet>
-                                        </p:cellEditor>
-                                    </p:column>
+                                <h:panelGrid columns="4" id="regPreInComp2" cellpadding="6">
+                                    <p:outputLabel value=""/>
+                                    <p:outputLabel value="Monto Preliminar" />
+                                    <p:outputLabel value="Monto Ejecutado" />
+                                    <p:outputLabel value=""/>
 
-                                    <p:column headerText="EDICION">
-                                        <p:rowEditor/>
-                                    </p:column>-->
-                                </p:dataTable>
+                                    <p:outputLabel value="Exp. Técnico: S/." />
+                                    <pe:inputNumber value="#{busquedaInversion.exp_tecnicoPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <pe:inputNumber value="#{busquedaInversion.exp_tecnicoD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{busquedaInversion.t1}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Infraestructura: S/." />
+                                    <pe:inputNumber value="#{busquedaInversion.infraestructuraPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <pe:inputNumber value="#{busquedaInversion.infraestructuraD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{busquedaInversion.t2}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Equipamiento y Mobiliario: S/."/>
+                                    <pe:inputNumber value="#{busquedaInversion.equip_mobiliPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <pe:inputNumber value="#{busquedaInversion.equip_mobiliD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{busquedaInversion.t3}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Supervisión: S/."/>
+                                    <pe:inputNumber value="#{busquedaInversion.supervisionPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <pe:inputNumber value="#{busquedaInversion.supervisionD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{busquedaInversion.t4}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Capacitación: S/." />
+                                    <pe:inputNumber value="#{busquedaInversion.capacitacionPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <pe:inputNumber value="#{busquedaInversion.capacitacionD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{busquedaInversion.t5}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Otros: S/."/>
+                                    <pe:inputNumber value="#{busquedaInversion.otrosPre}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <pe:inputNumber value="#{busquedaInversion.otrosD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:selectOneMenu value="#{busquedaInversion.t6}">
+                                        <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                        <f:selectItems value="#{busquedaInversion.lista_T}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value=""/>
+                                    <p:outputLabel value="Total: S/."/>
+                                    <pe:inputNumber value="#{busquedaInversion.totalD}" thousandSeparator="," decimalSeparator="." emptyValue="empty" required="false" style="text-align: right" disabled="true">  
+                                        <f:validateDoubleRange minimum="50"/>
+                                    </pe:inputNumber>
+                                    <p:outputLabel value=""/>
+                                </h:panelGrid><br></br>
+                                <h:panelGrid>
+                                    <p:commandButton value="Actualizar" actionListener="#{busquedaInversion.registroEjecucion()}" icon="ui-icon-check" update="regPreInComp2"/>
+                                </h:panelGrid>
+                               
                             </center>
                         </p:tab>
                     </p:tabView>

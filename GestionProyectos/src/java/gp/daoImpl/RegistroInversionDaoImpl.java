@@ -189,7 +189,7 @@ public class RegistroInversionDaoImpl implements RegistroInversionDAO {
     }
 
     @Override
-    public void ActualizarMontosEjecutados(Ejecucion ejecu, String idproyexpt) {
+    public void ActualizarMontosEjecutados(Ejecucion ejecu) {
         SqlSession session = sqlSessionFactory.openSession();
         try {
             /*for (int i = 0; i < ejecu.size(); i++) {

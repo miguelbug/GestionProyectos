@@ -5,7 +5,6 @@
  */
 package gp.model;
 
-import java.util.Date;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -16,7 +15,8 @@ import javax.faces.bean.RequestScoped;
 @ManagedBean
 @RequestScoped
 public class EjecucionMostrado {
-
+    
+    private Integer idEjecucion;
     private String mes;
     private String anio;
     private String monto;
@@ -244,6 +244,14 @@ public class EjecucionMostrado {
 
     public void setRordr6(String rordr6) {
         this.rordr6 = rordr6;
+    }
+
+    public Integer getIdEjecucion() {
+        return idEjecucion;
+    }
+
+    public void setIdEjecucion(Integer idEjecucion) {
+        this.idEjecucion = idEjecucion;
     }
 
 }

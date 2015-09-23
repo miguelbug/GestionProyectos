@@ -34,9 +34,10 @@
     </resultMap>
     
     <resultMap id="resultado7" type="gp.model.EjecucionMostrado">
+        <result property="idEjecucion" column="IDEJECUCION"/>
         <result property="mes" column="MES"/>
         <result property="anio" column="ANIO"/>
-        <result property="anio" column="ANIO"/>
+        <result property="fecha" column="FECHA"/>
         <result property="c1E" column="EXPE"/>
         <result property="c2E" column="INFAE"/>
         <result property="c3E" column="EQUIMOBE"/>
@@ -55,7 +56,6 @@
         <result property="rordr4" column="RO4"/>
         <result property="rordr5" column="RO5"/>
         <result property="rordr6" column="RO6"/>
-
     </resultMap>
     
     <resultMap id="resultado8" type="gp.model.Componentes">
@@ -223,7 +223,7 @@
         OTROS_E=#{c6E},
         EXPTECN_PRE=#{c1P},INFRAEST_PRE=#{c2P},EQUIPMOBIL_PRE=#{c3P},SUPERV_PRE=#{c4P},CAPACITAC_PRE=#{c5P},OTROS_PRE=#{c6P},
         RORDR1=#{rordr1},RORDR2=#{rordr2},RORDR3=#{rordr3},RORDR4=#{rordr4},RORDR5=#{rordr5},RORDR6=#{rordr6}
-        WHERE ID_PROYEXPT = #{idProyectoExpt}
+        WHERE ID_EJECUCION=#{idEjecucion}
     </update>
     
     <select id="validarProy" resultMap="resultado2" parameterType="String">
@@ -277,7 +277,9 @@
     </select>
     
     <select id="getMontosEjecutados" resultMap="resultado7" parameterType="java.util.HashMap">
-        SELECT  E.MES AS MES, 
+        SELECT  E.ID_EJECUCION AS IDEJECUCION,
+        E.MES AS MES, 
+        TO_CHAR(E.FECHA,'DD/MM/YYYY') AS FECHA,
         E.ANIO AS ANIO,
         E.EXPTECN_E AS EXPE,
         E.INFRAEST_E AS INFAE,

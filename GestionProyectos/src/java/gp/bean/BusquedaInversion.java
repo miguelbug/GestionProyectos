@@ -13,6 +13,8 @@ import gp.daoImpl.ListasGeneralesDaoImpl;
 import gp.daoImpl.RegistroInversionDaoImpl;
 import gp.model.ActualizarEjecucion;
 import gp.model.DetalleExpTecnico;
+import gp.model.Ejecucion;
+import gp.model.EjecucionMostrado;
 import gp.model.ExpedienteTecnico;
 import gp.model.MostrarEjecucion;
 import gp.model.MostrarExpedientesTecnicos;
@@ -34,7 +36,8 @@ import org.primefaces.event.ToggleEvent;
 @ManagedBean
 @ViewScoped
 public class BusquedaInversion {
-
+    
+    private Integer idEjecu;
     private String codigo;
     private boolean estado;
     private String nombreProy;
@@ -64,8 +67,33 @@ public class BusquedaInversion {
     private boolean mostrar;
     private MostrarExpedientesTecnicos selectedMET;
     private boolean mostrar2;
+    //para busqueda ejecucion
+    private Double exp_tecnicoD = null;
+    private Double exp_tecnicoPre = null;
+    private Double infraestructuraD = null;
+    private Double infraestructuraPre = null;
+    private Double equip_mobiliD = null;
+    private Double equip_mobiliPre = null;
+    private Double supervisionD = null;
+    private Double supervisionPre = null;
+    private Double capacitacionD = null;
+    private Double capacitacionPre = null;
+    private Double otrosD = null;
+    private Double otrosPre = null;
+    private List lista_T;
+    private String t1;
+    private String t2;
+    private String t3;
+    private String t4;
+    private String t5;
+    private String t6;
+    private Double totalD = null;
+    private List<String> etapas;
+    private String etapa;
+    private boolean esta;
 
     public BusquedaInversion() {
+        etapas = new ArrayList<String>();
         meses = new ArrayList<String>();
         anios = new ArrayList<String>();
         nuevosanios = new ArrayList<String>();
@@ -83,6 +111,8 @@ public class BusquedaInversion {
         resoluciones = lgd.getResoluciones();
         ri = new RegistroInversionDaoImpl();
         mostrar2 = false;
+        lista_T = new ArrayList<String>();
+
     }
 
     public void buscar() {
@@ -91,10 +121,15 @@ public class BusquedaInversion {
             met.clear();
             meses.clear();
             anios.clear();
+            etapas.clear();
             met = bid.getListaExpedientesTecnicos(codigo);
             nombreProy = bid.getNombreProy(codigo);
             meses = bid.getEjecucionMeses(codigo);
             anios = bid.getEjecucionAnios(codigo);
+            etapas = rid.getListaEtapas(codigo);
+            lista_T.clear();
+            lista_T.add("RO");
+            lista_T.add("RDR");
             if (meses.isEmpty() && anios.isEmpty()) {
                 meses.add("Sin Meses");
                 anios.add("Sin Años");
@@ -112,6 +147,7 @@ public class BusquedaInversion {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println(e.getMessage());
             System.out.println("mal");
             System.out.println("NO REGISTRADO");
@@ -123,11 +159,146 @@ public class BusquedaInversion {
 
     }
 
-    public void llenarMontosEjecucion() {
-        mej.clear();
+    public void llenarMontos() {
+        int i = -1;
+        if (!etapa.equals(" ") && !mes.equals(" ") && !anio.equals(" ")) {
+            i = rid.validarProyecto(codigo, etapa, mes, anio);
+            if (i > 0) {
+                System.out.println("iterador: " + i);
+                System.out.println("VALIDACION ACTUALIZA: " + i);
+                esta = true;//se actualiza
+                getMontosEjecucion(codigo, mes, anio, etapa);
+            } else {
+                System.out.println("iterador: " + i);
+                if (i == 0) {
+                    limpiarEjecucion();
+                    System.out.println("VALIDACION INGRESA: " + i);
+                    esta = false;//se ingresa nuevos registros
+                }
+            }
+        }
+    }
+
+    public void getMontosEjecucion(String codigo, String mesi, String anioi, String etapai) {
+        List<EjecucionMostrado> lista = rid.getMontosEjecutados(codigo, mesi, anioi, etapai);
+        System.out.println("Dimension: " + lista.size());
+        if (!lista.isEmpty()) {
+            this.idEjecu = lista.get(0).getIdEjecucion();
+            this.exp_tecnicoD = (lista.get(0).getC1E());
+            exp_tecnicoPre = (lista.get(0).getC1P());
+            this.t1 = lista.get(0).getRordr1();
+            this.infraestructuraD = (lista.get(0).getC2E());
+            this.infraestructuraPre = (lista.get(0).getC2P());
+            this.t2 = lista.get(0).getRordr2();
+            this.equip_mobiliD = (lista.get(0).getC3E());
+            this.equip_mobiliPre = (lista.get(0).getC3P());
+            this.t3 = lista.get(0).getRordr3();
+            this.supervisionD = (lista.get(0).getC4E());
+            this.supervisionPre = (lista.get(0).getC4P());
+            this.t4 = lista.get(0).getRordr4();
+            this.capacitacionD = (lista.get(0).getC5E());
+            this.capacitacionPre = (lista.get(0).getC5P());
+            this.t5 = lista.get(0).getRordr5();
+            this.otrosD = (lista.get(0).getC6E());
+            this.otrosPre = (lista.get(0).getC6P());
+            this.t6 = lista.get(0).getRordr6();
+            this.fecha = (lista.get(0).getFecha());
+            this.totalD = exp_tecnicoD + infraestructuraD + equip_mobiliD + supervisionD + capacitacionD + otrosD;
+        } else {
+            limpiarEjecucion();
+        }
+    }
+
+    public void registroEjecucion() {
+        FacesMessage message = null;
+        Date date = new Date();
         try {
-            mej = bid.getEjecucionMontos(codigo, mes, anio);
-            if (!mej.isEmpty()) {
+
+            if (esta == true) {
+                System.out.println("SE ACTUALIZA");
+                Ejecucion ejecu = new Ejecucion();
+                ejecu.setMes(mes);
+                ejecu.setAnio(Integer.parseInt(anio));
+                ejecu.setIdEjecucion(idEjecu);
+                ejecu.setNumEjecu(rid.getNumeroEjecu(codigo, anio));
+                ejecu.setC1E(exp_tecnicoD == null ? 0.0 : exp_tecnicoD);
+                ejecu.setC2E(infraestructuraD == null ? 0.0 : infraestructuraD);
+                ejecu.setC3E(equip_mobiliD == null ? 0.0 : equip_mobiliD);
+                ejecu.setC4E(supervisionD == null ? 0.0 : supervisionD);
+                ejecu.setC5E(capacitacionD == null ? 0.0 : capacitacionD);
+                ejecu.setC6E(otrosD == null ? 0.0 : otrosD);
+                ejecu.setC1P(exp_tecnicoPre == null ? 0.0 : this.exp_tecnicoPre);
+                ejecu.setC2P(this.infraestructuraPre == null ? 0.0 : this.infraestructuraPre);
+                ejecu.setC3P(equip_mobiliPre == null ? 0.0 : this.equip_mobiliPre);
+                ejecu.setC4P(supervisionPre == null ? 0.0 : this.supervisionPre);
+                ejecu.setC5P(capacitacionPre == null ? 0.0 : this.capacitacionPre);
+                ejecu.setC6P(otrosPre == null ? 0.0 : this.otrosPre);
+                ejecu.setRordr1(t1);
+                ejecu.setRordr2(t2);
+                ejecu.setRordr3(t3);
+                ejecu.setRordr4(t4);
+                ejecu.setRordr5(t5);
+                ejecu.setRordr6(t6);
+                rid.ActualizarMontosEjecutados(ejecu);
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN ACTUALIZADO LOS MONTOS");
+                RequestContext.getCurrentInstance().showMessageInDialog(message);
+
+            }
+            limpiarEjecucion();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NUEVOS COMPONENTES NO GUARDADOS");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
+        }
+    }
+
+    public void limpiarEjecucion() {
+        exp_tecnicoD = null;
+        infraestructuraD = null;
+        equip_mobiliD = null;
+        supervisionD = null;
+        capacitacionD = null;
+        otrosD = null;
+        exp_tecnicoPre = null;
+        infraestructuraPre = null;
+        equip_mobiliPre = null;
+        supervisionPre = null;
+        capacitacionPre = null;
+        otrosPre = null;
+        t1 = " ";
+        t2 = " ";
+        t3 = " ";
+        t4 = " ";
+        t5 = " ";
+        t6 = " ";
+        etapa = " ";
+        mes = " ";
+        anio = " ";
+    }
+
+    public void llenarMontosEjecucion() {
+        /*
+         int i = -1;
+         if (!etapAux.equals(" ") && !mesaux.equals(" ") && !anio.equals(" ")) {
+         i = rid.validarProyecto(cod_proy, etapAux, mesaux, anio);
+         if (i > 0) {
+         System.out.println("iterador: " + i);
+         System.out.println("VALIDACION ACTUALIZA: " + i);
+         esta = true;//se actualiza
+         getMontosEjecucion(cod_proy, mesaux, anio, etapAux);
+         } else {
+         System.out.println("iterador: " + i);
+         if (i == 0) {
+         limpiarEjecucion();
+         System.out.println("VALIDACION INGRESA: " + i);
+         esta = false;//se ingresa nuevos registros
+         }
+         }
+         }
+         */
+        try {
+            int i = -1;
+            if (!anio.equals(" ") && !mes.equals(" ")) {
                 System.out.println("ENTRA A FECHA");
                 fecha = mej.get(0).getFecha();
                 idproy = String.valueOf(mej.get(0).getIdproy());
@@ -213,23 +384,23 @@ public class BusquedaInversion {
 
     public void onRowEdit3(RowEditEvent event) {
         /*FacesMessage message = null;
-        System.out.println(" " + ((MostrarEjecucion) event.getObject()).getRdrror() + " " + ((MostrarEjecucion) event.getObject()).getIdejecucion());
-        try {
-            ActualizarEjecucion save = new ActualizarEjecucion();
-            save.setMontoP(((MostrarEjecucion) event.getObject()).getMontoPre());
-            save.setMontoE(((MostrarEjecucion) event.getObject()).getMontoEje());
-            save.setTiporor((ri.getIDRoRdR(((MostrarEjecucion) event.getObject()).getRdrror())));
-            save.setIdejecu(Integer.valueOf(((MostrarEjecucion) event.getObject()).getIdejecucion()));
-            bid.actualizarMontoEjecucion(save);
-            mej.clear();
-            mej = bid.getEjecucionMontos(codigo, mes, anio);
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "AVISO", "SE HA ACTUALIZADO EL MONTO");
-            RequestContext.getCurrentInstance().showMessageInDialog(message);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA PODIDO ACTUALIZADO EL MONTO");
-            RequestContext.getCurrentInstance().showMessageInDialog(message);
-        }*/
+         System.out.println(" " + ((MostrarEjecucion) event.getObject()).getRdrror() + " " + ((MostrarEjecucion) event.getObject()).getIdejecucion());
+         try {
+         ActualizarEjecucion save = new ActualizarEjecucion();
+         save.setMontoP(((MostrarEjecucion) event.getObject()).getMontoPre());
+         save.setMontoE(((MostrarEjecucion) event.getObject()).getMontoEje());
+         save.setTiporor((ri.getIDRoRdR(((MostrarEjecucion) event.getObject()).getRdrror())));
+         save.setIdejecu(Integer.valueOf(((MostrarEjecucion) event.getObject()).getIdejecucion()));
+         bid.actualizarMontoEjecucion(save);
+         mej.clear();
+         mej = bid.getEjecucionMontos(codigo, mes, anio);
+         message = new FacesMessage(FacesMessage.SEVERITY_INFO, "AVISO", "SE HA ACTUALIZADO EL MONTO");
+         RequestContext.getCurrentInstance().showMessageInDialog(message);
+         } catch (Exception e) {
+         System.out.println(e.getMessage());
+         message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "NO SE HA PODIDO ACTUALIZADO EL MONTO");
+         RequestContext.getCurrentInstance().showMessageInDialog(message);
+         }*/
 
     }
 
@@ -525,6 +696,198 @@ public class BusquedaInversion {
 
     public void setMostrar2(boolean mostrar2) {
         this.mostrar2 = mostrar2;
+    }
+
+    public Double getExp_tecnicoD() {
+        return exp_tecnicoD;
+    }
+
+    public void setExp_tecnicoD(Double exp_tecnicoD) {
+        this.exp_tecnicoD = exp_tecnicoD;
+    }
+
+    public Double getExp_tecnicoPre() {
+        return exp_tecnicoPre;
+    }
+
+    public void setExp_tecnicoPre(Double exp_tecnicoPre) {
+        this.exp_tecnicoPre = exp_tecnicoPre;
+    }
+
+    public Double getInfraestructuraD() {
+        return infraestructuraD;
+    }
+
+    public void setInfraestructuraD(Double infraestructuraD) {
+        this.infraestructuraD = infraestructuraD;
+    }
+
+    public Double getInfraestructuraPre() {
+        return infraestructuraPre;
+    }
+
+    public void setInfraestructuraPre(Double infraestructuraPre) {
+        this.infraestructuraPre = infraestructuraPre;
+    }
+
+    public Double getEquip_mobiliD() {
+        return equip_mobiliD;
+    }
+
+    public void setEquip_mobiliD(Double equip_mobiliD) {
+        this.equip_mobiliD = equip_mobiliD;
+    }
+
+    public Double getEquip_mobiliPre() {
+        return equip_mobiliPre;
+    }
+
+    public void setEquip_mobiliPre(Double equip_mobiliPre) {
+        this.equip_mobiliPre = equip_mobiliPre;
+    }
+
+    public Double getSupervisionD() {
+        return supervisionD;
+    }
+
+    public void setSupervisionD(Double supervisionD) {
+        this.supervisionD = supervisionD;
+    }
+
+    public Double getSupervisionPre() {
+        return supervisionPre;
+    }
+
+    public void setSupervisionPre(Double supervisionPre) {
+        this.supervisionPre = supervisionPre;
+    }
+
+    public Double getCapacitacionD() {
+        return capacitacionD;
+    }
+
+    public void setCapacitacionD(Double capacitacionD) {
+        this.capacitacionD = capacitacionD;
+    }
+
+    public Double getCapacitacionPre() {
+        return capacitacionPre;
+    }
+
+    public void setCapacitacionPre(Double capacitacionPre) {
+        this.capacitacionPre = capacitacionPre;
+    }
+
+    public Double getOtrosD() {
+        return otrosD;
+    }
+
+    public void setOtrosD(Double otrosD) {
+        this.otrosD = otrosD;
+    }
+
+    public Double getOtrosPre() {
+        return otrosPre;
+    }
+
+    public void setOtrosPre(Double otrosPre) {
+        this.otrosPre = otrosPre;
+    }
+
+    public List getLista_T() {
+        return lista_T;
+    }
+
+    public void setLista_T(List lista_T) {
+        this.lista_T = lista_T;
+    }
+
+    public String getT1() {
+        return t1;
+    }
+
+    public void setT1(String t1) {
+        this.t1 = t1;
+    }
+
+    public String getT2() {
+        return t2;
+    }
+
+    public void setT2(String t2) {
+        this.t2 = t2;
+    }
+
+    public String getT3() {
+        return t3;
+    }
+
+    public void setT3(String t3) {
+        this.t3 = t3;
+    }
+
+    public String getT4() {
+        return t4;
+    }
+
+    public void setT4(String t4) {
+        this.t4 = t4;
+    }
+
+    public String getT5() {
+        return t5;
+    }
+
+    public void setT5(String t5) {
+        this.t5 = t5;
+    }
+
+    public String getT6() {
+        return t6;
+    }
+
+    public void setT6(String t6) {
+        this.t6 = t6;
+    }
+
+    public Double getTotalD() {
+        return totalD;
+    }
+
+    public void setTotalD(Double totalD) {
+        this.totalD = totalD;
+    }
+
+    public List<String> getEtapas() {
+        return etapas;
+    }
+
+    public void setEtapas(List<String> etapas) {
+        this.etapas = etapas;
+    }
+
+    public String getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(String etapa) {
+        this.etapa = etapa;
+    }
+
+    public Integer getIdEjecu() {
+        return idEjecu;
+    }
+
+    public void setIdEjecu(Integer idEjecu) {
+        this.idEjecu = idEjecu;
+    }
+
+    public boolean isEsta() {
+        return esta;
+    }
+
+    public void setEsta(boolean esta) {
+        this.esta = esta;
     }
 
 }

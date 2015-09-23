@@ -25,25 +25,25 @@
                         <br></br>
                         <br></br>
                         <p:dataTable id="DatosAspectosGenerales" selection="#{eliminarProyectoBean.selectedAPG}" rowKey="#{ag.codigo}" value="#{eliminarProyectoBean.listaProyectos}" 
-                                     var="ag" style="width:95%" emptyMessage="SIN DATOS PARA MOSTRAR" rows="15"
+                                     var="ag" emptyMessage="SIN DATOS PARA MOSTRAR" rows="15"
                                      paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      rowsPerPageTemplate="5,10,15" filteredValue="#{eliminarProyectoBean.listafiltro}">
                             <p:column selectionMode="single" style="width:16px;text-align:center"/>
-                            <p:column headerText="CODIGO" style="text-align: center;width: 10%" sortBy="#{ag.codigo}" filterBy="#{ag.codigo}" filterMatchMode="contains">
+                            <p:column headerText="CODIGO" style="text-align: center;width: 7%" sortBy="#{ag.codigo}" filterBy="#{ag.codigo}" filterMatchMode="contains">
                                 <h:outputText value="#{ag.codigo}"/>
                             </p:column>
-                            <p:column headerText="NOMBRE DE PROYECTO" style="text-align: center;" sortBy="#{ag.nombre}" filterBy="#{ag.nombre}" filterMatchMode="contains">
+                            <p:column headerText="NOMBRE DE PROYECTO" style="text-align: left;" sortBy="#{ag.nombre}" filterBy="#{ag.nombre}" filterMatchMode="contains">
                                 <h:outputText value="#{ag.nombre}"  style="text-align: left"/>
                             </p:column>
-                            <p:column headerText="ORIGEN" style="text-align: center" sortBy="#{ag.origen}" filterBy="#{ag.origen}" filterMatchMode="contains">
+                            <p:column headerText="ORIGEN" style="text-align: left; width: 14%" sortBy="#{ag.origen}" filterBy="#{ag.origen}" filterMatchMode="contains">
                                 <h:outputText value="#{ag.origen}"/>
                             </p:column>
-                            <p:column headerText="MONT. VIAB." style="text-align: center;width: 10%" sortBy="#{ag.montoViabilidad}" filterBy="#{ag.montoViabilidad}" filterMatchMode="contains">
+                            <p:column headerText="MONT. VIAB." style="text-align: center;width: 7%" sortBy="#{ag.montoViabilidad}" filterBy="#{ag.montoViabilidad}" filterMatchMode="contains">
                                 <h:outputText value="#{ag.montoViabilidad}">
                                     <f:convertNumber currencySymbol="s/" type="currency"/>
                                 </h:outputText>
                             </p:column>
-                            <p:column headerText="FECH. VIAB." style="text-align: center;width: 10%" sortBy="#{ag.fechaViabilidad}" filterBy="#{ag.fechaViabilidad}" filterMatchMode="contains">
+                            <p:column headerText="FECH. VIAB." style="text-align: center;width: 7%" sortBy="#{ag.fechaViabilidad}" filterBy="#{ag.fechaViabilidad}" filterMatchMode="contains">
                                 <h:outputText value="#{ag.fechaViabilidad}"/>
                             </p:column>
                             <f:facet name="footer">

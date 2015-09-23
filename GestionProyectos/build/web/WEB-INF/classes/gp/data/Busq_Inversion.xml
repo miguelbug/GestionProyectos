@@ -11,7 +11,6 @@
         <result property="monto" column="MONTO"/>
         <result property="rr" column="RR"/>
         <result property="fecha" column="FECHA"/>
-        <result property="montoModificado" column="MONTOMODIF"/>
     </resultMap>
     
     <resultMap id="DetalleExpTecn" type="gp.model.DetalleExpTecnico">
@@ -71,9 +70,9 @@
         FROM PROY_EXPT PE, TIPOS_DOCUMENTOS TD
         WHERE PE.ID_TIPOSDOCUS=TD.ID_TIPOSDOCUS
         AND PE.ID_PROYECTO=#{codigo}
-        AND ESTADO IN ('1','2')
-        AND TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP = #{nombre}
-        ORDER BY PE.FECHA_REG DESC
+        AND ESTADO IN ('1')
+        AND TD.NOMBRE_TIPODOCU||' N° '||PE.NUMERO_EXP =#{nombre}
+        ORDER BY PE.NUMERO_MONTO DESC
     </select>
     <select id="getExpTecn" resultMap="ExpTecn" parameterType="String">
         SELECT PE.ID_PROYEXPT AS IDHISTO, 

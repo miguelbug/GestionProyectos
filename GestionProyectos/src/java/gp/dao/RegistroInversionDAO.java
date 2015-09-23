@@ -36,7 +36,7 @@ public interface RegistroInversionDAO {
     public Integer validarProyecto(String codigo, String etapa, String mes, String anio);
     public List<EjecucionMostrado> getMontosEjecutados(String codigo, String mes, String anio, String etapa);
     //public void ActualizarMontosEjecutados(List<Ejecucion> ejecu , String idproy);
-    public void ActualizarMontosEjecutados(Ejecucion ejecu , String idproy);
+    public void ActualizarMontosEjecutados(Ejecucion ejecu);
     public Integer getIdProyExpt2(Integer numero, Integer idproy, Integer etapa);
     public void nuevaInfraestructura(Componentes c);
     public void agregarMontoET(Historial h);

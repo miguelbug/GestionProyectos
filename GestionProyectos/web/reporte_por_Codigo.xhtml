@@ -34,9 +34,8 @@
                                 <p:outputLabel value="#{reporteInversion.nombreProyecto}"/>
                             </h:panelGrid>
                             <br></br>
-                            <br></br>
                             <p:dataTable  style="width:70%" value="#{reporteInversion.listaDatos}" var="ejecu" id="reporteEjecu" emptyMessage="SIN DATOS PARA MOSTRAR">
-                                <p:column headerText="N° ETAPA" style="text-align: center">
+                                <p:column headerText="MODIFICACION N°" style="text-align: center">
                                     <h:outputText value="#{ejecu.etapa}"  />
                                 </p:column>
                                 <p:column headerText="MONTO VIABLE" style="text-align: center">
@@ -55,14 +54,14 @@
                             <p:outputLabel value="EJECUCIÓN POR AÑO: "/>
                             <br></br>
                             <br></br>
-                            <p:dataTable style="width:90%" value="#{reporteInversion.listaTabEjec}" id="tabla1" emptyMessage="SIN DATOS PARA MOSTRAR" var="lista">
+                            <p:dataTable style="width:90%" value="#{reporteInversion.listaTabEjec}" id="tabla1" liveResize="true" emptyMessage="SIN DATOS PARA MOSTRAR" var="lista" >
                                 <p:column headerText="N° EJECUCION" style="text-align: center" >
                                     <h:outputText value="#{lista.numerEjecu}" />
                                 </p:column>
                                 <p:column headerText="ANIO" style="text-align: center" >
                                     <h:outputText value="#{lista.anio}" />
                                 </p:column>
-                                <p:column headerText="MONTO" style="text-align: center" footerText="S/ #{reporteInversion.sumaEjecucion1()}" >
+                                <p:column headerText="MONTO" style="text-align: center" footerText="TOTAL S/ #{reporteInversion.sumaEjecucion1()}" >
                                     <h:outputText value="#{lista.monto}" >
                                         <f:convertNumber currencySymbol="s/" type="currency"/>
                                     </h:outputText>
@@ -70,49 +69,64 @@
                             </p:dataTable>
                             <br></br>
                             <br></br>
+                            <p:commandButton ajax="false" value="Imprimir" actionListener="#{reporteInversion.imprimirEjecucionPorAnio()}"/>
+                            <br></br>
+                            <br></br>
                             <p:outputLabel value="EJECUCIÓN POR COMPONENTE: "/>
                             <br></br>
                             <br></br>
-                            <p:dataTable value="#{reporteInversion.listaTabEjec2}" id="tabla2" emptyMessage="SIN DATOS PARA MOSTRAR" var="lista"
-                                         rows="6" paginator="true" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                            <p:selectOneMenu value="#{reporteInversion.anio}">
+                                <f:selectItem itemLabel="Seleccione" itemValue=" "/>
+                                <f:selectItems value="#{reporteInversion.anios}"/>
+                                <p:ajax event="change" listener="#{reporteInversion.llenarListaAniosEjecucion()}" update="tabla2"/>
+                            </p:selectOneMenu>
+                            <br></br>
+                            <br></br>
+                            <p:dataTable value="#{reporteInversion.listaTabEjec2}" id="tabla2" emptyMessage="SIN DATOS PARA MOSTRAR" var="lista">
 
-                                <p:column headerText="AÑO" style="text-align: center" >
-                                    <h:outputText value="#{lista.anio}" />
+                                <p:column headerText="MES" style="text-align: center" >
+                                    <h:outputText value="#{lista.mes}" />
                                 </p:column>
-                                <p:column headerText="ETAPA" style="text-align: center" >
-                                    <h:outputText value="#{lista.etapa}" />
-                                </p:column>
-                                <p:column headerText="EXPEDIENTE TÉCNICO" style="text-align: center">
-                                    <h:outputText value="#{lista.c1}" >
+                                <p:column headerText="EXPEDIENTE TECNICO" style="text-align: center" footerText="S/ #{reporteInversion.sumaEjecucion3()}" >
+                                    <h:outputText value="#{lista.c1E}" >
                                         <f:convertNumber currencySymbol="s/" type="currency"/>
                                     </h:outputText>
                                 </p:column>
-                                <p:column headerText="INFRAESTRUCTURA" style="text-align: center" >
-                                    <h:outputText value="#{lista.c2}" >
+                                <p:column headerText="INFRAESTRUCTURA" style="text-align: center" footerText="S/ #{reporteInversion.sumaEjecucion4()}">
+                                    <h:outputText value="#{lista.c2E}" >
                                         <f:convertNumber currencySymbol="s/" type="currency"/>
                                     </h:outputText>
                                 </p:column>
-                                <p:column headerText="EQUIPAMIENTO Y MOBILI." style="text-align: center"  >
-                                    <h:outputText value="#{lista.c3}" >
+                                <p:column headerText="EQUIPAMIENTO Y MOBILI." style="text-align: center"  footerText="S/ #{reporteInversion.sumaEjecucion5()}">
+                                    <h:outputText value="#{lista.c3E}" >
                                         <f:convertNumber currencySymbol="s/" type="currency"/>
                                     </h:outputText>
                                 </p:column>
-                                <p:column headerText="SUPERVISIÓN" style="text-align: center" >
-                                    <h:outputText value="#{lista.c4}" >
+                                <p:column headerText="SUPERVISIÓN" style="text-align: center" footerText="S/ #{reporteInversion.sumaEjecucion6()}">
+                                    <h:outputText value="#{lista.c4E}" >
                                         <f:convertNumber currencySymbol="s/" type="currency"/>
                                     </h:outputText>
                                 </p:column>
-                                <p:column headerText="CAPACITACIÓN" style="text-align: center">
-                                    <h:outputText value="#{lista.c5}" >
+                                <p:column headerText="CAPACITACIÓN" style="text-align: center" footerText="S/ #{reporteInversion.sumaEjecucion7()}">
+                                    <h:outputText value="#{lista.c5E}" >
                                         <f:convertNumber currencySymbol="s/" type="currency"/>
                                     </h:outputText>
                                 </p:column>
-                                <p:column headerText="OTROS" style="text-align: center" >
-                                    <h:outputText value="#{lista.c6}" >
+                                <p:column headerText="OTROS" style="text-align: center" footerText="S/ #{reporteInversion.sumaEjecucion8()}">
+                                    <h:outputText value="#{lista.c6E}" >
                                         <f:convertNumber currencySymbol="s/" type="currency"/>
                                     </h:outputText>
                                 </p:column>
                             </p:dataTable>
+                            <br></br>
+                            <br></br>
+                            <p:commandButton ajax="false" value="Imprimir" actionListener="#{reporteInversion.imprimirEjecucionPorMes()}"/>
+                            <br></br>
+                            <br></br>
+                            <p:outputLabel value="GRÁFICA DE LAS EJECUCIONES"/>
+                            <br></br>
+                            <br></br>
+                            <p:chart type="bar" model="#{reporteInversion.barModel}" style="height:300px; width: 60%"/>
                         </p:tab>
                         <p:tab title="DEDUCTIVO/ADICIONAL" id="tab2">
                             <br></br>
@@ -129,8 +143,8 @@
                             <p:outputLabel value="ADICIONALES: " style="text-align: left"/>
                             <br></br>
                             <br></br>
-                            <p:dataTable style="width:90%" value="#{reporteInversion.listaDA2}" var="l2" id="tablaDA2" emptyMessage="SIN DATOS PARA MOSTRAR">
-                                <p:column headerText="N° DE DEDUCTIVO" style="text-align: center" >
+                            <p:dataTable style="width:90%" value="#{reporteInversion.listaDA1}" var="l2" id="tablaDA2" emptyMessage="SIN DATOS PARA MOSTRAR">
+                                <p:column headerText="N° DE ADICIONAL" style="text-align: center" >
                                     <h:outputText value="#{l2.num_docu}" />
                                 </p:column>
                                 <p:column headerText="MOTIVO" style="text-align: center" >
@@ -150,7 +164,7 @@
                             <p:outputLabel value="DEDUCTIVOS: " style="text-align: left"/>
                             <br></br>
                             <br></br>
-                            <p:dataTable style="width:90%" value="#{reporteInversion.listaDA1}" var="l1" id="tablaDA1" emptyMessage="SIN DATOS PARA MOSTRAR">
+                            <p:dataTable style="width:90%" value="#{reporteInversion.listaDA2}" var="l1" id="tablaDA1" emptyMessage="SIN DATOS PARA MOSTRAR">
                                 <p:column headerText="N° DE DEDUCTIVO" style="text-align: center" >
                                     <h:outputText value="#{l1.num_docu}" />
                                 </p:column>
@@ -166,6 +180,9 @@
                                     <h:outputText value="#{l1.fechaFormato}" />
                                 </p:column>
                             </p:dataTable>
+                            <br></br>
+                            <br></br>
+                            <p:commandButton value="Imprimir" ajax="false" actionListener="#{reporteInversion.imprimirDeductivosAdicionales()}"/>
                         </p:tab>
                         <p:tab title="EXPEDIENTES TÉCNICOS" id="tab3">
                             <br></br>
@@ -184,9 +201,11 @@
                                     </h:outputText>
                                 </p:column>
                             </p:dataTable>
+                            <br></br>
+                            <br></br>
+                            <p:commandButton value="Imprimir" ajax="false" actionListener="#{reporteInversion.imprimirExpedientesTecn()}"/>
                         </p:tab>
                     </p:tabView>
-
                 </h:form>
             </ui:define>
         </ui:composition>

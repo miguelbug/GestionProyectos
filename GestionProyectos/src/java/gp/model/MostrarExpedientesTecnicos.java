@@ -23,6 +23,7 @@ public class MostrarExpedientesTecnicos implements Serializable {
     private String rr;
     private String fecha;
     private String montoModificado;
+    private String numMonto;
 
     public MostrarExpedientesTecnicos() {
     }
@@ -75,4 +76,11 @@ public class MostrarExpedientesTecnicos implements Serializable {
         this.montoModificado = montoModificado;
     }
 
+    public String getNumMonto() {
+        return numMonto;
+    }
+
+    public void setNumMonto(String numMonto) {
+        this.numMonto = numMonto;
+    }
 }

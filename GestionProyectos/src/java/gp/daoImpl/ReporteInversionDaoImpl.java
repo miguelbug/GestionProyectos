@@ -7,11 +7,12 @@ package gp.daoImpl;
 
 import gp.connectionFactory.MyBatisConnectionFactory;
 import gp.dao.ReporteInversionDAO;
+import gp.model.Ejecucion;
 import gp.model.ExpedienteTecnico;
+import gp.model.GraficasMontosAnios;
 import gp.model.MostrarDesdeDependencias;
 import gp.model.MostrarTablaEjecucion;
 import gp.model.NuevosDocumentos;
-import gp.model.RIdatosEjecucion;
 import gp.model.RIdatosProyecto;
 import java.util.HashMap;
 import java.util.List;
@@ -113,7 +114,7 @@ public class ReporteInversionDaoImpl implements ReporteInversionDAO {
         map.put("etapa", etapa);
         SqlSession session = sqlSessionFactory.openSession();
         try {
-            list = session.selectList("ReporteInversion.getAdicionales", map);
+            list = session.selectList("ReporteInversion.getDeductivos", map);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -132,7 +133,7 @@ public class ReporteInversionDaoImpl implements ReporteInversionDAO {
         map.put("etapa", etapa);
         SqlSession session = sqlSessionFactory.openSession();
         try {
-            list = session.selectList("ReporteInversion.getDeductivos", map);
+            list = session.selectList("ReporteInversion.getAdicionales", map);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -165,6 +166,41 @@ public class ReporteInversionDaoImpl implements ReporteInversionDAO {
         SqlSession session = sqlSessionFactory.openSession();
         try {
             list = session.selectList("ReporteInversion.getDatosDesdeDepes", idOrigen);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
+    public List<GraficasMontosAnios> getAniosMontos(String codigo) {
+        List<GraficasMontosAnios> list = null;
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            list = session.selectList("ReporteInversion.getMontosAnios", codigo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+    @Override
+    public List<Ejecucion> getEjecucionXanios(String codigo, String anio) {
+        List<Ejecucion> list = null;
+        Map<String,String> map= new HashMap<String,String>();
+        map.put("anio", anio);
+        map.put("codigo", codigo);
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            list = session.selectList("ReporteInversion.getEjecucionXanios", map);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

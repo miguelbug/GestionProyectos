@@ -13,19 +13,29 @@ import gp.daoImpl.BusquedaInversionDaoImpl;
 import gp.daoImpl.ListasGeneralesDaoImpl;
 import gp.daoImpl.RegistroInversionDaoImpl;
 import gp.daoImpl.ReporteInversionDaoImpl;
+import gp.exporter.RealizarReporte;
+import gp.model.Ejecucion;
 import gp.model.ExpedienteTecnico;
+import gp.model.GraficasMontosAnios;
 import gp.model.MostrarDesdeDependencias;
 import gp.model.MostrarEjecucion2;
 import gp.model.MostrarTablaEjecucion;
 import gp.model.NuevosDocumentos;
 import gp.model.RIdatosEjecucion;
 import gp.model.RIdatosProyecto;
+import gp.model.Usuario;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
 
 /**
  *
@@ -53,12 +63,19 @@ public class ReporteInversion {
     private String componente;
     private List<String> componentes;
     private List<MostrarTablaEjecucion> listaTabEjec;
-    private List<MostrarTablaEjecucion> listaTabEjec2;
+    private List<Ejecucion> listaTabEjec2;
     private List<MostrarEjecucion2> listaMostrarEjecu;
     private List<NuevosDocumentos> listaDA1;
     private List<NuevosDocumentos> listaDA2;
     private BigDecimal suma;
     private BigDecimal suma2;
+    private BigDecimal suma3;
+    private BigDecimal suma4;
+    private BigDecimal suma5;
+    private BigDecimal suma6;
+    private BigDecimal suma7;
+    private BigDecimal suma8;
+    private BigDecimal suma9;
     private List<String> aniosDedAdic;
     private List<ExpedienteTecnico> listaExpedientes;
     private String anioDedAdic;
@@ -69,8 +86,16 @@ public class ReporteInversion {
     private List<String> listaOrigenes;
     private ListasGeneralesDAO lgd;
     private List<MostrarDesdeDependencias> listaDesdeOrig;
+    private BarChartModel barModel;
+    private List<GraficasMontosAnios> lgma;
+    private final FacesContext faceContext;
+    private final Usuario usu;
 
     public ReporteInversion() {
+        faceContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) faceContext.getExternalContext().getSession(true);
+        usu = (Usuario) session.getAttribute("sesionUsuario");
+        lgma = new ArrayList<GraficasMontosAnios>();
         listaDesdeOrig = new ArrayList<MostrarDesdeDependencias>();
         listaOrigenes = new ArrayList<String>();
         lgd = new ListasGeneralesDaoImpl();
@@ -85,7 +110,7 @@ public class ReporteInversion {
         rinvD = new ReporteInversionDaoImpl();
         componentes = new ArrayList<String>();
         listaTabEjec = new ArrayList<MostrarTablaEjecucion>();
-        listaTabEjec2 = new ArrayList<MostrarTablaEjecucion>();
+        listaTabEjec2 = new ArrayList<Ejecucion>();
         listaEjecucion = new ArrayList<RIdatosEjecucion>();
         bid = new BusquedaInversionDaoImpl();
         mostrar = false;
@@ -95,9 +120,38 @@ public class ReporteInversion {
 
     }
 
+    public void llenarListaAniosEjecucion() {
+        System.out.println("El anio es: " + anio);
+        listaTabEjec2.clear();
+        try {
+            listaTabEjec2 = rinvD.getEjecucionXanios(codProy, anio);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     public void llenarListaDesdeOrigen() {
         try {
             listaDesdeOrig = rinvD.getListaDesdeDepes(lgd.getIdDepencencia(origen));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public String sumaEjecucionFinal() {
+        suma9 = new BigDecimal(0.0);
+        int i = 0;
+        while (i < listaDesdeOrig.size()) {
+            suma9 = suma9.add(BigDecimal.valueOf(listaDesdeOrig.get(i).getMontoTotal()));
+            i++;
+        }
+        return new DecimalFormat("###,###.###").format(suma9);
+    }
+
+    public void imprimirReporteDependencia() {
+        try {
+            RealizarReporte reporte = new RealizarReporte();
+            reporte.reportePoryectosxNombre2(usu, String.valueOf(lgd.getIdDepencencia(origen)), "Reporte11");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -143,6 +197,69 @@ public class ReporteInversion {
         return new DecimalFormat("###,###.###").format(suma2);
     }
 
+    public String sumaEjecucion3() {
+        suma3 = new BigDecimal(0.0);
+        int i = 0;
+        while (i < listaTabEjec2.size()) {
+            suma3 = suma3.add(BigDecimal.valueOf(listaTabEjec2.get(i).getC1E()));
+            i++;
+        }
+        return new DecimalFormat("###,###.###").format(suma3);
+    }
+
+    public String sumaEjecucion4() {
+        suma4 = new BigDecimal(0.0);
+        int i = 0;
+        while (i < listaTabEjec2.size()) {
+            System.out.println("Numero: " + listaTabEjec2.get(i).getC2E());
+            suma4 = suma4.add(BigDecimal.valueOf(listaTabEjec2.get(i).getC2E()));
+            i++;
+        }
+        return new DecimalFormat("###,###.###").format(suma4);
+    }
+
+    public String sumaEjecucion5() {
+        suma5 = new BigDecimal(0.0);
+        int i = 0;
+        while (i < listaTabEjec2.size()) {
+            suma5 = suma5.add(BigDecimal.valueOf(listaTabEjec2.get(i).getC3E()));
+            i++;
+        }
+        return new DecimalFormat("###,###.###").format(suma5);
+    }
+
+    public String sumaEjecucion6() {
+        suma6 = new BigDecimal(0.0);
+        int i = 0;
+        while (i < listaTabEjec2.size()) {
+            suma6 = suma6.add(BigDecimal.valueOf(listaTabEjec2.get(i).getC4E()));
+            i++;
+        }
+        return new DecimalFormat("###,###.###").format(suma6);
+    }
+
+    public String sumaEjecucion7() {
+        suma7 = new BigDecimal(0.0);
+        int i = 0;
+        System.out.println("-----");
+        while (i < listaTabEjec2.size()) {
+            System.out.println("Numero: " + listaTabEjec2.get(i).getC5E());
+            suma7 = suma7.add(BigDecimal.valueOf(listaTabEjec2.get(i).getC5E()));
+            i++;
+        }
+        return new DecimalFormat("###,###.###").format(suma7);
+    }
+
+    public String sumaEjecucion8() {
+        suma8 = new BigDecimal(0.0);
+        int i = 0;
+        while (i < listaTabEjec2.size()) {
+            suma8 = suma8.add(BigDecimal.valueOf(listaTabEjec2.get(i).getC6E()));
+            i++;
+        }
+        return new DecimalFormat("###,###.###").format(suma8);
+    }
+
     public void llenarComponentes() {
         componentes.clear();
         componentes.add("EXPEDIENTE TÉCNICO");
@@ -153,6 +270,41 @@ public class ReporteInversion {
         componentes.add("OTROS");
 
     }
+    /*
+     PARA LAS GRÁFICAS
+     */
+
+    private BarChartModel initBarModel() {
+        BarChartModel model = new BarChartModel();
+        ChartSeries montos = new ChartSeries();
+        montos.setLabel("Años");
+        this.lgma = rinvD.getAniosMontos(codProy);
+        int i = 0;
+        while (i < lgma.size()) {
+            montos.set(lgma.get(i).getAnio(), lgma.get(i).getMonto());
+            i++;
+        }
+        model.addSeries(montos);
+        return model;
+    }
+
+    private void createBarModel() {
+        barModel = initBarModel();
+
+        barModel.setTitle("GRÁFICA MONTOS");
+        barModel.setLegendPosition("ne");
+
+        Axis xAxis = barModel.getAxis(AxisType.X);
+        xAxis.setLabel("Años");
+
+        Axis yAxis = barModel.getAxis(AxisType.Y);
+        yAxis.setLabel("Montos");
+        yAxis.setMin(0);
+        yAxis.setMax(100000000);
+    }
+    /*
+     PARA LAS GRÁFICAS
+     */
 
     public void mostrar() {
         listaDatos.clear();
@@ -170,11 +322,55 @@ public class ReporteInversion {
             listaetapas = rid.getListaEtapas(codProy);
             System.out.println("montos por aaños");
             listaTabEjec = rinvD.getEjecu1(codProy);
-            listaTabEjec2 = rinvD.getEjecu2(codProy);
             this.listaExpedientes = rinvD.getExpediente(codProy);
+            createBarModel();
         } catch (Exception e) {
             System.out.println(e.getMessage() + " " + e.getLocalizedMessage() + " " + e.getCause());
             e.printStackTrace();
+        }
+    }
+
+    public void imprimirEjecucionPorAnio() {
+        try {
+            RealizarReporte report = new RealizarReporte();
+            report.reporteEjecucionPorAnio("Reporte7", usu, codProy);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void imprimirEjecucionPorMes() {
+        try {
+            RealizarReporte report = new RealizarReporte();
+            report.reporteEjecucionPorMes("Reporte8", usu, codProy, anio, this.nombreProyecto);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void imprimirDeductivosAdicionales() {
+        try {
+            RealizarReporte report = new RealizarReporte();
+            report.reporteAdicionalesDeductivos("Reporte9", usu, codProy, this.nombreProyecto);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void imprimirExpedientesTecn() {
+        try {
+            RealizarReporte report = new RealizarReporte();
+            report.reporteExpedientesTecnicos("Reporte10", usu, codProy, this.nombreProyecto);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void imprimirReportePorDependencia() {
+        try {
+
+        } catch (Exception e) {
+
         }
     }
 
@@ -285,11 +481,11 @@ public class ReporteInversion {
         this.listaTabEjec = listaTabEjec;
     }
 
-    public List<MostrarTablaEjecucion> getListaTabEjec2() {
+    public List<Ejecucion> getListaTabEjec2() {
         return listaTabEjec2;
     }
 
-    public void setListaTabEjec2(List<MostrarTablaEjecucion> listaTabEjec2) {
+    public void setListaTabEjec2(List<Ejecucion> listaTabEjec2) {
         this.listaTabEjec2 = listaTabEjec2;
     }
 
@@ -459,6 +655,78 @@ public class ReporteInversion {
 
     public void setListaDesdeOrig(List<MostrarDesdeDependencias> listaDesdeOrig) {
         this.listaDesdeOrig = listaDesdeOrig;
+    }
+
+    public BarChartModel getBarModel() {
+        return barModel;
+    }
+
+    public void setBarModel(BarChartModel barModel) {
+        this.barModel = barModel;
+    }
+
+    public List<GraficasMontosAnios> getLgma() {
+        return lgma;
+    }
+
+    public void setLgma(List<GraficasMontosAnios> lgma) {
+        this.lgma = lgma;
+    }
+
+    public BigDecimal getSuma3() {
+        return suma3;
+    }
+
+    public void setSuma3(BigDecimal suma3) {
+        this.suma3 = suma3;
+    }
+
+    public BigDecimal getSuma4() {
+        return suma4;
+    }
+
+    public void setSuma4(BigDecimal suma4) {
+        this.suma4 = suma4;
+    }
+
+    public BigDecimal getSuma5() {
+        return suma5;
+    }
+
+    public void setSuma5(BigDecimal suma5) {
+        this.suma5 = suma5;
+    }
+
+    public BigDecimal getSuma6() {
+        return suma6;
+    }
+
+    public void setSuma6(BigDecimal suma6) {
+        this.suma6 = suma6;
+    }
+
+    public BigDecimal getSuma7() {
+        return suma7;
+    }
+
+    public void setSuma7(BigDecimal suma7) {
+        this.suma7 = suma7;
+    }
+
+    public BigDecimal getSuma8() {
+        return suma8;
+    }
+
+    public void setSuma8(BigDecimal suma8) {
+        this.suma8 = suma8;
+    }
+
+    public BigDecimal getSuma9() {
+        return suma9;
+    }
+
+    public void setSuma9(BigDecimal suma9) {
+        this.suma9 = suma9;
     }
 
 }

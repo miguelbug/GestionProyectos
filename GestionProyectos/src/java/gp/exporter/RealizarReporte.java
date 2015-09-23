@@ -89,7 +89,7 @@ public class RealizarReporte implements Serializable {
         parametros.put("usuario", usu.getNombreUsuario());
         parametros.put("logo", getLogo());
         parametros.put("nombre", nombre);
-        parametros.put("suma",suma);
+        parametros.put("suma", suma);
         repor.addMapParam(parametros);
         rpt = repor.ejecutaReporte(context, serveltcontext);
         if (!rpt && message == null) {
@@ -98,14 +98,30 @@ public class RealizarReporte implements Serializable {
         }
         categoriaServicio.CerrandoConexion();
     }
-    
+
+    public void reportePoryectosxNombre2(Usuario usu, String nombre, String reporte) throws SQLException {
+        Inicializar(reporte);
+        FacesMessage message = null;
+        boolean rpt = false;
+        parametros.put("usuario", usu.getNombreUsuario());
+        parametros.put("logo", getLogo());
+        parametros.put("codigo", nombre);
+        repor.addMapParam(parametros);
+        rpt = repor.ejecutaReporte(context, serveltcontext);
+        if (!rpt && message == null) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Mensaje", "No hay datos para generar reporte");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+        categoriaServicio.CerrandoConexion();
+    }
+
     public void reporteProyectosSoloFacus(Usuario usu, String reporte, String suma) throws SQLException {
         Inicializar(reporte);
         FacesMessage message = null;
         boolean rpt = false;
         parametros.put("usuario", usu.getNombreUsuario());
         parametros.put("logo", getLogo());
-        parametros.put("suma",suma);
+        parametros.put("suma", suma);
         repor.addMapParam(parametros);
         rpt = repor.ejecutaReporte(context, serveltcontext);
         if (!rpt && message == null) {
@@ -114,14 +130,14 @@ public class RealizarReporte implements Serializable {
         }
         categoriaServicio.CerrandoConexion();
     }
-    
-    public void reporteProyectosSoloDepes(Usuario usu, String reporte, String suma) throws SQLException{
+
+    public void reporteProyectosSoloDepes(Usuario usu, String reporte, String suma) throws SQLException {
         Inicializar(reporte);
         FacesMessage message = null;
         boolean rpt = false;
         parametros.put("usuario", usu.getNombreUsuario());
         parametros.put("logo", getLogo());
-        parametros.put("suma",suma);
+        parametros.put("suma", suma);
         repor.addMapParam(parametros);
         rpt = repor.ejecutaReporte(context, serveltcontext);
         if (!rpt && message == null) {
@@ -130,14 +146,14 @@ public class RealizarReporte implements Serializable {
         }
         categoriaServicio.CerrandoConexion();
     }
-    
-    public void reporteProyectosFacusDepes(Usuario usu, String reporte, String suma) throws SQLException{
+
+    public void reporteProyectosFacusDepes(Usuario usu, String reporte, String suma) throws SQLException {
         Inicializar(reporte);
         FacesMessage message = null;
         boolean rpt = false;
         parametros.put("usuario", usu.getNombreUsuario());
         parametros.put("logo", getLogo());
-        parametros.put("suma",suma);
+        parametros.put("suma", suma);
         repor.addMapParam(parametros);
         rpt = repor.ejecutaReporte(context, serveltcontext);
         if (!rpt && message == null) {
@@ -146,6 +162,75 @@ public class RealizarReporte implements Serializable {
         }
         categoriaServicio.CerrandoConexion();
     }
+
+    public void reporteEjecucionPorAnio(String reporte, Usuario usu, String codigo) throws SQLException {
+        Inicializar(reporte);
+        FacesMessage message = null;
+        boolean rpt = false;
+        parametros.put("usuario", usu.getNombreUsuario());
+        parametros.put("logo", getLogo());
+        parametros.put("codigo", codigo);
+        repor.addMapParam(parametros);
+        rpt = repor.ejecutaReporte(context, serveltcontext);
+        if (!rpt && message == null) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Mensaje", "No hay datos para generar reporte");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+        categoriaServicio.CerrandoConexion();
+    }
+
+    public void reporteEjecucionPorMes(String reporte, Usuario usu, String codigo, String anio, String nombreProy) throws SQLException {
+        Inicializar(reporte);
+        FacesMessage message = null;
+        boolean rpt = false;
+        parametros.put("usuario", usu.getNombreUsuario());
+        parametros.put("logo", getLogo());
+        parametros.put("codigo", codigo);
+        parametros.put("anio", anio);
+        parametros.put("nombreProyecto", nombreProy);
+        repor.addMapParam(parametros);
+        rpt = repor.ejecutaReporte(context, serveltcontext);
+        if (!rpt && message == null) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Mensaje", "No hay datos para generar reporte");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+        categoriaServicio.CerrandoConexion();
+    }
+
+    public void reporteAdicionalesDeductivos(String reporte, Usuario usu, String codigo, String nombreProy) throws SQLException {
+        Inicializar(reporte);
+        FacesMessage message = null;
+        boolean rpt = false;
+        parametros.put("usuario", usu.getNombreUsuario());
+        parametros.put("logo", getLogo());
+        parametros.put("codigo", codigo);
+        parametros.put("nombreProy", nombreProy);
+        repor.addMapParam(parametros);
+        rpt = repor.ejecutaReporte(context, serveltcontext);
+        if (!rpt && message == null) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Mensaje", "No hay datos para generar reporte");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+        categoriaServicio.CerrandoConexion();
+    }
+
+    public void reporteExpedientesTecnicos(String reporte, Usuario usu, String codigo, String nombreProy) throws SQLException {
+        Inicializar(reporte);
+        FacesMessage message = null;
+        boolean rpt = false;
+        parametros.put("usuario", usu.getNombreUsuario());
+        parametros.put("logo", getLogo());
+        parametros.put("codigo", codigo);
+        parametros.put("nombreProy", nombreProy);
+        repor.addMapParam(parametros);
+        rpt = repor.ejecutaReporte(context, serveltcontext);
+        if (!rpt && message == null) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Mensaje", "No hay datos para generar reporte");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+        categoriaServicio.CerrandoConexion();
+    }
+
     public FacesContext getContext() {
         return context;
     }

@@ -53,6 +53,20 @@
         <result property="montoTotal" column="MONTO"/>
     </resultMap>
 
+    <resultMap id="Map8" type="gp.model.GraficasMontosAnios">
+        <result property="anio" column="ANIO"/>
+        <result property="monto" column="TOTAL"/>
+    </resultMap>
+    
+    <resultMap id="Map9" type="gp.model.Ejecucion">
+        <result property="mes" column="MES"/>
+        <result property="c1E" column="EXPT"/>
+        <result property="c2E" column="INFRA"/>
+        <result property="c3E" column="EQUIP"/>
+        <result property="c4E" column="SUPERV"/>
+        <result property="c5E" column="CAPACIT"/>
+        <result property="c6E" column="OTROS"/>
+    </resultMap>
    
     <select id="getDatosProyEjecu" resultMap="Map1" parameterType="String">
         SELECT P.ID_PROYECTO AS IDPROY,
@@ -64,6 +78,7 @@
         WHERE ET.ID_PROYECTO=P.ID_PROYECTO
         AND P.ID_PROYECTO=#{codigo}
         AND ET.ESTADO='2'
+        ORDER BY ETAPA ASC
     </select>
     
     <select id="getEjecu1" resultMap="Map2" parameterType="java.util.Map">
@@ -72,7 +87,7 @@
         R.MONTO AS MONTO
         FROM (  SELECT E.ANIO AS ANIO,
         PT.ETAPA AS ETAPA,
-        SUM(E.NUM_EJECU+E.INFRAEST_E+E.EQUIPMOBIL_E+E.SUPERV_E+E.CAPACITAC_E+E.OTROS_E) AS MONTO
+        SUM(E.EXPTECN_E+E.INFRAEST_E+E.EQUIPMOBIL_E+E.SUPERV_E+E.CAPACITAC_E+E.OTROS_E) AS MONTO
         FROM EJECUCION E, PROY_EXPT PT
         WHERE E.ID_PROYEXPT IN (SELECT ID_PROYEXPT FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo})
         AND E.ID_PROYEXPT=PT.ID_PROYEXPT
@@ -173,5 +188,27 @@
         AND P.ID_PROYECTO=PE.ID_PROYECTO
         GROUP BY P.ID_PROYECTO,P.NOMBRE_PROY
     </select>
-
+    
+    <select id="getMontosAnios" resultMap="Map8" parameterType="String">
+        SELECT ANIO AS ANIO,
+        SUM(EXPTECN_E+INFRAEST_E+EQUIPMOBIL_E+SUPERV_E+CAPACITAC_E+OTROS_E) AS TOTAL
+        FROM EJECUCION
+        WHERE ID_PROYEXPT IN (SELECT ID_PROYEXPT FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo})
+        GROUP BY ANIO
+        ORDER BY ANIO ASC
+    </select>
+    
+    <select id="getEjecucionXanios" resultMap="Map9" parameterType="java.util.Map">
+        SELECT E.MES AS MES,
+        E.EXPTECN_E AS EXPT,
+        E.INFRAEST_E AS INFRA,
+        E.EQUIPMOBIL_E AS EQUIP,
+        E.SUPERV_E AS SUPERV,
+        E.CAPACITAC_E AS CAPACIT,
+        E.OTROS_E AS OTROS
+        FROM EJECUCION E
+        WHERE E.ANIO=#{anio}
+        AND E.ID_PROYEXPT IN (SELECT ID_PROYEXPT FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo})
+        ORDER BY E.ID_EJECUCION
+    </select>
 </mapper>

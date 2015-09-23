@@ -6,7 +6,9 @@
 
 package gp.dao;
 
+import gp.model.Ejecucion;
 import gp.model.ExpedienteTecnico;
+import gp.model.GraficasMontosAnios;
 import gp.model.MostrarDesdeDependencias;
 import gp.model.MostrarTablaEjecucion;
 import gp.model.NuevosDocumentos;
@@ -26,4 +28,6 @@ public interface ReporteInversionDAO {
     public List<NuevosDocumentos> getAdicionales(String codigo, String etapa);
     public List<ExpedienteTecnico> getExpediente(String codigo);
     public List<MostrarDesdeDependencias> getListaDesdeDepes(Integer nombreOrigen);
+    public List<GraficasMontosAnios> getAniosMontos(String codigo);
+    public List<Ejecucion> getEjecucionXanios(String codigo, String anio);
 }

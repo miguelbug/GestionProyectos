@@ -43,12 +43,15 @@
                             <p:column headerText="NOMBRE DEL PROYECTO" style="text-align: center" >
                                 <h:outputText value="#{l4.nombre}" />
                             </p:column>
-                            <p:column headerText="EJECUCION TOTAL" style="text-align: right;width: 10%" >
+                            <p:column headerText="EJECUCION TOTAL" style="text-align: right;width: 10%" footerText="Total S/. #{reporteInversion.sumaEjecucionFinal()}" >
                                 <h:outputText value="#{l4.montoTotal}" >
                                     <f:convertNumber currencySymbol="s/ " type="currency"/>
                                 </h:outputText>
                             </p:column>
                         </p:dataTable>
+                        <br></br>
+                        <br></br>
+                        <p:commandButton value="Imprimir" ajax="false" actionListener="#{reporteInversion.imprimirReporteDependencia()}"/>
                     </center>
                 </h:form>
             </ui:define>
