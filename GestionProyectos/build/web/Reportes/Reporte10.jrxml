@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="Reporte2"
+		 name="Reporte10"
 		 columnCount="1"
 		 printOrder="Horizontal"
 		 orientation="Portrait"

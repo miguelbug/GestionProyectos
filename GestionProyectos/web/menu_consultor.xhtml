@@ -11,10 +11,13 @@
     <h:body style="background-color: #CCCCFF;">
         <p:graphicImage url="/image/banner3.jpg" width="100%"/>
         <h:form id="f2">
-            <p:menubar>
-                <p:submenu label="REPORTES" icon="ui-icon-wrench" styleClass="conf">
+            <p:menubar autoDisplay="false">
+                <p:submenu label="REPORTES" icon="ui-icon ui-icon-document" styleClass="conf">
                     <p:menuitem value="Pre Inversión" action="reporte_PreInversion?faces-redirect=true"/>
-                    <p:menuitem value="Inversión"/>
+                    <p:submenu label="Inversión" styleClass="conf">
+                        <p:menuitem value="Por Código" action="reporte_por_Codigo?faces-redirect=true"/>
+                        <p:menuitem value="Por Dependencia o Facultad" action="reporte_por_Dependencia?faces-redirect=true"/>
+                    </p:submenu>
                     <p:menuitem value="Post Inversión"/>
                 </p:submenu>
                 <p:submenu label=" #{loginBean.usu.usuario}" icon="ui-icon-person" style="position:absolute; right:6px;" styleClass="conf">
