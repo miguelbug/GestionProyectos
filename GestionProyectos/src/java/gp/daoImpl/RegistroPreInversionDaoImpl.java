@@ -9,6 +9,7 @@ import gp.connectionFactory.MyBatisConnectionFactory;
 import gp.dao.RegistroPreInversionDAO;
 import gp.model.AspectosGenerales;
 import gp.model.Componentes;
+import gp.model.HistorialMontoViab;
 import gp.model.Nivel_Estudio;
 import gp.model.Opi_responsable;
 import gp.model.Origen;
@@ -30,6 +31,21 @@ public class RegistroPreInversionDaoImpl implements RegistroPreInversionDAO {
 
     public RegistroPreInversionDaoImpl() {
         this.sqlSessionFactory = MyBatisConnectionFactory.getSqlSessionFactory();
+    }
+
+    @Override
+    public void registrarHistorial(HistorialMontoViab hm) {
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            session.insert("RegistroPreInversion.insert_hmv", hm);
+            session.commit();
+        } catch (Exception e) {
+            System.out.println("RegistroPreInversion.insertar_histmov");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
     @Override

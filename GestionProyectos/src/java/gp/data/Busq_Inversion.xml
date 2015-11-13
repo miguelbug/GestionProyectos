@@ -49,6 +49,8 @@
         <result property="rordr6" column="RO6"/>
     </resultMap>
     
+    
+    
     <resultMap id="proyecto" type="String">
         <result property="nombreProy" column="NOMBREPROY"/>
     </resultMap>
@@ -60,6 +62,8 @@
     <resultMap id="AnioEjecu" type="String">
         <result property="anio" column="ANIO"/>
     </resultMap>
+    
+    
     
     <select id="getListaExpTecn" resultMap="ExpTecn" parameterType="String">
         SELECT PE.ID_PROYEXPT AS IDHISTO, 

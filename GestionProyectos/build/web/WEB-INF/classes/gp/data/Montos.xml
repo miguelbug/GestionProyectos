@@ -13,6 +13,10 @@
         <result property="monto" column="NUMEROMONTO"/>
     </resultMap>
     
+    <resultMap id="numMontoViab" type="Integer">
+        <result property="monto" column="NUMMONTOVIAB"/>
+    </resultMap>
+    
     <select id="numMonto_select" resultMap="numMonto" parameterType="String">
         SELECT MAX(NUMERO_MONTO) AS NUMEROMONTO FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo}
     </select>
@@ -77,5 +81,11 @@
         FROM COMPONENTES
         WHERE ID_PROYECTO=#{codigo}
         AND TIPO_REG ='1'
+    </select>
+    
+    <select id="numMonto_viable" resultMap="numMontoViab" parameterType="Integer">
+        SELECT MAX(NUM_MONTO) AS NUMMONTOVIAB
+        FROM HISTORIAL_MVIAB
+        WHERE ID_PROYECTO=#{codigo}
     </select>
 </mapper>

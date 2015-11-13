@@ -8,6 +8,7 @@ package gp.dao;
 
 import gp.model.AspectosGenerales;
 import gp.model.Componentes;
+import gp.model.HistorialMontoViab;
 import gp.model.Nivel_Estudio;
 import gp.model.Opi_responsable;
 import gp.model.Origen;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public interface RegistroPreInversionDAO {
     public void RegistrarAspecGeneral(AspectosGenerales ag);
+    public void registrarHistorial(HistorialMontoViab hm);
     public void RegistrarComponentes(Componentes c);
     public List<Origen> ObtenerLista_Origen(String tipo);
     public List<Opi_responsable> obtenerLista_opi();

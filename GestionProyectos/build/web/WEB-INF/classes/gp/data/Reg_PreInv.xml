@@ -66,6 +66,11 @@
         VALUES (#{montoExpTec},#{montoInfra},#{montoEquipMov},#{montoSuperv},#{montoCapac},#{montoOtros},#{fecharegistro},#{montoModif},#{codigoProy},#{numMonto},#{numeroExp},
         #{etapa},#{numeroRR},#{tipoDocu},#{estado})
     </insert>
+    
+    <insert id="insert_hmv" parameterType="gp.model.HistorialMontoViab">
+        INSERT INTO HISTORIAL_MVIAB (NUM_MONTO,MONTO_VIAB,ID_PROYECTO,FECHA_REGISTRO)
+        VALUES (#{num_monto},#{monto_viab},#{id_proy},#{fecha})
+    </insert>
      
     <select id="getIdOrigen" resultMap="get_IdOr" parameterType="String">
         SELECT ID_DEP FROM DEPENDENCIA WHERE NOMBRE_DEP=#{nombre}

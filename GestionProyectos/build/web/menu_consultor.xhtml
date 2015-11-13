@@ -11,28 +11,20 @@
     <h:body style="background-color: #CCCCFF;">
         <p:graphicImage url="/image/banner3.jpg" width="100%"/>
         <h:form id="f2">
-            <p:menubar>
-                <p:submenu label="REPORTES" icon="ui-icon-wrench" styleClass="conf">
+            <p:menubar autoDisplay="false">
+                <p:submenu label="REPORTES" icon="ui-icon ui-icon-document" styleClass="conf">
                     <p:menuitem value="Pre Inversión" action="reporte_PreInversion?faces-redirect=true"/>
-                    <p:menuitem value="Inversión"/>
+                    <p:submenu label="Inversión" styleClass="conf">
+                        <p:menuitem value="Por Código" action="reporte_por_Codigo?faces-redirect=true"/>
+                        <p:menuitem value="Por Dependencia o Facultad" action="reporte_por_Dependencia?faces-redirect=true"/>
+                    </p:submenu>
                     <p:menuitem value="Post Inversión"/>
                 </p:submenu>
                 <p:submenu label=" #{loginBean.usu.usuario}" icon="ui-icon-person" style="position:absolute; right:6px;" styleClass="conf">
                     <p:menuitem value ="Salir" action="#{loginBean.logout()}" icon="ui-icon-close" />
                 </p:submenu>
             </p:menubar>
-            <p:idleMonitor onidle="PF('sessionTimeOutDialog').show()" timeout="1800000"/><!-- control del timeout-->
         </h:form>
         <br></br>
-        <!-- Inicio control del timeout -->
-        <p:dialog header="SESIÓN CADUCADA" widgetVar="sessionTimeOutDialog" modal="true" closable="false" width="400" visible="false">
-            <h:form>
-                <center>
-                    <h:outputText value="Su sesión ha caducado, pulse el botón para reiniciar su sesión." /><br />
-                    <input type="submit" value="Reiniciar" onclick="setTimeout('redireccionar()', 0);"/>
-                </center>
-            </h:form>
-        </p:dialog>
-        <!-- Fin control del timeout -->
     </h:body>
 </html>

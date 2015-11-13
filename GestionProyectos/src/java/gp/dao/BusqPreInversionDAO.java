@@ -11,6 +11,7 @@ import gp.model.BusqPreInversion;
 import gp.model.Componentes;
 import gp.model.ComponentesMostrar;
 import gp.model.GuardarNuevComp;
+import gp.model.MontosViables;
 import gp.model.MostrarDesdeDependencias;
 import gp.model.MostrarFechaInicFin;
 import gp.model.busquedaPreInversionMontos;
@@ -37,4 +38,6 @@ public interface BusqPreInversionDAO {
     public List<busquedaPreInversionMontos> getComponentesDeMonto(String monoFecha, String codigoproy);
     public String validarProyecto(String codigo);
     public List<Integer> etapas(String proy);
+    public void actualizarMontoViab(Integer idProy, Double nuevMontoViab);
+    public List<MontosViables> getHistMontosViab(Integer idproy);
 }

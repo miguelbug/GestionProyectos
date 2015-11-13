@@ -12,6 +12,7 @@ import gp.model.BusqPreInversion;
 import gp.model.Componentes;
 import gp.model.ComponentesMostrar;
 import gp.model.GuardarNuevComp;
+import gp.model.MontosViables;
 import gp.model.MostrarDesdeDependencias;
 import gp.model.MostrarFechaInicFin;
 import gp.model.busquedaPreInversionMontos;
@@ -69,6 +70,20 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
     }
 
     @Override
+    public void actualizarMontoViab(Integer idProy, Double nuevMontoViab) {
+        SqlSession session = sqlSessionFactory.openSession();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("idproyecto", idProy);
+        map.put("montoViab", nuevMontoViab);
+        try {
+            session.update("BusqPreInversion.update_montoViab", map);
+            session.commit();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
     public void actualizarComponentes(Componentes c) {
         SqlSession session = sqlSessionFactory.openSession();
         try {
@@ -77,6 +92,22 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
         } finally {
             session.close();
         }
+    }
+
+    @Override
+    public List<MontosViables> getHistMontosViab(Integer idproy) {
+        List<MontosViables> list = null;
+        Map m = new HashMap();
+        SqlSession session = sqlSessionFactory.openSession();
+        try {
+            list = session.selectList("BusqPreInversion.getMontosViables", idproy);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("ERROR EN EL IMPL");
+        } finally {
+            session.close();
+        }
+        return list;
     }
 
     @Override
@@ -176,7 +207,7 @@ public class BusqPreInversionDaoImpl implements BusqPreInversionDAO {
     }
 
     @Override
-public List<BusqPreInversion> listaBusqPI_3(String codigo) {
+    public List<BusqPreInversion> listaBusqPI_3(String codigo) {
         SqlSession session = sqlSessionFactory.openSession();
         List<BusqPreInversion> list = null;
         try {
@@ -210,8 +241,8 @@ public List<BusqPreInversion> listaBusqPI_3(String codigo) {
     @Override
     public List<MostrarFechaInicFin> fechaInic_fechaFin(String fecha1, String fecha2) {
         SqlSession session = sqlSessionFactory.openSession();
-        System.out.println(fecha1+" "+fecha2);
-         Map<String, String> map = new HashMap<String, String>();
+        System.out.println(fecha1 + " " + fecha2);
+        Map<String, String> map = new HashMap<String, String>();
         map.put("fecha1", fecha1);
         map.put("fecha2", fecha2);
         List<MostrarFechaInicFin> list = null;
@@ -291,5 +322,4 @@ public List<BusqPreInversion> listaBusqPI_3(String codigo) {
         return list;
     }
 
-    
 }

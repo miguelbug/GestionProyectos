@@ -24,18 +24,7 @@
                     <p:menuitem value ="Salir" action="#{loginBean.logout()}" icon="ui-icon-close" />
                 </p:submenu>
             </p:menubar>
-            <p:idleMonitor onidle="PF('sessionTimeOutDialog').show()" timeout="1800000"/><!-- control del timeout-->
         </h:form>
         <br></br>
-        <!-- Inicio control del timeout -->
-        <p:dialog header="SESIÓN CADUCADA" widgetVar="sessionTimeOutDialog" modal="true" closable="false" width="400" visible="false">
-            <h:form>
-                <center>
-                    <h:outputText value="Su sesión ha caducado, pulse el botón para reiniciar su sesión." /><br />
-                    <input type="submit" value="Reiniciar" onclick="setTimeout('redireccionar()', 0);"/>
-                </center>
-            </h:form>
-        </p:dialog>
-        <!-- Fin control del timeout -->
     </h:body>
 </html>

@@ -7,12 +7,15 @@ package gp.bean;
 
 import gp.dao.BusqPreInversionDAO;
 import gp.dao.ListasGeneralesDAO;
+import gp.dao.MontosDAO;
 import gp.dao.RegistroPreInversionDAO;
 import gp.daoImpl.BusqPreInversionDaoImpl;
 import gp.daoImpl.ListasGeneralesDaoImpl;
+import gp.daoImpl.MontosDaoImpl;
 import gp.daoImpl.RegistroPreInversionDaoImpl;
 import gp.model.AspectosGenerales;
 import gp.model.Componentes;
+import gp.model.HistorialMontoViab;
 import gp.model.Opi_responsable;
 import gp.model.Origen;
 import gp.model.Usuario;
@@ -91,6 +94,7 @@ public class RegistroPreInversion {
     private List<String> resoluciones;
     private BusqPreInversionDAO bpi;
     public boolean error;
+    private MontosDAO montd;
 
     public RegistroPreInversion() {
         faceContext = FacesContext.getCurrentInstance();
@@ -98,6 +102,7 @@ public class RegistroPreInversion {
         usu = (Usuario) session.getAttribute("sesionUsuario");
         FacesContext facesContext = FacesContext.getCurrentInstance();
         String currentPage = facesContext.getViewRoot().getViewId();
+        montd = new MontosDaoImpl();
         fecha = new Date();
         rpd = new RegistroPreInversionDaoImpl();
         lista_opi = new ArrayList<String>();
@@ -255,7 +260,9 @@ public class RegistroPreInversion {
     public void GuardarAG() throws ParseException {
         FacesMessage message = null;
         try {
+            Date date = new Date();
             AspectosGenerales ag = new AspectosGenerales();
+            HistorialMontoViab hmv = new HistorialMontoViab();
             ag.setCodigo(codigo_int);
             ag.setNombre(this.nombre_proy.toUpperCase());
             ag.setMontoViabilidad(montoD);
@@ -267,7 +274,19 @@ public class RegistroPreInversion {
             ag.setOpiResp(rpd.getId_Opi(this.opi_resp));
             ag.setNivEstud(rpd.getId_Nivel(this.nivel_estud));
             ag.setUsuario(rpd.getId_Usuario(usu.getUsuario()));
+            ///////////////////////
+            hmv.setId_proy(codigo_int);
+            hmv.setMonto_viab(montoD);
+            Integer numMontViab = montd.getNumMontoViab(codigo_int);
+            if(numMontViab==null){
+                hmv.setNum_monto(1);
+            }else{
+                numMontViab++;
+                hmv.setNum_monto(numMontViab);
+            }
+            hmv.setFecha(date);
             rpd.RegistrarAspecGeneral(ag);
+            rpd.registrarHistorial(hmv);
             estado = false;
             estado2 = true;
             estado4 = true;

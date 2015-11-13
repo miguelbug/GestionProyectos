@@ -19,8 +19,10 @@ import gp.model.AspectosGenerales;
 import gp.model.BusqPreInversion;
 import gp.model.Componentes;
 import gp.model.GuardarNuevComp;
+import gp.model.HistorialMontoViab;
 import gp.model.HistorialMontos;
 import gp.model.Montos;
+import gp.model.MontosViables;
 import gp.model.Opi_responsable;
 import gp.model.Origen;
 import gp.model.busquedaPreInversionMontos;
@@ -132,10 +134,12 @@ public class BusquedaPreInversion {
     private String id_comp;
     private boolean estadof;
     private boolean tabview;
+    private List<MontosViables> listaMontos;
 
     public BusquedaPreInversion() {
         cantidad = "2";
         listaEtapas = new ArrayList<Integer>();
+        listaMontos = new ArrayList<MontosViables>();
         listaBPI_1 = new ArrayList<BusqPreInversion>();
         listaBPI_2 = new ArrayList<BusqPreInversion>();
         bpi = new BusqPreInversionDaoImpl();
@@ -187,6 +191,15 @@ public class BusquedaPreInversion {
     public void guardarMontoViabilidad() {
         montoViable = montoViable.add(BigDecimal.valueOf((b4D)));
         System.out.println("EL MONTO VIABLE ES: " + montoViable);
+    }
+
+    public void historialMontViab() {
+        listaMontos.clear();
+        try{
+            listaMontos = bpi.getHistMontosViab(Integer.parseInt(b20));
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     public void guardarFechaModificacion() {
@@ -382,57 +395,91 @@ public class BusquedaPreInversion {
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "NO SE HAN MODIFICADO EL PROYECTO");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         }
-
+        estado2 = true;
+        estado3 = true;
+        estado4 = false;
+        llenarAspectosGenerales();
     }
 
     public void modificarComponentes() {
         FacesMessage message = null;
         try {
             Componentes c = new Componentes();
-            if (b26D == null || idcomp == null) {
-                Date date = new Date();
-                c.setNumMonto(0);
-                c.setMontoExpTec(b13D);
-                c.setMontoInfra(b14D);
-                c.setMontoEquipMov(b15D);
-                c.setMontoSuperv(b16D);
-                c.setMontoCapac(b17D);
-                c.setMontoOtros(b18D);
-                c.setCodigoProy(Integer.parseInt(b20));
-                c.setFecharegistro(date);
-                if (b26D == null) {
-                    c.setMontoModif(0.0);
-                } else {
-                    if (idcomp == null) {
-                        c.setMontoModif(b26D);
-                    }
-                }
-                c.setTipoRegistro("0");
-                rpd.RegistrarComponentes(c);
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS COMPONENTES");
-                RequestContext.getCurrentInstance().showMessageInDialog(message);
+            Date date = new Date();
+            HistorialMontoViab hmv = new HistorialMontoViab();
+            //c.setNumMonto((mont.getNumMonto(b20) == null ? 0 : mont.getNumMonto(b20)));
+            c.setMontoExpTec(b13D);
+            c.setMontoInfra(b14D);
+            c.setMontoEquipMov(b15D);
+            c.setMontoSuperv(b16D);
+            c.setMontoCapac(b17D);
+            c.setMontoOtros(b18D);
+            c.setCodigoProy(Integer.parseInt(b20));
+            c.setFecharegistro(date);
+            c.setMontoModif(0.0);
+            c.setIdcomp(Integer.parseInt(id_comp));
+            bpi.actualizarComponentes(c);
+            bpi.actualizarMontoViab(Integer.parseInt(b20), b19D);
+            hmv.setFecha(date);
+            hmv.setId_proy(Integer.parseInt(b20));
+            hmv.setMonto_viab(b19D);
+            Integer numMontViab = montd.getNumMontoViab(Integer.parseInt(b20));
+            if (numMontViab == null) {
+                hmv.setNum_monto(1);
             } else {
-                c.setNumMonto((mont.getNumMonto(b20) == null ? 0 : mont.getNumMonto(b20)));
-                c.setMontoExpTec(b13D);
-                c.setMontoInfra(b14D);
-                c.setMontoEquipMov(b15D);
-                c.setMontoSuperv(b16D);
-                c.setMontoCapac(b17D);
-                c.setMontoOtros(b18D);
-                c.setCodigoProy(Integer.parseInt(b20));
-                c.setFecharegistro(getDate(nuevaFecha));
-                c.setMontoModif(b26D);
-                c.setMontoaux(Double.parseDouble(String.valueOf(aux1)));
-                c.setFechaaux(getDate(aux2));
-                c.setIdcomp(idcomp);
-                bpi.actualizarComponentes(c);
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO LOS COMPONENTES");
-                RequestContext.getCurrentInstance().showMessageInDialog(message);
+                numMontViab++;
+                hmv.setNum_monto(numMontViab);
             }
+
+            rpd.registrarHistorial(hmv);
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO LOS COMPONENTES");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
+            /*if (b26D == null || idcomp == null) {
+             Date date = new Date();
+             c.setNumMonto(0);
+             c.setMontoExpTec(b13D);
+             c.setMontoInfra(b14D);
+             c.setMontoEquipMov(b15D);
+             c.setMontoSuperv(b16D);
+             c.setMontoCapac(b17D);
+             c.setMontoOtros(b18D);
+             c.setCodigoProy(Integer.parseInt(b20));
+             c.setFecharegistro(date);
+             if (b26D == null) {
+             c.setMontoModif(0.0);
+             } else {
+             if (idcomp == null) {
+             c.setMontoModif(b26D);
+             }
+             }
+             c.setTipoRegistro("0");
+             rpd.RegistrarComponentes(c);
+             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS COMPONENTES");
+             RequestContext.getCurrentInstance().showMessageInDialog(message);
+             } else {
+             c.setNumMonto((mont.getNumMonto(b20) == null ? 0 : mont.getNumMonto(b20)));
+             c.setMontoExpTec(b13D);
+             c.setMontoInfra(b14D);
+             c.setMontoEquipMov(b15D);
+             c.setMontoSuperv(b16D);
+             c.setMontoCapac(b17D);
+             c.setMontoOtros(b18D);
+             c.setCodigoProy(Integer.parseInt(b20));
+             c.setFecharegistro(getDate(nuevaFecha));
+             c.setMontoModif(b26D);
+             c.setMontoaux(Double.parseDouble(String.valueOf(aux1)));
+             c.setFechaaux(getDate(aux2));
+             c.setIdcomp(idcomp);
+             bpi.actualizarComponentes(c);
+             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO LOS COMPONENTES");
+             RequestContext.getCurrentInstance().showMessageInDialog(message);
+             }*/
             mdf.clear();
             mdf = montd.getMontosModificados(b20);
             this.montosModificados();
-            limpiarComponentes();
+            //limpiarComponentes();
+            estado7 = true;
+            llenarAspectosGenerales();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -464,6 +511,7 @@ public class BusquedaPreInversion {
         estado7 = true;
         estado9 = true;
         estado12 = true;
+        estadof = true;
         limpiarComponentes();
         FacesMessage message = null;
         if (b20 == "") {
@@ -489,10 +537,28 @@ public class BusquedaPreInversion {
                 b11 = listaBPI_1.get(i).getC9();
                 b12 = listaBPI_1.get(i).getC10();
             }
-            listaEtapas.clear();
-            listaEtapas.add(0);
-            this.listaEtapas = bpi.etapas(b20);
+            //listaEtapas.clear();
+            //listaEtapas.add(0);
+            //this.listaEtapas = bpi.etapas(b20);
             this.tabview = true;
+        }
+        llenarMontos();
+    }
+
+    public void llenarAspectosGenerales() {
+        listaBPI_1.clear();
+        listaBPI_1 = bpi.listaBusqPI(b20);
+        for (int i = 0; i < listaBPI_1.size(); i++) {
+            b1 = listaBPI_1.get(i).getC1();
+            b2 = listaBPI_1.get(i).getC2();
+            b3 = listaBPI_1.get(i).getC3();
+            b4D = Double.parseDouble(listaBPI_1.get(i).getC4());
+            b5 = listaBPI_1.get(i).getC5();
+            b8 = listaBPI_1.get(i).getC6();
+            b9 = listaBPI_1.get(i).getC7();
+            b10 = listaBPI_1.get(i).getC8();
+            b11 = listaBPI_1.get(i).getC9();
+            b12 = listaBPI_1.get(i).getC10();
         }
     }
 
@@ -517,11 +583,12 @@ public class BusquedaPreInversion {
     }
 
     public void llenarMontos() {
-        if (etapaSelect.equals("0")) {
-            listaBPI_2 = bpi.listaBusqPI_2(b20, etapaSelect);
-        } else {
-            listaBPI_2 = bpi.listaBusqPI_2(b20, etapaSelect);
-        }
+        /*if (etapaSelect.equals("0")) {
+         listaBPI_2 = bpi.listaBusqPI_2(b20, etapaSelect);
+         } else {
+         listaBPI_2 = bpi.listaBusqPI_2(b20, etapaSelect);
+         }*/
+        listaBPI_2 = bpi.listaBusqPI_2(b20, "0");
         i = 0;
         this.atras = true;
         this.adelante = false;
@@ -588,49 +655,49 @@ public class BusquedaPreInversion {
         //this.b19 = String.valueOf(valor);
         b19D = valor.doubleValue();
         System.out.println(estado10);
-        if (estado10 == 0) {
-            if (b26D == null) {
-                if (b19D.equals(b4D.doubleValue())) {
-                    System.out.println(b19D + " MONTO VIABLE" + b4D);
-                    System.out.println("iguales 0");
-                    color = "clase1";
-                    estado11 = false;
-                } else {
-                    System.out.println(b19D + " MONTO VIABLE" + b4D);
-                    System.out.println("diferentes 0");
-                    color = "clase2";
-                    estado11 = true;
-                }
-            } else {
-                if (b19D.equals(aux1.doubleValue())) {
-                    System.out.println(b19 + " " + aux1);
-                    System.out.println("iguales 0");
-                    color = "clase1";
-                    estado11 = false;
-                } else {
-                    System.out.println(b19D + " " + aux1);
-                    System.out.println("diferentes 0");
-                    color = "clase2";
-                    estado11 = true;
-                }
-            }
+        /*if (estado10 == 0) {
+         if (b26D == null) {
+         if (b19D.equals(b4D.doubleValue())) {
+         System.out.println(b19D + " MONTO VIABLE" + b4D);
+         System.out.println("iguales 0");
+         color = "clase1";
+         estado11 = false;
+         } else {
+         System.out.println(b19D + " MONTO VIABLE" + b4D);
+         System.out.println("diferentes 0");
+         color = "clase2";
+         estado11 = true;
+         }
+         } else {
+         if (b19D.equals(aux1.doubleValue())) {
+         System.out.println(b19 + " " + aux1);
+         System.out.println("iguales 0");
+         color = "clase1";
+         estado11 = false;
+         } else {
+         System.out.println(b19D + " " + aux1);
+         System.out.println("diferentes 0");
+         color = "clase2";
+         estado11 = true;
+         }
+         }
 
-        } else {
-            if (estado10 == 1) {
-                //if (b19D == Double.parseDouble(b24Daux)) {
-                if (b19D.equals(b24D)) {
-                    System.out.println(b19D + " " + b24D);
-                    System.out.println("iguales 1");
-                    color = "clase1";
-                    estado11 = false;
-                } else {
-                    System.out.println(b19D + " " + b24D);
-                    System.out.println("iguales 1");
-                    color = "clase2";
-                    estado11 = true;
-                }
-            }
-        }
+         } else {
+         if (estado10 == 1) {
+         //if (b19D == Double.parseDouble(b24Daux)) {
+         if (b19D.equals(b24D)) {
+         System.out.println(b19D + " " + b24D);
+         System.out.println("iguales 1");
+         color = "clase1";
+         estado11 = false;
+         } else {
+         System.out.println(b19D + " " + b24D);
+         System.out.println("iguales 1");
+         color = "clase2";
+         estado11 = true;
+         }
+         }
+         }*/
 
     }
 
@@ -703,11 +770,10 @@ public class BusquedaPreInversion {
         estado8 = false;
         estado10 = 0;
         estado11 = false;
-        estadof = false;
         b25 = " ";
         b26D = null;
         nuevaFecha = "";
-        limpiarComponentes();
+        //limpiarComponentes();
         getExpedientesLista();
         getInformesLista();
         getResolucionesLista();
@@ -1451,6 +1517,14 @@ public class BusquedaPreInversion {
 
     public void setTabview(boolean tabview) {
         this.tabview = tabview;
+    }
+
+    public List<MontosViables> getListaMontos() {
+        return listaMontos;
+    }
+
+    public void setListaMontos(List<MontosViables> listaMontos) {
+        this.listaMontos = listaMontos;
     }
 
 }

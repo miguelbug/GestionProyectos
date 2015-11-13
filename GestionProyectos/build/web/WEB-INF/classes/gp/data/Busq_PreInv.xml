@@ -76,6 +76,11 @@
         <result property="idcomp" column="IDCOMP"/>
     </resultMap>
     
+    <resultMap id="HistMontos" type="gp.model.MontosViables">
+        <result property="montoViab" column="MONTOVIAB"/>
+        <result property="fecha" column="FECHA"/>
+    </resultMap>
+    
     <resultMap id="validarProyecto" type="String">
         <result property="codigo" column="IDPROY"/>
     </resultMap>
@@ -83,6 +88,14 @@
     <resultMap id="Etapa_Lista" type="Integer">
         <result property="etapa" column="ETAPA"/>
     </resultMap>
+    
+    <select id="getMontosViables" resultMap="HistMontos" parameterType="Integer">
+        SELECT MONTO_VIAB AS MONTOVIAB,
+        TO_CHAR(FECHA_REGISTRO,'DD/MM/YYYY HH:MI:SS') AS FECHA
+        FROM HISTORIAL_MVIAB
+        WHERE ID_PROYECTO=#{idproy}
+        ORDER BY FECHA_REGISTRO DESC
+    </select>
     
     <select id="getBPI" resultMap="lista_busqPreInv" parameterType="String">
         SELECT P.ID_PROYECTO AS CODIGO,
@@ -252,6 +265,13 @@
         
         WHERE ID_PROYECTO = #{codigoProy}
         AND ID_PROYEXPT=#{idcomp}
+    </update>
+    
+    <update id="update_montoViab" parameterType="java.util.Map">
+        UPDATE PROYECTO
+        SET
+        MONTO_VIAB = #{montoViab}
+        WHERE ID_PROYECTO = #{idproyecto}
     </update>
     
     <select id="getMontosHistorial" resultMap="lista_componentesHistorial" parameterType="String">
