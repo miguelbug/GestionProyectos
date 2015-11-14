@@ -9,7 +9,9 @@ package gp.daoImpl;
 import gp.connectionFactory.MyBatisConnectionFactory;
 import gp.dao.MontosDAO;
 import gp.model.Montos;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -27,6 +29,25 @@ public class MontosDaoImpl implements MontosDAO {
 
     public MontosDaoImpl(SqlSessionFactory sqlSessionFactory) {
         this.sqlSessionFactory = sqlSessionFactory;
+    }
+
+    @Override
+    public Integer getNumMonto0(Integer proy, String etapa) {
+        Integer nummonto = null;
+        SqlSession session = sqlSessionFactory.openSession();
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("idproyecto", proy);
+        map.put("etapa", etapa);
+        try {
+            nummonto = session.selectOne("MontosData.numMonto_cero", map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            System.out.println("ERROR EN EL IMPL getnumonto");
+        } finally {
+            session.close();
+        }
+        return nummonto;
     }
 
     @Override

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package gp.model;
 
 import java.io.Serializable;
@@ -17,7 +16,7 @@ import javax.faces.bean.RequestScoped;
  */
 @ManagedBean
 @RequestScoped
-public class GuardarNuevComp implements Serializable{
+public class GuardarNuevComp implements Serializable {
 
     private Double exp_tecn;
     private Double infraestructura;
@@ -29,12 +28,56 @@ public class GuardarNuevComp implements Serializable{
     private Double monto_modif;
     private String tipo_reg;
     private String id_proyecto;
-    private Double num_monto;
-    
+    private Integer num_monto;
+    private Integer numeroExp;
+    private String numeroRR;
+    private String estado;
+    private Integer tipoDocu;
+    private Integer etapa;
+
     public GuardarNuevComp() {
     }
 
-    
+    public Integer getNumeroExp() {
+        return numeroExp;
+    }
+
+    public Integer getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(Integer etapa) {
+        this.etapa = etapa;
+    }
+
+    public Integer getTipoDocu() {
+        return tipoDocu;
+    }
+
+    public void setTipoDocu(Integer tipoDocu) {
+        this.tipoDocu = tipoDocu;
+    }
+
+    public void setNumeroExp(Integer numeroExp) {
+        this.numeroExp = numeroExp;
+    }
+
+    public String getNumeroRR() {
+        return numeroRR;
+    }
+
+    public void setNumeroRR(String numeroRR) {
+        this.numeroRR = numeroRR;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     public Date getFecha_reg() {
         return fecha_reg;
     }
@@ -115,14 +158,12 @@ public class GuardarNuevComp implements Serializable{
         this.monto_modif = monto_modif;
     }
 
-    public Double getNum_monto() {
+    public Integer getNum_monto() {
         return num_monto;
     }
 
-    public void setNum_monto(Double num_monto) {
+    public void setNum_monto(Integer num_monto) {
         this.num_monto = num_monto;
     }
-    
-    
-    
+
 }

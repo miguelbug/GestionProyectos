@@ -21,6 +21,11 @@
         SELECT MAX(NUMERO_MONTO) AS NUMEROMONTO FROM PROY_EXPT WHERE ID_PROYECTO=#{codigo}
     </select>
     
+    <select id="numMonto_cero" resultMap="numMonto" parameterType="java.util.Map">
+        SELECT MAX(NUMERO_MONTO) AS NUMEROMONTO FROM PROY_EXPT WHERE ID_PROYECTO=#{idproyecto} AND ETAPA = #{etapa}
+    </select>
+    
+    
     <select id="get_MontModif" resultMap="result" parameterType="String">
         SELECT R1.DOCUMENTO||' : '||R1.MONTO||' - '||TO_CHAR(R1.FECHA_REG,'DD/MM/YYYY') AS EXPMONTFECH
         FROM (SELECT TD.NOMBRE_TIPODOCU||' '||PE.NUMERO_EXP AS DOCUMENTO,

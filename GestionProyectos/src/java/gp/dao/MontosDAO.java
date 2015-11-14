@@ -22,5 +22,6 @@ public interface MontosDAO {
     public List<Montos> getMontoCapacitacion(String codigo);
     public List<Montos> getMontoOtros(String codigo);
     public Integer getNumMonto(String codigo);
+    public Integer getNumMonto0(Integer proy, String etapa);
     public Integer getNumMontoViab(Integer codigo);
 }

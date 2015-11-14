@@ -22,7 +22,7 @@
                                 <p:commandButton value="Buscar" actionListener="#{busquedaPreInversion.cambiarAlBuscar()}" update=":form:" icon="ui-icon-search"/>
                             </h:panelGrid>
                             <p:commandButton value="Modificar" actionListener="#{busquedaPreInversion.cambiarEstado2()}" update=":form:" icon="ui-icon-pencil"   disabled="#{busquedaPreInversion.estado}"/>
-                            <p:commandButton value="Agregar" actionListener="#{busquedaPreInversion.cambiarEstado2()}" update=":form:" icon="ui-icon-folder-open"   disabled="#{busquedaPreInversion.estado}"/>
+                            <p:commandButton value="Agregar" actionListener="#{busquedaPreInversion.cambiarEstado3()}" update=":form:" icon="ui-icon-folder-open"   disabled="#{busquedaPreInversion.estado}"/>
                         </h:panelGrid>
                     </center>
                     <br></br>
@@ -31,7 +31,7 @@
                             <center>
                                 <h:panelGrid columns="2" id="regPreInvAG" cellspacing="6">
                                     <p:outputLabel value="Código"/>
-                                    <p:inputText value="#{busquedaPreInversion.b1}" style="text-transform:uppercase;" disabled="#{busquedaPreInversion.estado9}">
+                                    <p:inputText value="#{busquedaPreInversion.b1}" style="text-transform:uppercase;color: black" disabled="#{busquedaPreInversion.estado9}">
                                     </p:inputText>
 
                                     <p:outputLabel value="Nombre:"/>
@@ -56,7 +56,7 @@
 
                                     <p:outputLabel value="Monto de Viabilidad:"/>
                                     <h:panelGrid columns="2">
-                                        <pe:inputNumber value="#{busquedaPreInversion.b4D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estado2}" emptyValue="empty" required="false" style="text-align: right">  
+                                        <pe:inputNumber value="#{busquedaPreInversion.b4D}" thousandSeparator="," decimalSeparator="." disabled="#{busquedaPreInversion.estadoMontViabil}" emptyValue="empty" required="false" style="text-align: right">  
                                             <f:validateDoubleRange minimum="50"/>
                                             <p:ajax event="change" listener="#{busquedaPreInversion.guardarMontoViabilidad()}"/>
                                         </pe:inputNumber>

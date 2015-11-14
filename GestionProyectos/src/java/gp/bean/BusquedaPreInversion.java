@@ -79,6 +79,7 @@ public class BusquedaPreInversion {
     private Double b26D = null;
     private boolean estado;
     private boolean estado2;
+    private boolean estadoMontViabil;
     private boolean estado3;
     private boolean estado4;
     private boolean estado5;
@@ -148,6 +149,7 @@ public class BusquedaPreInversion {
         lista_origen = new ArrayList<String>();
         estado = true;
         estado2 = true;
+        estadoMontViabil = true;
         estado9 = true;
         estado4 = false;
         estado3 = true;
@@ -161,8 +163,6 @@ public class BusquedaPreInversion {
         historialMontos = new ArrayList<HistorialMontos>();
         estado10 = -1;
         estado = true;
-
-        estado2 = true;
 
         estado8 = true;
 
@@ -195,9 +195,9 @@ public class BusquedaPreInversion {
 
     public void historialMontViab() {
         listaMontos.clear();
-        try{
+        try {
             listaMontos = bpi.getHistMontosViab(Integer.parseInt(b20));
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -347,7 +347,6 @@ public class BusquedaPreInversion {
     }
 
     public void agregar_Actualizar() {
-
         if (estado10 == 1) {
             guardarNuevosComponentes();
         } else {
@@ -396,98 +395,10 @@ public class BusquedaPreInversion {
             RequestContext.getCurrentInstance().showMessageInDialog(message);
         }
         estado2 = true;
+        estadoMontViabil = true;
         estado3 = true;
         estado4 = false;
         llenarAspectosGenerales();
-    }
-
-    public void modificarComponentes() {
-        FacesMessage message = null;
-        try {
-            Componentes c = new Componentes();
-            Date date = new Date();
-            HistorialMontoViab hmv = new HistorialMontoViab();
-            //c.setNumMonto((mont.getNumMonto(b20) == null ? 0 : mont.getNumMonto(b20)));
-            c.setMontoExpTec(b13D);
-            c.setMontoInfra(b14D);
-            c.setMontoEquipMov(b15D);
-            c.setMontoSuperv(b16D);
-            c.setMontoCapac(b17D);
-            c.setMontoOtros(b18D);
-            c.setCodigoProy(Integer.parseInt(b20));
-            c.setFecharegistro(date);
-            c.setMontoModif(0.0);
-            c.setIdcomp(Integer.parseInt(id_comp));
-            bpi.actualizarComponentes(c);
-            bpi.actualizarMontoViab(Integer.parseInt(b20), b19D);
-            hmv.setFecha(date);
-            hmv.setId_proy(Integer.parseInt(b20));
-            hmv.setMonto_viab(b19D);
-            Integer numMontViab = montd.getNumMontoViab(Integer.parseInt(b20));
-            if (numMontViab == null) {
-                hmv.setNum_monto(1);
-            } else {
-                numMontViab++;
-                hmv.setNum_monto(numMontViab);
-            }
-
-            rpd.registrarHistorial(hmv);
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO LOS COMPONENTES");
-            RequestContext.getCurrentInstance().showMessageInDialog(message);
-            /*if (b26D == null || idcomp == null) {
-             Date date = new Date();
-             c.setNumMonto(0);
-             c.setMontoExpTec(b13D);
-             c.setMontoInfra(b14D);
-             c.setMontoEquipMov(b15D);
-             c.setMontoSuperv(b16D);
-             c.setMontoCapac(b17D);
-             c.setMontoOtros(b18D);
-             c.setCodigoProy(Integer.parseInt(b20));
-             c.setFecharegistro(date);
-             if (b26D == null) {
-             c.setMontoModif(0.0);
-             } else {
-             if (idcomp == null) {
-             c.setMontoModif(b26D);
-             }
-             }
-             c.setTipoRegistro("0");
-             rpd.RegistrarComponentes(c);
-             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS COMPONENTES");
-             RequestContext.getCurrentInstance().showMessageInDialog(message);
-             } else {
-             c.setNumMonto((mont.getNumMonto(b20) == null ? 0 : mont.getNumMonto(b20)));
-             c.setMontoExpTec(b13D);
-             c.setMontoInfra(b14D);
-             c.setMontoEquipMov(b15D);
-             c.setMontoSuperv(b16D);
-             c.setMontoCapac(b17D);
-             c.setMontoOtros(b18D);
-             c.setCodigoProy(Integer.parseInt(b20));
-             c.setFecharegistro(getDate(nuevaFecha));
-             c.setMontoModif(b26D);
-             c.setMontoaux(Double.parseDouble(String.valueOf(aux1)));
-             c.setFechaaux(getDate(aux2));
-             c.setIdcomp(idcomp);
-             bpi.actualizarComponentes(c);
-             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO LOS COMPONENTES");
-             RequestContext.getCurrentInstance().showMessageInDialog(message);
-             }*/
-            mdf.clear();
-            mdf = montd.getMontosModificados(b20);
-            this.montosModificados();
-            //limpiarComponentes();
-            estado7 = true;
-            llenarAspectosGenerales();
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "NO SE HAN MODIFICADO LOS COMPONENTES");
-            RequestContext.getCurrentInstance().showMessageInDialog(message);
-        }
-
     }
 
     public void llenar_origen() {
@@ -508,6 +419,7 @@ public class BusquedaPreInversion {
         estado5 = true;
         estado6 = false;
         estado2 = true;
+        estadoMontViabil = true;
         estado7 = true;
         estado9 = true;
         estado12 = true;
@@ -628,6 +540,7 @@ public class BusquedaPreInversion {
         estado5 = true;
         estado6 = false;
         estado2 = true;
+        estadoMontViabil = true;
         estado7 = true;
         estado8 = true;
         estado9 = true;
@@ -655,6 +568,19 @@ public class BusquedaPreInversion {
         //this.b19 = String.valueOf(valor);
         b19D = valor.doubleValue();
         System.out.println(estado10);
+        if (estado10 == 1) {
+            if (b19D.equals(b4D.doubleValue())) {
+                System.out.println(b19D + " MONTO VIABLE" + b4D);
+                System.out.println("iguales 0");
+                color = "clase1";
+                estado11 = false;
+            } else {
+                System.out.println(b19D + " MONTO VIABLE" + b4D);
+                System.out.println("diferentes 0");
+                color = "clase2";
+                estado11 = true;
+            }
+        }
         /*if (estado10 == 0) {
          if (b26D == null) {
          if (b19D.equals(b4D.doubleValue())) {
@@ -701,36 +627,168 @@ public class BusquedaPreInversion {
 
     }
 
+    public void modificarComponentes() {
+        FacesMessage message = null;
+        try {
+            Componentes c = new Componentes();
+            Date date = new Date();
+            HistorialMontoViab hmv = new HistorialMontoViab();
+            //c.setNumMonto((mont.getNumMonto(b20) == null ? 0 : mont.getNumMonto(b20)));
+            c.setMontoExpTec(b13D);
+            c.setMontoInfra(b14D);
+            c.setMontoEquipMov(b15D);
+            c.setMontoSuperv(b16D);
+            c.setMontoCapac(b17D);
+            c.setMontoOtros(b18D);
+            c.setCodigoProy(Integer.parseInt(b20));
+            c.setFecharegistro(date);
+            c.setMontoModif(0.0);
+            c.setIdcomp(Integer.parseInt(id_comp));
+            bpi.actualizarComponentes(c);
+            bpi.actualizarMontoViab(Integer.parseInt(b20), b19D);
+            hmv.setFecha(date);
+            hmv.setId_proy(Integer.parseInt(b20));
+            hmv.setMonto_viab(b19D);
+            Integer numMontViab = montd.getNumMontoViab(Integer.parseInt(b20));
+            if (numMontViab == null) {
+                hmv.setNum_monto(1);
+            } else {
+                numMontViab++;
+                hmv.setNum_monto(numMontViab);
+            }
+
+            rpd.registrarHistorial(hmv);
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO LOS COMPONENTES");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
+            /*if (b26D == null || idcomp == null) {
+             Date date = new Date();
+             c.setNumMonto(0);
+             c.setMontoExpTec(b13D);
+             c.setMontoInfra(b14D);
+             c.setMontoEquipMov(b15D);
+             c.setMontoSuperv(b16D);
+             c.setMontoCapac(b17D);
+             c.setMontoOtros(b18D);
+             c.setCodigoProy(Integer.parseInt(b20));
+             c.setFecharegistro(date);
+             if (b26D == null) {
+             c.setMontoModif(0.0);
+             } else {
+             if (idcomp == null) {
+             c.setMontoModif(b26D);
+             }
+             }
+             c.setTipoRegistro("0");
+             rpd.RegistrarComponentes(c);
+             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN GUARDADO LOS COMPONENTES");
+             RequestContext.getCurrentInstance().showMessageInDialog(message);
+             } else {
+             c.setNumMonto((mont.getNumMonto(b20) == null ? 0 : mont.getNumMonto(b20)));
+             c.setMontoExpTec(b13D);
+             c.setMontoInfra(b14D);
+             c.setMontoEquipMov(b15D);
+             c.setMontoSuperv(b16D);
+             c.setMontoCapac(b17D);
+             c.setMontoOtros(b18D);
+             c.setCodigoProy(Integer.parseInt(b20));
+             c.setFecharegistro(getDate(nuevaFecha));
+             c.setMontoModif(b26D);
+             c.setMontoaux(Double.parseDouble(String.valueOf(aux1)));
+             c.setFechaaux(getDate(aux2));
+             c.setIdcomp(idcomp);
+             bpi.actualizarComponentes(c);
+             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "REALIZADO", "SE HAN MODIFICADO LOS COMPONENTES");
+             RequestContext.getCurrentInstance().showMessageInDialog(message);
+             }*/
+            mdf.clear();
+            mdf = montd.getMontosModificados(b20);
+            this.montosModificados();
+            //limpiarComponentes();
+            estado7 = true;
+            llenarAspectosGenerales();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "ERROR", "NO SE HAN MODIFICADO LOS COMPONENTES");
+            RequestContext.getCurrentInstance().showMessageInDialog(message);
+        }
+
+    }
+
     public void guardarNuevosComponentes() {
         GuardarNuevComp gnc = new GuardarNuevComp();
         FacesMessage message = null;
+        HistorialMontoViab hmv = new HistorialMontoViab();
         try {
-            Integer numero = montd.getNumMonto(b20);
+            Date date = new Date();
+            Integer numero = montd.getNumMonto0(Integer.parseInt(b20), "0");
             if (numero == null) {
                 numero = 0;
+            } else {
+                numero++;
             }
-            int numero_parse = numero + 1;
-            gnc.setNum_monto(Double.parseDouble(String.valueOf(numero_parse)));
+            gnc.setNum_monto(numero);
             gnc.setExp_tecn(b13D == null ? 0.0 : b13D);
             gnc.setInfraestructura(b14D == null ? 0.0 : b14D);
             gnc.setEquip_mobil(b15D == null ? 0.0 : b15D);
             gnc.setSupervision(b16D == null ? 0.0 : b16D);
             gnc.setCapacitacion(b17D == null ? 0.0 : b17D);
             gnc.setOtros(b18D == null ? 0.0 : b18D);
-            gnc.setFecha_reg(getDate(fmmaux));
-            gnc.setMonto_modif(b24Daux == " " ? 0.0 : Double.parseDouble(b24Daux));
-            gnc.setTipo_reg("1");
+            gnc.setFecha_reg(date);
+            gnc.setMonto_modif(0.0);
+            gnc.setTipoDocu(1);
             gnc.setId_proyecto(b20);
+            gnc.setNumeroExp(0);
+            gnc.setNumeroRR("Sin RR");
+            gnc.setEstado("0");
+            gnc.setEtapa(0);
             this.bpi.guardarNuevosComponentes(gnc);
+            bpi.actualizarMontoViab(Integer.parseInt(b20), b4D);
+            hmv.setFecha(date);
+            hmv.setId_proy(Integer.parseInt(b20));
+            hmv.setMonto_viab(b4D);
+            Integer numMontViab = montd.getNumMontoViab(Integer.parseInt(b20));
+            if (numMontViab == null) {
+                hmv.setNum_monto(1);
+            } else {
+                numMontViab++;
+                hmv.setNum_monto(numMontViab);
+            }
+
+            rpd.registrarHistorial(hmv);
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "CORRECTO", "SE HAN GUARDADO LOS COMPONENTES Y EL MONTO MODIFICADO");
             RequestContext.getCurrentInstance().showMessageInDialog(message);
-            mdf.clear();
-            mdf = montd.getMontosModificados(b20);
-            b24D = 0.0;
-            System.out.println("LIMPA");
-            limpiarComponentes();
-            System.out.println("DESPUES DE LIMPIAR");
-            fmm = "";
+            estado7 = true;
+            estadoMontViabil = true;
+            llenarAspectosGenerales();
+            /*Integer numero = montd.getNumMonto(b20);
+             if (numero == null) {
+             numero = 0;
+             }
+             int numero_parse = numero + 1;
+             gnc.setNum_monto(Double.parseDouble(String.valueOf(numero_parse)));
+             gnc.setExp_tecn(b13D == null ? 0.0 : b13D);
+             gnc.setInfraestructura(b14D == null ? 0.0 : b14D);
+             gnc.setEquip_mobil(b15D == null ? 0.0 : b15D);
+             gnc.setSupervision(b16D == null ? 0.0 : b16D);
+             gnc.setCapacitacion(b17D == null ? 0.0 : b17D);
+             gnc.setOtros(b18D == null ? 0.0 : b18D);
+             gnc.setFecha_reg(getDate(fmmaux));
+             gnc.setMonto_modif(b24Daux == " " ? 0.0 : Double.parseDouble(b24Daux));
+             gnc.setTipo_reg("1");
+             gnc.setId_proyecto(b20);
+             this.bpi.guardarNuevosComponentes(gnc);
+             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "CORRECTO", "SE HAN GUARDADO LOS COMPONENTES Y EL MONTO MODIFICADO");
+             RequestContext.getCurrentInstance().showMessageInDialog(message);
+             mdf.clear();
+             mdf = montd.getMontosModificados(b20);
+             b24D = 0.0;
+             System.out.println("LIMPA");
+             //limpiarComponentes();
+             System.out.println("DESPUES DE LIMPIAR");
+             fmm = "";*/
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -742,6 +800,7 @@ public class BusquedaPreInversion {
 
     public void cambiarEstado() {
         estado2 = true;
+        estadoMontViabil = true;
         estado4 = false;
         estado3 = true;
         estado5 = false;
@@ -761,6 +820,7 @@ public class BusquedaPreInversion {
 
     public void cambiarEstado2() {
         estado2 = false;
+        estadoMontViabil = false;
         estado3 = false;
         estado4 = true;
         estado5 = false;
@@ -779,6 +839,15 @@ public class BusquedaPreInversion {
         getResolucionesLista();
         System.out.println("MODIFICAR");
         montosModificados();
+    }
+
+    public void cambiarEstado3() {
+        estadoMontViabil = false;
+        estadof = false;
+        limpiarComponentes();
+        estado7 = false;
+        estado11 = false;
+        estado10 = 1;
 
     }
 
@@ -1525,6 +1594,14 @@ public class BusquedaPreInversion {
 
     public void setListaMontos(List<MontosViables> listaMontos) {
         this.listaMontos = listaMontos;
+    }
+
+    public boolean isEstadoMontViabil() {
+        return estadoMontViabil;
+    }
+
+    public void setEstadoMontViabil(boolean estadoMontViabil) {
+        this.estadoMontViabil = estadoMontViabil;
     }
 
 }

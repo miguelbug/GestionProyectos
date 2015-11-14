@@ -232,8 +232,23 @@
     
     <!-- -->
     <insert id="insert_gnc" parameterType="gp.model.GuardarNuevComp">
-        INSERT INTO COMPONENTES (EXP_TECN,INFRAESTRUCTURA,EQUIP_MOBIL,SUPERVISION,CAPACITACION,OTROS,FECHA_REG,MONTO_MODIF,TIPO_REG,ID_PROYECTO,NUM_MONTO)
-        VALUES (#{exp_tecn},#{infraestructura},#{equip_mobil},#{supervision},#{capacitacion},#{otros},#{fecha_reg},#{monto_modif},#{tipo_reg},#{id_proyecto},#{num_monto})
+        INSERT INTO PROY_EXPT (NUMERO_EXP,
+        ID_TIPOSDOCUS,
+        ETAPA,
+        ID_PROYECTO,
+        EXP_TECN,
+        INFRAESTRUCTURA,
+        EQUIP_MOBIL,
+        SUPERVISION,
+        CAPACITACION,
+        OTROS,
+        MONTO_MODIF,
+        FECHA_REG,
+        NUMERO_RR,
+        NUMERO_MONTO,
+        ESTADO)
+        VALUES (#{numeroExp},#{tipoDocu},#{etapa},#{id_proyecto},#{exp_tecn},#{infraestructura},#{equip_mobil},#{supervision},#{capacitacion},#{otros},#{monto_modif},#{fecha_reg},
+                #{numeroRR},#{num_monto},#{estado})
     </insert>
     
     <update id="update_Ag" parameterType="gp.model.AspectosGenerales">
